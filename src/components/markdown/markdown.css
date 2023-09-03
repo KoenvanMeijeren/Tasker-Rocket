@@ -1,0 +1,118 @@
+@import url('github-markdown-css');
+@import url('highlight.js/styles/github.css');
+
+.markdown-body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+}
+
+.markdown-body > ul {
+  list-style: square;
+}
+
+.markdown-body > ol {
+  list-style: decimal;
+}
+
+.markdown-body h1:hover .icon-link::after,
+.markdown-body h2:hover .icon-link::after,
+.markdown-body h3:hover .icon-link::after,
+.markdown-body h4:hover .icon-link::after,
+.markdown-body h5:hover .icon-link::after,
+.markdown-body h6:hover .icon-link::after {
+  width: 5px;
+  height: 10px;
+  content: " ";
+  background: white;
+  display: block;
+  position: absolute;
+  right: 2px;
+  top: 5px;
+  border: 2px solid black;
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+}
+
+.markdown-body h1:hover .icon-link,
+.markdown-body h2:hover .icon-link,
+.markdown-body h3:hover .icon-link,
+.markdown-body h4:hover .icon-link,
+.markdown-body h5:hover .icon-link,
+.markdown-body h6:hover .icon-link {
+  background: white;
+  height: 20px;
+  width: 10px;
+  border-radius: 10px;
+  border: 2px solid black;
+  display: inline-block;
+  position: absolute;
+}
+
+.markdown-body h1, h2, h3, h4, h5, h6 {
+  position: relative;
+}
+
+.markdown-body h1::before,
+.markdown-body h2::before,
+.markdown-body h3::before,
+.markdown-body h4::before,
+.markdown-body h5::before,
+.markdown-body h6::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50px;
+  width: 50px;
+  height: 100%;
+}
+
+@media (max-width: 767px) {
+  .markdown-body {
+    padding: 15px;
+  }
+}
+
+html[data-theme='dark'] {
+  .markdown-body {
+    background-color: #2b3650;
+    color: white;
+  }
+
+  & table {
+    background-color: #1C2334;
+    color: white;
+
+    & tr {
+      background-color: #1C2334;
+      color: white;
+
+      &:nth-child(2n) {
+        background-color: #2b3650;
+        color: white;
+      }
+    }
+  }
+
+  .markdown-body h1:hover .icon-link::after,
+  .markdown-body h2:hover .icon-link::after,
+  .markdown-body h3:hover .icon-link::after,
+  .markdown-body h4:hover .icon-link::after,
+  .markdown-body h5:hover .icon-link::after,
+  .markdown-body h6:hover .icon-link::after {
+    background-color: #1C2334;
+    border: 2px solid white;
+  }
+
+  .markdown-body h1:hover .icon-link,
+  .markdown-body h2:hover .icon-link,
+  .markdown-body h3:hover .icon-link,
+  .markdown-body h4:hover .icon-link,
+  .markdown-body h5:hover .icon-link,
+  .markdown-body h6:hover .icon-link {
+    background: #1C2334;
+    border: 2px solid white;
+  }
+}

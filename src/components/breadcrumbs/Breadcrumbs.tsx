@@ -13,11 +13,12 @@ export function pathToBreadcrumbs(path: string): {
 	name: string;
 	path: string;
 }[] {
-	if (path === '/') {
+	const url = decodeURIComponent(path);
+	if (url === '/') {
 		return [];
 	}
 
-	const breadcrumbs = path.split('/');
+	const breadcrumbs = url.split('/');
 	return breadcrumbs
 		.map((breadcrumb: string, index: number) => {
 			if (excludedBreadcrumbs.includes(breadcrumb)) {

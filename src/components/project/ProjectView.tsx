@@ -11,7 +11,9 @@ import { Text } from '@chakra-ui/react';
 
 export default function ProjectView() {
 	const path = usePathname().replace('/projecten', '');
-	const { data, error, isLoading } = useGitHubContentTree(path);
+	const { data, error, isLoading } = useGitHubContentTree(
+		decodeURIComponent(path)
+	);
 
 	if (error) {
 		return <div>laden mislukt...</div>;
@@ -37,7 +39,7 @@ export default function ProjectView() {
 			{data.map((item: GitHubTreeItem) => {
 				return (
 					<GridItem key={item.url}>
-						<Link href={`/projecten/${item.path}`}>
+						<Link href={`/projecten/${encodeURIComponent(item.path)}`}>
 							<Card>
 								<CardBody>
 									<Text>{item.name}</Text>

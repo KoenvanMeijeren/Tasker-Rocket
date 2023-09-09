@@ -1,5 +1,5 @@
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import CodeMirror, { basicSetup } from '@uiw/react-codemirror';
+import CodeMirror from '@uiw/react-codemirror';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import { javascript } from '@codemirror/lang-javascript';

@@ -42,7 +42,7 @@ export function ProjectsOverview() {
 			{data.map((item: GitHubTreeItem) => {
 				return (
 					<GridItem key={item.url}>
-						<Link href={`./projecten/${item.path}`}>
+						<Link href={`./projecten/${encodeURIComponent(item.path)}`}>
 							<Card>
 								<CardBody>
 									<Text>{item.name}</Text>

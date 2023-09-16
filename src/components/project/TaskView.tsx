@@ -13,7 +13,7 @@ import { LanguageSupport } from '@codemirror/language';
 export default function TaskView(params: { item: GitHubTreeItem }) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
-	const fileExtension = params.item.url.split('.').pop()?.split('?')[0] ?? '';
+	const fileExtension = params.item.url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
 
 	useMemo(() => {
 		setFileContent(

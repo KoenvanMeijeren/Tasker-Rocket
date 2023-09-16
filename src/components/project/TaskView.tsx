@@ -9,6 +9,48 @@ import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { Markdown } from '@/components/markdown/Markdown';
 import { LanguageSupport } from '@codemirror/language';
+import { csharp } from '@codemirror/legacy-modes/mode/clike';
+import { sql } from '@codemirror/lang-sql';
+import { java } from '@codemirror/lang-java';
+import { sass } from '@codemirror/lang-sass';
+import { cpp } from '@codemirror/lang-cpp';
+
+function fileExtensionToCodeMirrorExtensions(fileExtension: string) {
+  switch (fileExtension) {
+    case 'json':
+      return [json()];
+    case 'js':
+      return [javascript()];
+    case 'css':
+      return [css()];
+    case 'html':
+      return [html()];
+    case 'ts':
+      return [
+        javascript({
+          typescript: true,
+        }),
+      ];
+    case 'tsx':
+      return [
+        javascript({
+          jsx: true,
+          typescript: true,
+        }),
+      ];
+    case 'sql':
+      return [sql()];
+    case 'cs':
+    case 'java':
+      return [java()];
+    case 'sass':
+      return [sass()];
+    case 'cpp':
+      return [cpp()];
+  }
+
+  return [];
+}
 
 export default function TaskView(params: { item: GitHubTreeItem }) {
 	const [fileContent, setFileContent] = useState('');
@@ -19,35 +61,7 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 		setFileContent(
 			Buffer.from(params.item.content ?? '', 'base64').toString('utf8')
 		);
-		switch (fileExtension) {
-			case 'json':
-				setExtension([json()]);
-				break;
-			case 'js':
-				setExtension([javascript()]);
-				break;
-			case 'css':
-				setExtension([css()]);
-				break;
-			case 'html':
-				setExtension([html()]);
-				break;
-			case 'ts':
-				setExtension([
-					javascript({
-						typescript: true,
-					}),
-				]);
-				break;
-			case 'tsx':
-				setExtension([
-					javascript({
-						jsx: true,
-						typescript: true,
-					}),
-				]);
-				break;
-		}
+    setExtension(fileExtensionToCodeMirrorExtensions(fileExtension));
 	}, [params, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);

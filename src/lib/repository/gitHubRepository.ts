@@ -10,7 +10,7 @@ export const gitHubConfig = {
 
 export function useGitHubContentRootTree() {
 	return useAuthenticatedDataFetcher<GitHubTreeItem[]>(
-		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents/content`,
+		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents`,
 		gitHubConfig.token
 	);
 }

@@ -48,7 +48,7 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 				]);
 				break;
 		}
-	}, [params]);
+	}, [params, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 

@@ -10,6 +10,10 @@ import { html } from '@codemirror/lang-html';
 import { Markdown } from '@/components/markdown/Markdown';
 import { LanguageSupport } from '@codemirror/language';
 import GitHubImageView from '@/components/project/GitHubImageView';
+import { sql } from '@codemirror/lang-sql';
+import { java } from '@codemirror/lang-java';
+import { sass } from '@codemirror/lang-sass';
+import { cpp } from '@codemirror/lang-cpp';
 
 function fileExtensionToCodeMirrorExtension(fileExtension: string) {
 	switch (fileExtension) {
@@ -34,6 +38,15 @@ function fileExtensionToCodeMirrorExtension(fileExtension: string) {
 					typescript: true,
 				}),
 			];
+		case 'sql':
+			return [sql()];
+		case 'cs':
+		case 'java':
+			return [java()];
+		case 'sass':
+			return [sass()];
+		case 'cpp':
+			return [cpp()];
 	}
 
 	return [];

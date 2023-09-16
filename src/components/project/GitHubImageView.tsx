@@ -1,35 +1,26 @@
 'use client';
 
-import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { Box, Image } from '@chakra-ui/react';
+import { useMemo, useState } from 'react';
+import { imageExtensions } from '@/components/project/TaskView';
 
-export default function GitHubImageView(params: { item: GitHubTreeItem }) {
-	const { data, error, isLoading } = useGitHubFileContent(params.item);
+export default function GitHubImageView(params: {
+	item: GitHubTreeItem;
+	imageType: string;
+}) {
+	const [imageUrl, setImageUrl] = useState('');
 
-	if (error) {
-		return <div>laden mislukt...</div>;
-	}
+	useMemo(() => {
+		const content = params.item.content ?? '';
+		const imageDataType = imageExtensions[params.imageType] ?? 'image/png';
 
-	if (isLoading) {
-		return <div>laden...</div>;
-	}
-
-	if (!data || !data.download_url) {
-		return (
-			<Box>
-				<Image src="https://via.placeholder.com/150" />
-			</Box>
-		);
-	}
+		setImageUrl(`data:${imageDataType};base64, ${content}`);
+	}, [params]);
 
 	return (
-		<Box>
-			<Image
-				src={data.download_url}
-				alt={params.item.name}
-				// fallbackSrc="https://via.placeholder.com/150"
-			/>
+		<Box minWidth="200px" maxWidth="980px" m="auto">
+			<Image src={imageUrl} alt={params.item.name} />
 		</Box>
 	);
 }

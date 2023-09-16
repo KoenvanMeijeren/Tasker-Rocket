@@ -39,20 +39,26 @@ function fileExtensionToCodeMirrorExtension(fileExtension: string) {
 	return [];
 }
 
+export interface ImageExtensions {
+	[key: string]: string;
+}
+
+export const imageExtensions: ImageExtensions = {
+	jpg: 'image/jpg',
+	jpeg: 'image/jpeg',
+	gif: 'image/gif',
+	svg: 'image/svg+xml',
+	webp: 'image/webp',
+	ico: 'image/ico',
+	png: 'image/png',
+	tiff: 'image/tiff',
+};
+
 export default function TaskView(params: { item: GitHubTreeItem }) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
-	const fileExtension = params.item.url.split('.').pop()?.split('?')[0] ?? '';
-	const imageExtensions = [
-		'jpg',
-		'jpeg',
-		'gif',
-		'svg',
-		'webp',
-		'ico',
-		'png',
-		'tiff',
-	];
+	const fileExtension =
+		params.item.url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
 
 	useMemo(() => {
 		setFileContent(
@@ -68,8 +74,13 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 		return <Markdown markdown={fileContent}></Markdown>;
 	}
 
-	if (imageExtensions.includes(fileExtension)) {
-		return <GitHubImageView item={params.item}></GitHubImageView>;
+	if (Object.keys(imageExtensions).includes(fileExtension)) {
+		return (
+			<GitHubImageView
+				item={params.item}
+				imageType={fileExtension}
+			></GitHubImageView>
+		);
 	}
 
 	return (

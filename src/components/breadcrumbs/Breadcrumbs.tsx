@@ -4,7 +4,8 @@ import { HiHome } from 'react-icons/hi';
 import { usePathname, useRouter } from 'next/navigation';
 import { replaceAll, urlToReadableString } from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
-import { ChevronRightIcon } from '@chakra-ui/icons';
+import React from 'react';
+import { BiSolidChevronRight } from 'react-icons/bi';
 
 const excludedBreadcrumbs: string[] = ['content'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -57,7 +58,7 @@ export function Breadcrumbs() {
 		<>
 			<Breadcrumb
 				spacing="8px"
-				separator={<ChevronRightIcon color="gray.500" />}
+				separator={<BiSolidChevronRight color="gray.500" />}
 			>
 				{breadcrumbs.map((item, index: number) => {
 					return (

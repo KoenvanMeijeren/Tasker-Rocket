@@ -9,51 +9,67 @@ import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { Markdown } from '@/components/markdown/Markdown';
 import { LanguageSupport } from '@codemirror/language';
+import GitHubImageView from '@/components/project/GitHubImageView';
+
+function fileExtensionToCodeMirrorExtension(fileExtension: string) {
+	switch (fileExtension) {
+		case 'json':
+			return [json()];
+		case 'js':
+			return [javascript()];
+		case 'css':
+			return [css()];
+		case 'html':
+			return [html()];
+		case 'ts':
+			return [
+				javascript({
+					typescript: true,
+				}),
+			];
+		case 'tsx':
+			return [
+				javascript({
+					jsx: true,
+					typescript: true,
+				}),
+			];
+	}
+
+	return [];
+}
 
 export default function TaskView(params: { item: GitHubTreeItem }) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
 	const fileExtension = params.item.url.split('.').pop()?.split('?')[0] ?? '';
+	const imageExtensions = [
+		'jpg',
+		'jpeg',
+		'gif',
+		'svg',
+		'webp',
+		'ico',
+		'png',
+		'tiff',
+	];
 
 	useMemo(() => {
 		setFileContent(
 			Buffer.from(params.item.content ?? '', 'base64').toString('utf8')
 		);
-		switch (fileExtension) {
-			case 'json':
-				setExtension([json()]);
-				break;
-			case 'js':
-				setExtension([javascript()]);
-				break;
-			case 'css':
-				setExtension([css()]);
-				break;
-			case 'html':
-				setExtension([html()]);
-				break;
-			case 'ts':
-				setExtension([
-					javascript({
-						typescript: true,
-					}),
-				]);
-				break;
-			case 'tsx':
-				setExtension([
-					javascript({
-						jsx: true,
-						typescript: true,
-					}),
-				]);
-				break;
-		}
+
+		setExtension(fileExtensionToCodeMirrorExtension(fileExtension));
 	}, [params]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 
 	if (fileExtension === 'md') {
 		return <Markdown markdown={fileContent}></Markdown>;
+	}
+
+	if (imageExtensions.includes(fileExtension)) {
+		return <GitHubImageView item={params.item}></GitHubImageView>;
 	}
 
 	return (

@@ -21,3 +21,10 @@ export function useGitHubContentTree(path: string) {
 		gitHubConfig.token
 	);
 }
+
+export function useGitHubFileContent(item: GitHubTreeItem) {
+	return useAuthenticatedDataFetcher<GitHubTreeItem>(
+		item.url,
+		gitHubConfig.token
+	);
+}

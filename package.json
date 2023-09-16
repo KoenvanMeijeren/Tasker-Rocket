@@ -13,7 +13,6 @@
     "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.0",
     "@codemirror/language-data": "github:codemirror/language-data",
@@ -28,7 +27,6 @@
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",
     "next": "^13.4.12",
-    "postcss": "^8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",

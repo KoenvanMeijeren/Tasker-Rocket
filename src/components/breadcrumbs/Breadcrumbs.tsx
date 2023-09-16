@@ -1,7 +1,7 @@
 'use client';
 
 import { HiHome } from 'react-icons/hi';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { replaceAll, urlToReadableString } from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import React from 'react';
@@ -48,8 +48,8 @@ export function pathToBreadcrumbs(path: string): {
 }
 
 export function Breadcrumbs() {
-	const breadcrumbs = pathToBreadcrumbs(usePathname());
-	const router = useRouter();
+  const router = useRouter();
+	const breadcrumbs = pathToBreadcrumbs(router.asPath);
 	if (breadcrumbs.length < 1) {
 		return <></>;
 	}

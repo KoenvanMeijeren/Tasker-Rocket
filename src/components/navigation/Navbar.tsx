@@ -15,12 +15,12 @@ import {
 import { IconType } from 'react-icons';
 import { FiMenu } from 'react-icons/fi';
 import NextLink from 'next/link';
-import { usePathname } from 'next/navigation';
 import { themeConfig } from '../../../theme.config';
 import { AiOutlinePieChart } from 'react-icons/ai';
 import { TbLayoutBoard } from 'react-icons/tb';
 import { TaskerLogo } from '@/components/icons/TaskerLogo';
 import { DesktopHeader } from '@/components/navigation/DesktopHeader';
+import { useRouter } from 'next/router';
 
 interface LinkItemProps {
 	name: string;
@@ -40,7 +40,7 @@ export const LinkItems: Array<LinkItemProps> = [
 		name: 'Project',
 		href: '#',
 		icon: TbLayoutBoard,
-		activatesOnPath: 'projecten/content',
+		activatesOnPath: 'projecten/',
 	},
 ];
 
@@ -56,7 +56,7 @@ export const NavItem = ({
 	activatesOnPath,
 	...rest
 }: NavItemProps) => {
-	const currentPath = usePathname();
+	const currentPath = useRouter().asPath;
 	let isActive = currentPath === href;
 	if (activatesOnPath) {
 		isActive =

@@ -56,7 +56,7 @@ export const NavItem = ({
 	activatesOnPath,
 	...rest
 }: NavItemProps) => {
-	const currentPath = useRouter().asPath;
+	const currentPath = useRouter().asPath.replace('#', '');
 	let isActive = currentPath === href;
 	if (activatesOnPath) {
 		isActive =

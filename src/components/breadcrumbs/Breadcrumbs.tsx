@@ -7,7 +7,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import React from 'react';
 import { BiSolidChevronRight } from 'react-icons/bi';
 
-const excludedBreadcrumbs: string[] = ['content'];
+const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
 
 export function pathToBreadcrumbs(path: string): {

@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import Link from 'next/link';
 import TaskView from '@/components/project/TaskView';
@@ -10,7 +10,8 @@ import { Card, CardBody } from '@chakra-ui/card';
 import { Text } from '@chakra-ui/react';
 
 export default function ProjectView() {
-	const path = usePathname().replace('/projecten', '');
+	const path = useRouter().asPath.replace('/projecten', '');
+
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
 	);

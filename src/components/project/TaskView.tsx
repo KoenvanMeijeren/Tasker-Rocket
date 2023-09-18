@@ -4,7 +4,7 @@ import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
 import { Markdown } from '@/components/markdown/Markdown';
@@ -73,13 +73,13 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 	const fileExtension =
 		params.item.url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
 
-	useMemo(() => {
+  useEffect(() => {
 		setFileContent(
 			Buffer.from(params.item.content ?? '', 'base64').toString('utf8')
 		);
 
 		setExtension(fileExtensionToCodeMirrorExtension(fileExtension));
-	}, [params]);
+	}, [params, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 

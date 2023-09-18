@@ -2,7 +2,7 @@
 
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { Box, Image } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { imageExtensions } from '@/components/project/TaskView';
 
 export default function GitHubImageView(params: {
@@ -11,7 +11,7 @@ export default function GitHubImageView(params: {
 }) {
 	const [imageUrl, setImageUrl] = useState('');
 
-	useMemo(() => {
+  useEffect(() => {
 		const content = params.item.content ?? '';
 		const imageDataType = imageExtensions[params.imageType] ?? 'image/png';
 

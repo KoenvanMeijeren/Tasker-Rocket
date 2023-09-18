@@ -5,22 +5,23 @@ import { Box, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { imageExtensions } from '@/components/project/TaskView';
 
-export default function GitHubImageView(params: {
+export default function GitHubImageView(props: {
 	item: GitHubTreeItem;
 	imageType: string;
 }) {
+  const {item, imageType} = props;
 	const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-		const content = params.item.content ?? '';
-		const imageDataType = imageExtensions[params.imageType] ?? 'image/png';
+		const content = item.content ?? '';
+		const imageDataType = imageExtensions[imageType] ?? 'image/png';
 
 		setImageUrl(`data:${imageDataType};base64, ${content}`);
-	}, [params]);
+	}, [item, imageType]);
 
 	return (
 		<Box minWidth="200px" maxWidth="980px" m="auto">
-			<Image src={imageUrl} alt={params.item.name} />
+			<Image src={imageUrl} alt={item.name} />
 		</Box>
 	);
 }

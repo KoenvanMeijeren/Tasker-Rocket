@@ -1,6 +1,6 @@
 import { Box, Button, Show, Spacer, useColorMode } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { Breadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 export function DesktopHeader() {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -12,7 +12,7 @@ export function DesktopHeader() {
 			</Box>
 			<Spacer />
 			<Button onClick={toggleColorMode}>
-				{colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+				{colorMode === 'light' ? <MdDarkMode /> : <MdLightMode />}
 			</Button>
 		</Show>
 	);

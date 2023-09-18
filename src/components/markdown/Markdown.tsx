@@ -1,4 +1,3 @@
-import './markdown.css';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';

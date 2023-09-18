@@ -67,7 +67,7 @@ export const imageExtensions: ImageExtensions = {
 	tiff: 'image/tiff',
 };
 
-export default function TaskView(params: { item: GitHubTreeItem }) {
+export default function TaskView({ item } : {item: GitHubTreeItem}) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
 	const fileExtension =
@@ -75,11 +75,11 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 
   useEffect(() => {
 		setFileContent(
-			Buffer.from(params.item.content ?? '', 'base64').toString('utf8')
+			Buffer.from(item.content ?? '', 'base64').toString('utf8')
 		);
 
 		setExtension(fileExtensionToCodeMirrorExtension(fileExtension));
-	}, [params, fileExtension]);
+	}, [item, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 
@@ -90,7 +90,7 @@ export default function TaskView(params: { item: GitHubTreeItem }) {
 	if (Object.keys(imageExtensions).includes(fileExtension)) {
 		return (
 			<GitHubImageView
-				item={params.item}
+				item={item}
 				imageType={fileExtension}
 			></GitHubImageView>
 		);

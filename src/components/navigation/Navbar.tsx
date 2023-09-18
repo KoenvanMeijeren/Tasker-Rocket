@@ -40,7 +40,7 @@ export const LinkItems: Array<LinkItemProps> = [
 		name: 'Project',
 		href: '#',
 		icon: TbLayoutBoard,
-		activatesOnPath: 'projecten/',
+		activatesOnPath: 'projecten',
 	},
 ];
 

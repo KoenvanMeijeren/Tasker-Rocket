@@ -38,7 +38,7 @@ export function pathToBreadcrumbs(path: string): {
 
 			return {
 				name: urlToReadableString(
-					replaceAll(breadcrumb, removedBreadcrumbCharacters, '')
+					replaceAll(breadcrumb, removedBreadcrumbCharacters, ''),
 				),
 				path: breadcrumbs.slice(0, index + 1).join('/'),
 			};
@@ -54,21 +54,16 @@ export function Breadcrumbs() {
 	}
 
 	return (
-		<>
-			<Breadcrumb
-				spacing="8px"
-				separator={<ChevronRightIcon color="gray.500" />}
-			>
-				{breadcrumbs.map((item, index: number) => {
-					return (
-						<BreadcrumbItem key={`breadcrumb-item-${index}-${item.path}`}>
-							<BreadcrumbLink href="#" onClick={() => router.push(item.path)}>
-								{index === 0 && <HiHome />} {item.name}
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-					);
-				})}
-			</Breadcrumb>
-		</>
+		<Breadcrumb separator={<ChevronRightIcon color="gray.500" />} spacing="8px">
+			{breadcrumbs.map((item, index: number) => {
+				return (
+					<BreadcrumbItem key={`breadcrumb-item-${index}-${item.path}`}>
+						<BreadcrumbLink href="#" onClick={() => router.push(item.path)}>
+							{index === 0 ? <HiHome /> : null} {item.name}
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+				);
+			})}
+		</Breadcrumb>
 	);
 }

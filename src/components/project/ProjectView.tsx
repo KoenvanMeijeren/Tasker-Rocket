@@ -1,18 +1,16 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import Link from 'next/link';
 import TaskView from '@/components/project/TaskView';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { GridItem, SimpleGrid } from '@chakra-ui/layout';
-import { Card, CardBody } from '@chakra-ui/card';
-import { Text } from '@chakra-ui/react';
+import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import { Card, CardBody, GridItem, SimpleGrid, Text } from '@chakra-ui/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function ProjectView() {
 	const path = usePathname().replace('/projecten', '');
 	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path)
+		decodeURIComponent(path),
 	);
 
 	if (error) {
@@ -28,13 +26,13 @@ export default function ProjectView() {
 	}
 
 	if (!Array.isArray(data)) {
-		return <TaskView item={data}></TaskView>;
+		return <TaskView item={data} />;
 	}
 
 	return (
 		<SimpleGrid
-			templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
 			spacing={4}
+			templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
 		>
 			{data.map((item: GitHubTreeItem) => {
 				return (

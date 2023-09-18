@@ -1,6 +1,6 @@
-import { Box, Button, Show, Spacer, useColorMode } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { Breadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { Box, Button, Show, Spacer, useColorMode } from '@chakra-ui/react';
 
 export function DesktopHeader() {
 	const { colorMode, toggleColorMode } = useColorMode();

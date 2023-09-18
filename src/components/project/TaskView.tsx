@@ -17,42 +17,23 @@ import { cpp } from '@codemirror/lang-cpp';
 import {urlToFileExtension} from "@/lib/utility/formatters";
 import {hasKeyInMap} from "@/lib/utility/dataStructure";
 
-function fileExtensionToCodeMirrorExtension(fileExtension: string) {
-	switch (fileExtension) {
-		case 'json':
-			return [json()];
-		case 'js':
-			return [javascript()];
-		case 'css':
-			return [css()];
-		case 'html':
-			return [html()];
-		case 'ts':
-			return [
-				javascript({
-					typescript: true,
-				}),
-			];
-		case 'tsx':
-			return [
-				javascript({
-					jsx: true,
-					typescript: true,
-				}),
-			];
-		case 'sql':
-			return [sql()];
-		case 'cs':
-		case 'java':
-			return [java()];
-		case 'sass':
-			return [sass()];
-		case 'cpp':
-			return [cpp()];
-	}
-
-	return [];
+export interface CodeExtensions {
+  [key: string]: LanguageSupport[];
 }
+
+const codeExtensions: CodeExtensions= {
+  json: [json()],
+  js: [javascript()],
+  css: [css()],
+  html: [html()],
+  ts: [javascript({ typescript: true })],
+  tsx: [javascript({ jsx: true, typescript: true })],
+  sql: [sql()],
+  cs: [java()],
+  java: [java()],
+  sass: [sass()],
+  cpp: [cpp()],
+};
 
 export interface ImageExtensions {
 	[key: string]: string;
@@ -79,7 +60,7 @@ export default function TaskView({ item } : {item: GitHubTreeItem}) {
 			Buffer.from(item.content ?? '', 'base64').toString('utf8')
 		);
 
-		setExtension(fileExtensionToCodeMirrorExtension(fileExtension));
+		setExtension(codeExtensions[fileExtension] || []);
 	}, [item, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);

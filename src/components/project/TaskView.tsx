@@ -14,6 +14,8 @@ import { sql } from '@codemirror/lang-sql';
 import { java } from '@codemirror/lang-java';
 import { sass } from '@codemirror/lang-sass';
 import { cpp } from '@codemirror/lang-cpp';
+import {urlToFileExtension} from "@/lib/utility/formatters";
+import {hasKeyInMap} from "@/lib/utility/dataStructure";
 
 function fileExtensionToCodeMirrorExtension(fileExtension: string) {
 	switch (fileExtension) {
@@ -70,8 +72,7 @@ export const imageExtensions: ImageExtensions = {
 export default function TaskView({ item } : {item: GitHubTreeItem}) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
-	const fileExtension =
-		params.item.url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
+	const fileExtension = urlToFileExtension(item.url);
 
   useEffect(() => {
 		setFileContent(
@@ -87,7 +88,7 @@ export default function TaskView({ item } : {item: GitHubTreeItem}) {
 		return <Markdown markdown={fileContent}></Markdown>;
 	}
 
-	if (Object.keys(imageExtensions).includes(fileExtension)) {
+	if (hasKeyInMap(imageExtensions, fileExtension)) {
 		return (
 			<GitHubImageView
 				item={item}

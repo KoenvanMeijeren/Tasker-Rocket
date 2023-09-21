@@ -4,13 +4,16 @@ import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import TaskView from '@/components/project/TaskView';
 import CollapsibleTask from '@/components/task/CollapsibleTask';
-import { Stack } from '@chakra-ui/react';
+import { Box, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Colors } from '../../../theme.config';
+import { useColors } from '@/hooks/useColors';
 
 export default function Task() {
 	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
 	);
+	const { backgroundColor, fontColor } = useColors();
 
 	if (error) {
 		return <div>laden mislukt...</div>;
@@ -29,13 +32,19 @@ export default function Task() {
 	}
 
 	return (
-		<div style={{ overflowY: 'scroll', height: '100vh' }}>
+		<div style={{ overflowY: 'auto', height: '100vh' }}>
+			<Box px={'28px'} py={'24px'} backgroundColor={backgroundColor}>
+				<Text fontSize={{ base: '24px', md: '40px', lg: '56px' }}>
+					Race Simulator
+				</Text>
+			</Box>
 			<Stack
 				display="block"
 				flexDirection={'column'}
 				alignItems={'flex-start'}
 				mb={3}
-				p={4}
+				py={'36px'}
+				px={'60px'}
 			>
 				{data.map((item: GitHubTreeItem) => {
 					return (

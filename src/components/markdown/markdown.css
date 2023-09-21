@@ -11,20 +11,6 @@
   color: #474C55;
 }
 
-.subtask {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  align-self: stretch;
-
-  border-radius: 8px;
-  border: 8px solid var(--stroke, #E2E8F0);
-
-  /* card drop shadow */
-  box-shadow: 0px 4px 10px -3px rgba(0, 0, 0, 0.07);
-}
-
 .markdown-body>ul {
   list-style: square;
 }
@@ -98,7 +84,7 @@ h6 {
 
 html[data-theme='dark'] {
   .markdown-body {
-    background-color: #2b3650;
+    background-color: #2d3748;
     color: white;
   }
 

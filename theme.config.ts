@@ -19,10 +19,12 @@ export const themeConfig: ThemeConfig = {
 export const Colors = { 
   dark: {
     backgroundSecondary: '#2d3748',
+    border: '#3b424d',
     font: 'white'
   },
   light: {
     backgroundSecondary: 'white',
+    border: '#D2DBE3',
     font: '#464b53'
   },
   green: '#239964',

@@ -5,6 +5,7 @@ import {
 	Text,
 	useColorModeValue,
 	Divider,
+	Button,
 } from '@chakra-ui/react';
 import { Markdown } from '../markdown/Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
@@ -41,10 +42,10 @@ export default function CollapsibleTask({ path }: { path: string }) {
 
 	return (
 		<Box
+			zIndex={2}
 			backgroundColor={backgroundColor}
 			borderRadius={8}
-			p={4}
-			mb={6}
+			p={2}
 			boxShadow={'0px 4px 10px -3px rgba(0, 0, 0, 0.07)'}
 			outline={isOpen ? '5px solid #E2E8F0' : '0px solid #E2E8F0'}
 			transition={'outline-width 200ms ease'}
@@ -62,15 +63,20 @@ export default function CollapsibleTask({ path }: { path: string }) {
 						{task.name}
 					</Text>
 				</Box>
-				<ChevronDownIcon
-					transform={rotate}
-					transition={'all 0.2s linear'}
-					boxSize={10}
-					color={fontColor}
-				/>
+				<Box>
+					<ChevronDownIcon
+						transform={rotate}
+						transition={'all 0.2s linear'}
+						boxSize={10}
+						color={fontColor}
+					/>
+				</Box>
 			</Box>
 			<Collapse in={isOpen}>
-				<Divider mt={4} borderWidth={1.5} />
+				<Divider my={4} borderWidth={1.5} />
+				<Box display={'flex'} justifyContent={'flex-end'}>
+					<button className="btn btn-blue">Done</button>
+				</Box>
 				<Markdown markdown={content}></Markdown>
 			</Collapse>
 		</Box>

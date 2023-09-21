@@ -11,7 +11,6 @@ import { usePathname } from 'next/navigation';
 
 export default function ProjectView() {
 	const path = usePathname().replace('/projecten', '');
-	console.log(path);
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
 	);

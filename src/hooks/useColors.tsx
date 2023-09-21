@@ -8,5 +8,7 @@ export function useColors() {
 	);
 	const fontColor = useColorModeValue(Colors.light.font, Colors.dark.font);
 
-	return { backgroundColor, fontColor };
+	const border = useColorModeValue(Colors.light.border, Colors.dark.border);
+
+	return { backgroundColor, fontColor, border };
 }

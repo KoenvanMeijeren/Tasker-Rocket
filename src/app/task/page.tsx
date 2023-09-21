@@ -1,15 +1,13 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 'use client';
-import TaskView from '@/components/project/TaskView';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { ListItem, UnorderedList } from '@chakra-ui/layout';
-import { useSearchParams } from 'next/navigation';
+import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import TaskView from '@/components/project/TaskView';
+import CollapsibleTask from '@/components/task/CollapsibleTask';
+import { Stack } from '@chakra-ui/react';
 
 export default function Task() {
-	const searchParams = useSearchParams();
-	const taskName = searchParams.get('name');
-	// const path = usePathname().replace('/task', '');
-	const path = '/content%2F22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
+	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
 	);
@@ -25,15 +23,26 @@ export default function Task() {
 	if (!data) {
 		return <div>Er kon geen content gevonden worden.</div>;
 	}
+
 	if (!Array.isArray(data)) {
 		return <TaskView item={data}></TaskView>;
 	}
 
 	return (
-		<UnorderedList>
-			{data.map((item: GitHubTreeItem, index) => {
-				return <ListItem key={index}>{item.name}</ListItem>;
-			})}
-		</UnorderedList>
+		<div style={{ overflowY: 'scroll', height: '100vh' }}>
+			<Stack
+				display="block"
+				flexDirection={'column'}
+				alignItems={'flex-start'}
+				mb={3}
+				p={4}
+			>
+				{data.map((item: GitHubTreeItem) => {
+					return (
+						<CollapsibleTask key={item.name} path={item.path}></CollapsibleTask>
+					);
+				})}
+			</Stack>
+		</div>
 	);
 }

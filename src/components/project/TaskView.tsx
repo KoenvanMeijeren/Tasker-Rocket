@@ -1,14 +1,14 @@
+import { Markdown } from '@/components/markdown/Markdown';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import CodeMirror from '@uiw/react-codemirror';
-import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { Box, useColorModeValue } from '@chakra-ui/react';
-import { javascript } from '@codemirror/lang-javascript';
-import { json } from '@codemirror/lang-json';
-import { useMemo, useState } from 'react';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
-import { Markdown } from '@/components/markdown/Markdown';
+import { javascript } from '@codemirror/lang-javascript';
+import { json } from '@codemirror/lang-json';
 import { LanguageSupport } from '@codemirror/language';
+import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
+import CodeMirror from '@uiw/react-codemirror';
+import { useMemo, useState } from 'react';
 
 export default function TaskView(params: { item: GitHubTreeItem }) {
 	const [fileContent, setFileContent] = useState('');

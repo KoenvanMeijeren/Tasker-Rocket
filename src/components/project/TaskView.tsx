@@ -1,59 +1,81 @@
-import { Markdown } from '@/components/markdown/Markdown';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import CodeMirror from '@uiw/react-codemirror';
+import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { Box, useColorModeValue } from '@chakra-ui/react';
-import { css } from '@codemirror/lang-css';
-import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
+import { useEffect, useState } from 'react';
+import { css } from '@codemirror/lang-css';
+import { html } from '@codemirror/lang-html';
+import { Markdown } from '@/components/markdown/Markdown';
 import { LanguageSupport } from '@codemirror/language';
-import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
-import CodeMirror from '@uiw/react-codemirror';
-import { useMemo, useState } from 'react';
+import GitHubImageView from '@/components/project/GitHubImageView';
+import { sql } from '@codemirror/lang-sql';
+import { java } from '@codemirror/lang-java';
+import { sass } from '@codemirror/lang-sass';
+import { cpp } from '@codemirror/lang-cpp';
+import {urlToFileExtension} from "@/lib/utility/formatters";
+import {hasKeyInMap} from "@/lib/utility/dataStructure";
 
-export default function TaskView(params: { item: GitHubTreeItem }) {
+export interface CodeExtensions {
+  [key: string]: LanguageSupport[];
+}
+
+const codeExtensions: CodeExtensions= {
+  json: [json()],
+  js: [javascript()],
+  css: [css()],
+  html: [html()],
+  ts: [javascript({ typescript: true })],
+  tsx: [javascript({ jsx: true, typescript: true })],
+  sql: [sql()],
+  cs: [java()],
+  java: [java()],
+  sass: [sass()],
+  cpp: [cpp()],
+};
+
+export interface ImageExtensions {
+	[key: string]: string;
+}
+
+export const imageExtensions: ImageExtensions = {
+	jpg: 'image/jpg',
+	jpeg: 'image/jpeg',
+	gif: 'image/gif',
+	svg: 'image/svg+xml',
+	webp: 'image/webp',
+	ico: 'image/ico',
+	png: 'image/png',
+	tiff: 'image/tiff',
+};
+
+export default function TaskView({ item } : {item: GitHubTreeItem}) {
 	const [fileContent, setFileContent] = useState('');
 	const [extension, setExtension] = useState<LanguageSupport[]>([]);
-	const fileExtension = params.item.url.split('.').pop()?.split('?')[0] ?? '';
+	const fileExtension = urlToFileExtension(item.url);
 
-	useMemo(() => {
+  useEffect(() => {
 		setFileContent(
-			Buffer.from(params.item.content ?? '', 'base64').toString('utf8')
+			Buffer.from(item.content ?? '', 'base64').toString('utf8')
 		);
-		switch (fileExtension) {
-			case 'json':
-				setExtension([json()]);
-				break;
-			case 'js':
-				setExtension([javascript()]);
-				break;
-			case 'css':
-				setExtension([css()]);
-				break;
-			case 'html':
-				setExtension([html()]);
-				break;
-			case 'ts':
-				setExtension([
-					javascript({
-						typescript: true,
-					}),
-				]);
-				break;
-			case 'tsx':
-				setExtension([
-					javascript({
-						jsx: true,
-						typescript: true,
-					}),
-				]);
-				break;
-		}
-	}, [params]);
+
+		setExtension(codeExtensions[fileExtension] || []);
+	}, [item, fileExtension]);
 
 	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 
 	if (fileExtension === 'md') {
 		return <Markdown markdown={fileContent}></Markdown>;
+	}
+
+	if (hasKeyInMap(imageExtensions, fileExtension)) {
+		return (
+			<GitHubImageView
+				item={item}
+				imageType={fileExtension}
+			></GitHubImageView>
+		);
 	}
 
 	return (

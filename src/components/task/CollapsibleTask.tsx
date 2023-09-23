@@ -11,9 +11,10 @@ import { Markdown } from '../markdown/Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import './collapsibleTask.css';
-import { ChevronDownIcon, CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Colors } from '../../../theme.config';
 import { useColors } from '@/hooks/useColors';
+import { removeFileExtension, urlToFileExtension, urlToReadableString } from '@/lib/utility/formatters';
 
 export default function CollapsibleTask({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -37,8 +38,8 @@ export default function CollapsibleTask({ path }: { path: string }) {
 	}
 
 	const task = data as GitHubTreeItem;
-
 	const content = Buffer.from(task.content ?? '', 'base64').toString('utf8');
+	const taskName = removeFileExtension(task.name)
 
 	return (
 		<Box
@@ -50,6 +51,7 @@ export default function CollapsibleTask({ path }: { path: string }) {
 			outline={isOpen ? '5px solid #E2E8F0' : '0px solid #E2E8F0'}
 			transition={'outline-width 200ms ease'}
 		>
+			{/* Title bar (collapsible) */}
 			<Box
 				cursor={'pointer'}
 				display={'flex'}
@@ -60,7 +62,7 @@ export default function CollapsibleTask({ path }: { path: string }) {
 				<Box display={'flex'} alignItems={'center'} gap={'10px'}>
 					<CheckCircleIcon boxSize={'20px'} color={Colors.green} />
 					<Text fontSize={'18px'} className="noselect">
-						{task.name}
+						{taskName}
 					</Text>
 				</Box>
 				<Box>
@@ -72,6 +74,8 @@ export default function CollapsibleTask({ path }: { path: string }) {
 					/>
 				</Box>
 			</Box>
+
+			{/* Content */}
 			<Collapse in={isOpen}>
 				<Divider my={4} borderWidth={1.5} />
 				<Box display={'flex'} justifyContent={'flex-end'}>

@@ -1,5 +1,5 @@
-@import url('github-markdown-css');
-@import url('highlight.js/styles/github.css');
+@import url('../../node_modules/github-markdown-css');
+@import url('../../node_modules/highlight.js/styles/github.css');
 
 .markdown-body {
   box-sizing: border-box;

@@ -3,7 +3,6 @@
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import TaskView from '@/components/project/TaskView';
-import CollapsibleTask from '@/components/task/CollapsibleTask';
 import {
 	Box,
 	Center,
@@ -14,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useColors } from '@/hooks/useColors';
 import { Colors } from '../../../theme.config';
+import CollapsibleTask from '@/components/task/CollapsibleTask';
 
 export default function Task() {
 	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';

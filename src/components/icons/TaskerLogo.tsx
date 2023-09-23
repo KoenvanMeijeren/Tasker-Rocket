@@ -1,10 +1,10 @@
 export function TaskerLogo() {
 	return (
 		<svg
-			width="32"
+			fill="none"
 			height="32"
 			viewBox="0 0 32 32"
-			fill="none"
+			width="32"
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<path
@@ -17,13 +17,13 @@ export function TaskerLogo() {
 					fill="white"
 				/>
 			</g>
-			<g opacity="0.9" filter="url(#filter1_d_6_1556)">
+			<g filter="url(#filter1_d_6_1556)" opacity="0.9">
 				<path
 					d="M14.7369 15.1578C14.7369 14.2277 15.4909 13.4736 16.4211 13.4736C17.3513 13.4736 18.1053 14.2277 18.1053 15.1578V23.5789C18.1053 24.5091 17.3513 25.2631 16.4211 25.2631C15.4909 25.2631 14.7369 24.5091 14.7369 23.5789V15.1578Z"
 					fill="white"
 				/>
 			</g>
-			<g opacity="0.7" filter="url(#filter2_d_6_1556)">
+			<g filter="url(#filter2_d_6_1556)" opacity="0.7">
 				<path
 					d="M21.0522 10.947C21.0522 10.0169 21.8063 9.26282 22.7365 9.26282C23.6666 9.26282 24.4207 10.0169 24.4207 10.947V23.5786C24.4207 24.5088 23.6666 25.2628 22.7365 25.2628C21.8063 25.2628 21.0522 24.5088 21.0522 23.5786V10.947Z"
 					fill="white"
@@ -31,20 +31,20 @@ export function TaskerLogo() {
 			</g>
 			<defs>
 				<filter
+					colorInterpolationFilters="sRGB"
+					filterUnits="userSpaceOnUse"
+					height="20.5264"
 					id="filter0_d_6_1556"
+					width="5.36841"
 					x="7.42126"
 					y="6.23718"
-					width="5.36841"
-					height="20.5264"
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
 				>
 					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
+						result="hardAlpha"
 						type="matrix"
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
 					/>
 					<feOffset dy="0.5" />
 					<feGaussianBlur stdDeviation="0.5" />
@@ -54,32 +54,32 @@ export function TaskerLogo() {
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"
 					/>
 					<feBlend
-						mode="normal"
 						in2="BackgroundImageFix"
+						mode="normal"
 						result="effect1_dropShadow_6_1556"
 					/>
 					<feBlend
-						mode="normal"
 						in="SourceGraphic"
 						in2="effect1_dropShadow_6_1556"
+						mode="normal"
 						result="shape"
 					/>
 				</filter>
 				<filter
+					colorInterpolationFilters="sRGB"
+					filterUnits="userSpaceOnUse"
+					height="13.7894"
 					id="filter1_d_6_1556"
+					width="5.36841"
 					x="13.7369"
 					y="12.9736"
-					width="5.36841"
-					height="13.7894"
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
 				>
 					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
+						result="hardAlpha"
 						type="matrix"
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
 					/>
 					<feOffset dy="0.5" />
 					<feGaussianBlur stdDeviation="0.5" />
@@ -89,32 +89,32 @@ export function TaskerLogo() {
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"
 					/>
 					<feBlend
-						mode="normal"
 						in2="BackgroundImageFix"
+						mode="normal"
 						result="effect1_dropShadow_6_1556"
 					/>
 					<feBlend
-						mode="normal"
 						in="SourceGraphic"
 						in2="effect1_dropShadow_6_1556"
+						mode="normal"
 						result="shape"
 					/>
 				</filter>
 				<filter
+					colorInterpolationFilters="sRGB"
+					filterUnits="userSpaceOnUse"
+					height="18"
 					id="filter2_d_6_1556"
+					width="5.36841"
 					x="20.0522"
 					y="8.76282"
-					width="5.36841"
-					height="18"
-					filterUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
 				>
 					<feFlood floodOpacity="0" result="BackgroundImageFix" />
 					<feColorMatrix
 						in="SourceAlpha"
+						result="hardAlpha"
 						type="matrix"
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-						result="hardAlpha"
 					/>
 					<feOffset dy="0.5" />
 					<feGaussianBlur stdDeviation="0.5" />
@@ -124,14 +124,14 @@ export function TaskerLogo() {
 						values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"
 					/>
 					<feBlend
-						mode="normal"
 						in2="BackgroundImageFix"
+						mode="normal"
 						result="effect1_dropShadow_6_1556"
 					/>
 					<feBlend
-						mode="normal"
 						in="SourceGraphic"
 						in2="effect1_dropShadow_6_1556"
+						mode="normal"
 						result="shape"
 					/>
 				</filter>

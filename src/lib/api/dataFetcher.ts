@@ -21,7 +21,7 @@ export const dataFetcher = async ([input, init]: [
 export function useDataFetcher<T>(
 	url: string | URL | RequestInfo,
 	payload: RequestInit,
-	config: SWRConfiguration = {}
+	config: SWRConfiguration = {},
 ) {
 	return useSWR<T, Error>([url, payload], dataFetcher, {
 		shouldRetryOnError: false,
@@ -34,7 +34,7 @@ export function useAuthenticatedDataFetcher<T>(
 	bearerToken: string,
 	headers: HeadersInit = {},
 	payload: RequestInit = {},
-	config: SWRConfiguration = {}
+	config: SWRConfiguration = {},
 ) {
 	return useDataFetcher<T>(
 		url,
@@ -46,6 +46,6 @@ export function useAuthenticatedDataFetcher<T>(
 			},
 			...payload,
 		},
-		config
+		config,
 	);
 }

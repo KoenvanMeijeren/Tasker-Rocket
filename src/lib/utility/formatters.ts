@@ -4,6 +4,10 @@ export function urlToReadableString(url: string): string {
 	return decodeURIComponent(result);
 }
 
+export function urlToFileExtension(url: string): string {
+  return url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
+}
+
 export function replaceAll(
 	input: string,
 	searchValues: string[] | RegExp[],

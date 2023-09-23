@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 'use client';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
@@ -11,16 +10,17 @@ import {
 	Text,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import { useColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useColors';
 import { Colors } from '../../../theme.config';
-import CollapsibleTask from '@/components/task/CollapsibleTask';
+import Task from '@/components/task/Task';
+import path from 'path';
 
-export default function Task() {
+export default function TaskView() {
 	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
 	);
-	const { backgroundColor, border } = useColors();
+	const { backgroundColor, border } = useModeColors();
 
 	if (error) {
 		return <div>laden mislukt...</div>;
@@ -35,7 +35,7 @@ export default function Task() {
 	}
 
 	if (!Array.isArray(data)) {
-		return <TaskView item={data}></TaskView>;
+		return <div>Er ging iets fout...</div>;
 	}
 
 	return (
@@ -56,10 +56,10 @@ export default function Task() {
 				{data.map((item: GitHubTreeItem, index) => {
 					return (
 						<>
-							<CollapsibleTask
+							<Task
 								key={item.name}
 								path={item.path}
-							></CollapsibleTask>
+							></Task>
 							{index != data.length - 1 && (
 								<Box display={'flex'} justifyContent={'flex-start'}>
 									<Center p={'4px'} zIndex={1} height={'40px'} ml={'60px'}>

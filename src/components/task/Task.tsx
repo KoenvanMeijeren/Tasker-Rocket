@@ -13,13 +13,13 @@ import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import './collapsibleTask.css';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Colors } from '../../../theme.config';
-import { useColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useColors';
 import { removeFileExtension, urlToFileExtension, urlToReadableString } from '@/lib/utility/formatters';
 
-export default function CollapsibleTask({ path }: { path: string }) {
+export default function Task({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
-	const rotate = isOpen ? 'rotate(180deg)' : 'rotate(0)';
-	const { backgroundColor, fontColor } = useColors();
+	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
+	const { backgroundColor, fontColor, border } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
@@ -48,7 +48,7 @@ export default function CollapsibleTask({ path }: { path: string }) {
 			borderRadius={8}
 			p={2}
 			boxShadow={'0px 4px 10px -3px rgba(0, 0, 0, 0.07)'}
-			outline={isOpen ? '5px solid #E2E8F0' : '0px solid #E2E8F0'}
+			outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
 			transition={'outline-width 200ms ease'}
 		>
 			{/* Title bar (collapsible) */}

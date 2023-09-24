@@ -17,7 +17,7 @@ import { removeFileExtension } from '@/lib/utility/formatters';
 export default function Task({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const { backgroundColor, fontColor, border } = useModeColors();
+	const { backgroundColorSecondary: backgroundColor, fontColor, border } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
@@ -77,20 +77,20 @@ export default function Task({ path }: { path: string }) {
 			<Collapse in={isOpen}>
 				<Divider my={4} borderWidth={1.5} />
 				<Box px={4}>
-				<Box display={'flex'} justifyContent={'flex-end'}>
-					<button className="btn btn-green">
-						{
-						<Box 
-						display='flex' 
-						alignItems={'center'} 
-						gap={'8px'}>
-							<CheckCircleIcon color={'white'}/>
-							<Text fontWeight={'medium'} >Done</Text>
-						</Box>
-						}
-					</button>
-				</Box>
-				<Markdown markdown={content}></Markdown>
+					<Box display={'flex'} justifyContent={'flex-end'}>
+						<button className="btn btn-green">
+							{
+								<Box
+									display='flex'
+									alignItems={'center'}
+									gap={'8px'}>
+									<CheckCircleIcon color={'white'} />
+									<Text fontWeight={'medium'} >Done</Text>
+								</Box>
+							}
+						</button>
+					</Box>
+					<Markdown markdown={content}></Markdown>
 				</Box>
 			</Collapse>
 		</Box>

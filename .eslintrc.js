@@ -53,6 +53,7 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": ["error", { useTabs: true, singleQuote: true, printWidth: 80,  endOfLine: "auto" }],
+    "indent": ["error", "tab"],
     "react/prefer-stateless-function": "error",
     "react/button-has-type": "error",
     "react/no-unused-prop-types": "error",

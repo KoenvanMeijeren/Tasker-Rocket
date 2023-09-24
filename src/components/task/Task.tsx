@@ -8,7 +8,7 @@ import {
 import { Markdown } from '../markdown/Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import '../../styles/collapsibleTask.css';
+import './task.css';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Colors } from '../../../theme.config';
 import { useModeColors } from '@/hooks/useColors';
@@ -37,7 +37,7 @@ export default function Task({ path }: { path: string }) {
 
 	const task = data as GitHubTreeItem;
 	const content = Buffer.from(task.content ?? '', 'base64').toString('utf8');
-	const taskName = removeFileExtension(task.name)
+	const taskName = task.name.includes('.md') ? removeFileExtension(task.name) : task.name
 
 	return (
 		<Box

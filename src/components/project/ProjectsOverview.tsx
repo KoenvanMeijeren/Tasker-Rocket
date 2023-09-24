@@ -18,7 +18,7 @@ export const ProjectsOverview = () => {
 	}
 
 	if (!data) {
-		return <div>Er zijn geen projecten gevonden.</div>;
+		return <div>Er zijn geen projects gevonden.</div>;
 	}
 
 	return (
@@ -29,7 +29,7 @@ export const ProjectsOverview = () => {
 			{data.map((item: GitHubTreeItem) => {
 				return (
 					<GridItem key={item.url}>
-						<Link href={`./projecten/${encodeURIComponent(item.path)}`}>
+						<Link href={`./projects/${encodeURIComponent(item.path)}`}>
 							<Card>
 								<CardBody>
 									<Text>{item.name}</Text>

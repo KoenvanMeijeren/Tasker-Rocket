@@ -14,7 +14,6 @@ export function useGitHubContentRootTree() {
 		gitHubConfig.token,
 	);
 }
-
 export function useGitHubContentTree(path: string) {
 	return useAuthenticatedDataFetcher<GitHubTreeItem[] | GitHubTreeItem>(
 		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,

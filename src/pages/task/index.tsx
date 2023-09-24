@@ -1,20 +1,19 @@
 'use client';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import {
-	Box,
-	Center,
-	Divider,
-	Stack,
-	Text,
-} from '@chakra-ui/react';
+import { Box, Center, Divider, Stack, Text } from '@chakra-ui/react';
 import { useModeColors } from '@/hooks/useColors';
+import { useRouter } from 'next/router';
 import Task from '@/components/task/Task';
 
 export default function TaskView() {
-	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
+	 const pathHard = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
+	const router = useRouter();
+	const path = router.asPath.replace('/task', '');
+	console.log('curr' + path)
+	console.log(pathHard)
 	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path)
+		decodeURIComponent(path),
 	);
 	const { backgroundColor, border } = useModeColors();
 
@@ -35,40 +34,37 @@ export default function TaskView() {
 	}
 
 	return (
-		<Box h= '100vh'>
-			<Box px={'28px'} py={'24px'} backgroundColor={backgroundColor}>
+		<Box >
+			<Box backgroundColor={backgroundColor} px="28px" py="24px">
 				<Text fontSize={{ base: '24px', md: '40px', lg: '56px' }}>
 					Race Simulator
 				</Text>
 			</Box>
 			<Stack
+				alignItems="flex-start"
 				display="block"
-				flexDirection={'column'}
-				alignItems={'flex-start'}
+				flexDirection="column"
 				mb={3}
-				py={'36px'}
-				px={'60px'}
+				px="60px"
+				py="36px"
 			>
 				{data.map((item: GitHubTreeItem, index) => {
 					return (
 						<>
-							<Task
-								key={item.name}
-								path={item.path}
-							></Task>
-							{index != data.length - 1 && (
-								<Box display={'flex'} justifyContent={'flex-start'}>
-									<Center p={'4px'} zIndex={1} height={'40px'} ml={'60px'}>
+							<Task key={item.name} path={item.path} />
+							{index != data.length - 1 ? (
+								<Box display="flex" justifyContent="flex-start">
+									<Center height="40px" ml="60px" p="4px" zIndex={1}>
 										<Divider
-											zIndex={0}
-											orientation="vertical"
-											borderWidth={2}
 											borderColor={border}
+											borderWidth={2}
 											opacity={1}
+											orientation="vertical"
+											zIndex={0}
 										/>
 									</Center>
 								</Box>
-							)}
+							) : null}
 						</>
 					);
 				})}

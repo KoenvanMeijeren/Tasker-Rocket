@@ -5,7 +5,7 @@ export enum HttpStatusCode {
 
 export function assertResponse(
 	response: Response,
-	expectedHttpStatusCode: HttpStatusCode
+	expectedHttpStatusCode: HttpStatusCode,
 ): boolean {
 	return response.status === expectedHttpStatusCode.valueOf();
 }

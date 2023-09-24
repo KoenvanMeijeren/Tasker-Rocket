@@ -20,23 +20,23 @@ export default function SidebarWithHeader({
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	return (
 		<Box
-			minH="100vh"
 			bg={useColorModeValue(
 				themeConfig.lightModeBgColor,
-				themeConfig.darkModeBgColor
+				themeConfig.darkModeBgColor,
 			)}
+			minH="100vh"
 		>
 			<SidebarContent
-				onClose={() => onClose}
 				display={{ base: 'none', md: 'block' }}
+				onClose={() => onClose}
 			/>
 			<Drawer
 				autoFocus={false}
 				isOpen={isOpen}
-				placement="left"
 				onClose={onClose}
-				returnFocusOnClose={false}
 				onOverlayClick={onClose}
+				placement="left"
+				returnFocusOnClose={false}
 				size="full"
 			>
 				<DrawerContent>

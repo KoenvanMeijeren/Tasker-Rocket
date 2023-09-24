@@ -1,19 +1,15 @@
 'use client';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import TaskView from '@/components/project/TaskView';
 import {
 	Box,
 	Center,
 	Divider,
 	Stack,
 	Text,
-	useColorModeValue,
 } from '@chakra-ui/react';
 import { useModeColors } from '@/hooks/useColors';
-import { Colors } from '../../../theme.config';
 import Task from '@/components/task/Task';
-import path from 'path';
 
 export default function TaskView() {
 	const path = '/22-23%20-%20Race%20Simulator%2FEpisode%201%2FLevel%201';
@@ -39,7 +35,7 @@ export default function TaskView() {
 	}
 
 	return (
-		<div style={{ overflowY: 'scroll', height: '100vh' }}>
+		<Box h= '100vh'>
 			<Box px={'28px'} py={'24px'} backgroundColor={backgroundColor}>
 				<Text fontSize={{ base: '24px', md: '40px', lg: '56px' }}>
 					Race Simulator
@@ -77,6 +73,6 @@ export default function TaskView() {
 					);
 				})}
 			</Stack>
-		</div>
+		</Box>
 	);
 }

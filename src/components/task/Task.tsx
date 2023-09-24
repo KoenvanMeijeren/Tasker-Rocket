@@ -3,18 +3,16 @@ import {
 	Collapse,
 	Box,
 	Text,
-	useColorModeValue,
 	Divider,
-	Button,
 } from '@chakra-ui/react';
 import { Markdown } from '../markdown/Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import './collapsibleTask.css';
+import '../../styles/collapsibleTask.css';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Colors } from '../../../theme.config';
 import { useModeColors } from '@/hooks/useColors';
-import { removeFileExtension, urlToFileExtension, urlToReadableString } from '@/lib/utility/formatters';
+import { removeFileExtension } from '@/lib/utility/formatters';
 
 export default function Task({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -51,7 +49,7 @@ export default function Task({ path }: { path: string }) {
 			outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
 			transition={'outline-width 200ms ease'}
 		>
-			{/* Title bar (collapsible) */}
+			{/* Task header (collapsible) */}
 			<Box
 				cursor={'pointer'}
 				display={'flex'}
@@ -78,10 +76,22 @@ export default function Task({ path }: { path: string }) {
 			{/* Content */}
 			<Collapse in={isOpen}>
 				<Divider my={4} borderWidth={1.5} />
+				<Box px={4}>
 				<Box display={'flex'} justifyContent={'flex-end'}>
-					<button className="btn btn-blue">Done</button>
+					<button className="btn btn-green">
+						{
+						<Box 
+						display='flex' 
+						alignItems={'center'} 
+						gap={'8px'}>
+							<CheckCircleIcon color={'white'}/>
+							<Text fontWeight={'medium'} >Done</Text>
+						</Box>
+						}
+					</button>
 				</Box>
 				<Markdown markdown={content}></Markdown>
+				</Box>
 			</Collapse>
 		</Box>
 	);

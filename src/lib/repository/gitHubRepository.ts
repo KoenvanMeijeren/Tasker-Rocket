@@ -11,13 +11,13 @@ export const gitHubConfig = {
 export function useGitHubContentRootTree() {
 	return useAuthenticatedDataFetcher<GitHubTreeItem[]>(
 		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents`,
-		gitHubConfig.token
+		gitHubConfig.token,
 	);
 }
 
 export function useGitHubContentTree(path: string) {
 	return useAuthenticatedDataFetcher<GitHubTreeItem[] | GitHubTreeItem>(
 		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
-		gitHubConfig.token
+		gitHubConfig.token,
 	);
 }

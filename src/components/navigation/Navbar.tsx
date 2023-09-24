@@ -64,26 +64,26 @@ export const NavItem = ({
 	}
 
 	return (
-		<Flex justify="center" my="20" mx="4" role="group" {...rest}>
+		<Flex justify="center" mx="4" my="20" role="group" {...rest}>
 			<Link
+				_focus={{ boxShadow: 'none' }}
 				as={NextLink}
 				href={href}
 				style={{ textDecoration: 'none' }}
-				_focus={{ boxShadow: 'none' }}
 			>
 				<Box
-					cursor="pointer"
-					borderRadius="lg"
-					p={3}
 					_hover={{
 						bg: 'white',
 						color: themeConfig.activeColor,
 					}}
-					transition="all 0.3s"
-					color={isActive ? themeConfig.activeColor : themeConfig.menuTextColor}
 					backgroundColor={isActive ? 'white' : 'unset'}
+					borderRadius="lg"
+					color={isActive ? themeConfig.activeColor : themeConfig.menuTextColor}
+					cursor="pointer"
+					p={3}
+					transition="all 0.3s"
 				>
-					{icon && <Icon fontSize="64" as={icon} />}
+					{icon ? <Icon as={icon} fontSize="64" /> : null}
 				</Box>
 			</Link>
 		</Flex>
@@ -97,14 +97,14 @@ interface MobileOrHeaderProps extends FlexProps {
 export const MobileNavOrHeader = ({ onOpen, ...rest }: MobileOrHeaderProps) => {
 	return (
 		<Flex
-			ml={{ base: 0, md: 60 }}
-			px={{ base: 4, md: 4 }}
-			height="20"
 			alignItems="center"
 			bg={useColorModeValue('white', themeConfig.darkModeBgColor)}
-			borderBottomWidth="1px"
 			borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+			borderBottomWidth="1px"
+			height="20"
 			justifyContent={{ base: '', md: 'end' }}
+			ml={{ base: 0, md: 60 }}
+			px={{ base: 4, md: 4 }}
 			{...rest}
 		>
 			<Hide above="md">
@@ -116,9 +116,9 @@ export const MobileNavOrHeader = ({ onOpen, ...rest }: MobileOrHeaderProps) => {
 					</Box>
 
 					<Text
+						color={themeConfig.menuTextColor}
 						fontSize="2xl"
 						fontWeight="bold"
-						color={themeConfig.menuTextColor}
 					>
 						Tasker
 					</Text>
@@ -127,11 +127,11 @@ export const MobileNavOrHeader = ({ onOpen, ...rest }: MobileOrHeaderProps) => {
 				<Spacer />
 
 				<IconButton
+					aria-label="open menu"
 					display="flex"
+					icon={<FiMenu />}
 					onClick={onOpen}
 					variant="outline"
-					aria-label="open menu"
-					icon={<FiMenu />}
 				/>
 			</Hide>
 
@@ -147,13 +147,13 @@ interface SidebarProps extends BoxProps {
 export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 	return (
 		<Box
-			transition="3s ease"
 			bg={themeConfig.menuBgColor}
 			borderRight="1px"
 			borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-			w={{ base: 'full', md: 60 }}
-			pos="fixed"
 			h="full"
+			pos="fixed"
+			transition="3s ease"
+			w={{ base: 'full', md: 60 }}
 			{...rest}
 		>
 			<Flex align="center" mt={5}>
@@ -164,10 +164,10 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 				</Box>
 
 				<Text
-					fontSize="2xl"
-					fontWeight="bold"
 					className="mr-1"
 					color={themeConfig.menuTextColor}
+					fontSize="2xl"
+					fontWeight="bold"
 				>
 					Tasker
 				</Text>
@@ -183,11 +183,11 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 			{LinkItems.map((link) => (
 				<NavItem
-					key={link.name}
-					icon={link.icon}
-					href={link.href}
 					activatesOnPath={link.activatesOnPath}
 					aria-label={link.name}
+					href={link.href}
+					icon={link.icon}
+					key={link.name}
 				/>
 			))}
 		</Box>

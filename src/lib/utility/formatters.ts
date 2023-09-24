@@ -13,7 +13,7 @@ export const removeFileExtension = (filename:string) => filename.split('.').slic
 export function replaceAll(
 	input: string,
 	searchValues: string[] | RegExp[],
-	replaceValue: string
+	replaceValue: string,
 ) {
 	for (const searchValue of searchValues) {
 		input = input.replaceAll(searchValue, replaceValue);

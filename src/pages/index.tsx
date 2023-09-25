@@ -1,4 +1,4 @@
-import { Content } from '@/components/content/Content';
+import { Content } from '@/components/Content';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 

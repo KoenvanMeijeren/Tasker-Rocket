@@ -4,8 +4,8 @@ import { Card, CardBody } from "@chakra-ui/card";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Collapse, useDisclosure } from "@chakra-ui/react";
 import Link from "next/link";
-import Text from "../textStyles/Text";
-import Heading from "../textStyles/Heading";
+import Text from "./textStyles/Text";
+import Heading from "./textStyles/Heading";
 
 export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
@@ -42,7 +42,6 @@ export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
             <Collapse in={isOpen}>
                 <Box overflowX={'auto'} display={'flex'} py={3} gap={4}  >
                     {data.map((item: GitHubTreeItem) => {
-                        console.log(data.length)
                         return (
                             <Link style={{ flexShrink: 0 }} href={`/${encodeURIComponent(item.path)}`}>
                                 <Card backgroundColor={backgroundColorPrimary}>

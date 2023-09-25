@@ -4,20 +4,28 @@ import {
 	Box,
 	Text,
 	Divider,
+	useColorModeValue,
 } from '@chakra-ui/react';
-import { Markdown } from '../markdown/Markdown';
+import { Markdown } from '../Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import './task.css';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Colors } from '../../../theme.config';
 import { useModeColors } from '@/hooks/useColors';
-import { removeFileExtension } from '@/lib/utility/formatters';
+import { removeFileExtension, urlToFileExtension } from '@/lib/utility/formatters';
+import { hasKeyInMap } from '@/lib/utility/dataStructure';
+import GitHubImageView from '../GitHubImageView';
+import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
+import { FileType, codeExtensions, determineFileType, imageExtensions } from '@/types/extensions';
+import CodeMirror from '@uiw/react-codemirror';
+import './collapsible.css';
 
-export default function Task({ path }: { path: string }) {
+export default function Collapsible({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
+
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const { backgroundColorSecondary: backgroundColor, fontColor, border } = useModeColors();
+	const { backgroundColorSecondary, fontColor, border } = useModeColors();
+	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
@@ -36,13 +44,39 @@ export default function Task({ path }: { path: string }) {
 	}
 
 	const task = data as GitHubTreeItem;
+	const fileExtension = urlToFileExtension(task.name)
 	const content = Buffer.from(task.content ?? '', 'base64').toString('utf8');
-	const taskName = task.name.includes('.md') ? removeFileExtension(task.name) : task.name
+	const isMarkdown = fileExtension === 'md';
+	const taskName = isMarkdown ? removeFileExtension(task.name) : task.name
+
+	const renderContent = () => {
+		const fileType = determineFileType(fileExtension);
+		switch (fileType) {
+			case FileType.Markdown:
+				return <Markdown markdown={content}></Markdown>
+			case FileType.Image:
+				return <GitHubImageView
+					item={task}
+					imageType={fileExtension}
+				></GitHubImageView>
+			case FileType.Code:
+				return (
+					<Box >
+						<CodeMirror
+							theme={codeMirrorTheme}
+							editable={false}
+							value={content}
+							extensions={codeExtensions[fileExtension]}
+						/>
+					</Box>
+				)
+		}
+	}
 
 	return (
 		<Box
 			zIndex={2}
-			backgroundColor={backgroundColor}
+			backgroundColor={backgroundColorSecondary}
 			borderRadius={8}
 			p={2}
 			boxShadow={'0px 4px 10px -3px rgba(0, 0, 0, 0.07)'}
@@ -56,6 +90,8 @@ export default function Task({ path }: { path: string }) {
 				alignItems={'center'}
 				justifyContent={'space-between'}
 				onClick={onToggle}
+				px={4}
+
 			>
 				<Box display={'flex'} alignItems={'center'} gap={'10px'}>
 					<CheckCircleIcon boxSize={'20px'} color={Colors.green} />
@@ -76,8 +112,8 @@ export default function Task({ path }: { path: string }) {
 			{/* Content */}
 			<Collapse in={isOpen}>
 				<Divider my={4} borderWidth={1.5} />
-				<Box px={4}>
-					<Box display={'flex'} justifyContent={'flex-end'}>
+				<Box py={4} px={4}>
+					<Box mb={6} display={'flex'} justifyContent={'flex-end'}>
 						<button className="btn btn-green">
 							{
 								<Box
@@ -90,7 +126,7 @@ export default function Task({ path }: { path: string }) {
 							}
 						</button>
 					</Box>
-					<Markdown markdown={content}></Markdown>
+					{renderContent()}
 				</Box>
 			</Collapse>
 		</Box>

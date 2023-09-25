@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { Content } from '@/components/content/Content';
+import { Content } from '@/components/Content';
 
 export default function ProjectContent() {
 	const router = useRouter();

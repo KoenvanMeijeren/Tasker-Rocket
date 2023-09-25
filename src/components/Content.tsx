@@ -1,21 +1,20 @@
 'use client';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { Box, Center, Divider, Stack } from '@chakra-ui/layout';
+import { Box, Stack } from '@chakra-ui/layout';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
-import { useModeColors } from '@/hooks/useColors';
-import Task from '@/components/task/Task';
 import { FoldersSection } from './FoldersSection';
 import { sortArrayByName } from '@/lib/utility/formatters';
+import VerticalDivider from './VerticalDivider';
+import Collapsible from './collapsible/Collapsible';
 
 export function Content({ data }: { data: GitHubTreeItem[] }) {
-	const { border } = useModeColors();
+	console.log(data)
 	const [dirs, files] = splitFilesAndDirs(data);
-	const sortedDirs = sortArrayByName(dirs);
+	const sortedDirs = dirs.sort();
 
 	return (
 		<Box >
 			<FoldersSection data={sortedDirs} />
-
 			<Stack
 				alignItems="flex-start"
 				display="block"
@@ -27,19 +26,10 @@ export function Content({ data }: { data: GitHubTreeItem[] }) {
 				{files.map((item: GitHubTreeItem, index) => {
 					return (
 						<>
-							<Task key={item.name} path={item.path} />
+							<Collapsible key={item.name} path={item.path} />
+
 							{index != files.length - 1 ? (
-								<Box display="flex" justifyContent="flex-start">
-									<Center height="40px" ml="60px" p="4px" zIndex={1}>
-										<Divider
-											borderColor={border}
-											borderWidth={2}
-											opacity={1}
-											orientation="vertical"
-											zIndex={0}
-										/>
-									</Center>
-								</Box>
+								<VerticalDivider />
 							) : null}
 						</>
 					);

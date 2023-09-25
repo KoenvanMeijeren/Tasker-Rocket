@@ -4,7 +4,7 @@ import { Box, Center, Divider, Stack } from '@chakra-ui/layout';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { useModeColors } from '@/hooks/useColors';
 import Task from '@/components/task/Task';
-import { FoldersSection } from './content/FoldersSection';
+import { FoldersSection } from './FoldersSection';
 import { sortArrayByName } from '@/lib/utility/formatters';
 
 export function Content({ data }: { data: GitHubTreeItem[] }) {

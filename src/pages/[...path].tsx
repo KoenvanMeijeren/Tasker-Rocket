@@ -2,10 +2,10 @@
 import { useRouter } from 'next/router';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { Content } from '@/components/Content';
+import { Content } from '@/components/content/Content';
 
 export default function ProjectContent() {
- 	const router = useRouter();
+	const router = useRouter();
 	const path = router.asPath
 
 	const { data, error, isLoading } = useGitHubContentTree(

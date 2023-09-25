@@ -1,9 +1,9 @@
-import { Content } from '@/components/Content';
+import { Content } from '@/components/content/Content';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
-  const { data, error, isLoading } = useGitHubContentRootTree();
+	const { data, error, isLoading } = useGitHubContentRootTree();
 
 	if (error) {
 		return <div>laden mislukt...</div>;
@@ -18,6 +18,6 @@ export default function Home() {
 	}
 
 	return (
-			<Content data={data as GitHubTreeItem[]} />
+		<Content data={data as GitHubTreeItem[]} />
 	)
 }

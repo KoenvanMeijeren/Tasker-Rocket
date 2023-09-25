@@ -2,14 +2,15 @@ import { useModeColors } from "@/hooks/useColors";
 import { GitHubTreeItem } from "@/lib/repository/gitHubData";
 import { Card, CardBody } from "@chakra-ui/card";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Collapse, Text, useDisclosure } from "@chakra-ui/react";
-import { data } from "autoprefixer";
+import { Box, Collapse, useDisclosure } from "@chakra-ui/react";
 import Link from "next/link";
+import Text from "../textStyles/Text";
+import Heading from "../textStyles/Heading";
 
 export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const { backgroundColorSecondary, backgroundColorPrimary, fontColor, border } = useModeColors();
+    const { backgroundColorSecondary, backgroundColorPrimary, fontColor } = useModeColors();
 
     return (
         <Box
@@ -28,7 +29,7 @@ export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
                 justifyContent={'space-between'}
                 onClick={onToggle}
             >
-                <Text className="noselect">Folders</Text>
+                <Heading className="noselect">Folders</Heading>
                 <ChevronDownIcon
                     transform={rotate}
                     transition={'all 0.2s linear'}

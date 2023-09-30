@@ -3,7 +3,7 @@ import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { FoldersSection } from './FoldersSection';
-import { sortArrayByName } from '@/lib/utility/formatters';
+// import { sortArrayByName } from '@/lib/utility/formatters';
 import VerticalDivider from './VerticalDivider';
 import Collapsible from './collapsible/Collapsible';
 

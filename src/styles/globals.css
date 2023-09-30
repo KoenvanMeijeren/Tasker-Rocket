@@ -20,10 +20,64 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+/* Prevents text selection when used */
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+/* FONTS */
+@font-face {
+  font-family: "Satoshi Regular";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("./fonts/Satoshi-Regular.otf") format("otf");
+  unicode-range: U+20, U+21, U+23, U+26-29, U+2C-33, U+35-38, U+3A, U+3F,
+    U+41-57, U+61-7A, U+A9, U+E9, U+2013, U+2014, U+2026, U+2AF6, U+1F44B;
+}
+
+@font-face {
+  font-family: "Satoshi Medium";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("./fonts/Satoshi-Medium.otf") format("otf");
+  unicode-range: U+20, U+21, U+23, U+26-29, U+2C-33, U+35-38, U+3A, U+3F,
+    U+41-57, U+61-7A, U+A9, U+E9, U+2013, U+2014, U+2026, U+2AF6, U+1F44B;
+}
+
+@font-face {
+  font-family: "Satoshi Bold";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("./fonts/Satoshi-Bold.ttf") format("truetype");
+  unicode-range: U+20, U+21, U+23, U+26-29, U+2C-33, U+35-38, U+3A, U+3F,
+    U+41-57, U+61-7A, U+A9, U+E9, U+2013, U+2014, U+2026, U+2AF6, U+1F44B;
+}
+
+@font-face {
+  font-family: "Satoshi Light";
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url("./fonts/Satoshi-Light.otf") format("otf");
+  unicode-range: U+20, U+21, U+23, U+26-29, U+2C-33, U+35-38, U+3A, U+3F,
+    U+41-57, U+61-7A, U+A9, U+E9, U+2013, U+2014, U+2026, U+2AF6, U+1F44B;
 }

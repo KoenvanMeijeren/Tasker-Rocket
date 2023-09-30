@@ -4,16 +4,17 @@
 .markdown-body {
   box-sizing: border-box;
   min-width: 200px;
-  max-width: 980px;
   margin: 0 auto;
-  padding: 45px;
+  background: #FFF;
+  font-family: Satoshi;
+  color: #474C55;
 }
 
-.markdown-body > ul {
+.markdown-body>ul {
   list-style: square;
 }
 
-.markdown-body > ol {
+.markdown-body>ol {
   list-style: decimal;
 }
 
@@ -51,7 +52,12 @@
   position: absolute;
 }
 
-.markdown-body h1, h2, h3, h4, h5, h6 {
+.markdown-body h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   position: relative;
 }
 
@@ -77,7 +83,7 @@
 
 html[data-theme='dark'] {
   .markdown-body {
-    background-color: #2b3650;
+    background-color: #2d3748;
     color: white;
   }
 

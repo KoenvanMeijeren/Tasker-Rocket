@@ -1,18 +1,18 @@
 'use client';
 
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { imageExtensions } from '@/types/extensions';
 import { Box, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { imageExtensions } from '@/components/project/TaskView';
 
 export default function GitHubImageView(props: {
 	item: GitHubTreeItem;
 	imageType: string;
 }) {
-  const {item, imageType} = props;
+	const { item, imageType } = props;
 	const [imageUrl, setImageUrl] = useState('');
 
-  useEffect(() => {
+	useEffect(() => {
 		const content = item.content ?? '';
 		const imageDataType = imageExtensions[imageType] ?? 'image/png';
 

@@ -10,7 +10,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeHighlight from 'rehype-highlight';
 import { useEffect, useState } from 'react';
 
-async function markdownToHtml(markdown: string): Promise<string> {
+export async function markdownToHtml(markdown: string): Promise<string> {
 	return (
 		(
 			await remark()
@@ -40,16 +40,21 @@ async function markdownToHtml(markdown: string): Promise<string> {
 	);
 }
 
-export function Markdown(params: { markdown: string }) {
+export function Markdown({ markdown }: { markdown: string }) {
 	const [html, setHtml] = useState('');
 
 	useEffect(() => {
-		markdownToHtml(params.markdown)
+		markdownToHtml(markdown)
 			.then(setHtml)
 			.catch(() => setHtml('kon de content niet goed inladen...'));
-	}, [params]);
+	}, [markdown]);
 
 	return (
-		<div className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />
+		<>
+			<div
+				className={`markdown-body`}
+				dangerouslySetInnerHTML={{ __html: html }}
+			></div>
+		</>
 	);
 }

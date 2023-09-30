@@ -31,7 +31,6 @@ export default function SidebarWithHeader({
 				onClose={() => onClose}
 			/>
 			<Drawer
-				autoFocus={false}
 				isOpen={isOpen}
 				onClose={onClose}
 				onOverlayClick={onClose}

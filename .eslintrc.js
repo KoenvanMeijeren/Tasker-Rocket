@@ -53,7 +53,6 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": ["error", { useTabs: true, singleQuote: true, printWidth: 80,  endOfLine: "auto" }],
-    "indent": ["error", "tab"],
     "react/prefer-stateless-function": "error",
     "react/button-has-type": "error",
     "react/no-unused-prop-types": "error",
@@ -70,7 +69,7 @@ module.exports = {
       { destructureInSignature: "always" },
     ],
     "react/jsx-no-leaked-render": ["error", { validStrategies: ["ternary"] }],
-    "react/jsx-max-depth": ["error", { max: 5 }],
+    "react/jsx-max-depth": ["error", { max: 6 }],
     "react/function-component-definition": [
       "off"
     ],
@@ -128,7 +127,6 @@ module.exports = {
         format: ["PascalCase", "UPPER_CASE"]
       }
     ],
-    "filename-rules/match": [2, { ".ts": "camelCase", ".tsx": "PascalCase, camelCase" }],
     "import/no-default-export": "off"
   }
 }

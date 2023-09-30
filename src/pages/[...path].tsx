@@ -6,10 +6,10 @@ import { Content } from '@/components/Content';
 
 export default function ProjectContent() {
 	const router = useRouter();
-	const path = router.asPath
+	const path = router.asPath;
 
 	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path)
+		decodeURIComponent(path),
 	);
 
 	if (error) {
@@ -24,7 +24,5 @@ export default function ProjectContent() {
 		return <div>Er kon geen content gevonden worden.</div>;
 	}
 
-	return (
-		<Content data={data as GitHubTreeItem[]} />
-	);
+	return <Content data={data as GitHubTreeItem[]} />;
 }

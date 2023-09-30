@@ -1,4 +1,3 @@
-
 export function urlToReadableString(url: string): string {
 	const result = url.charAt(0).toUpperCase() + url.slice(1);
 

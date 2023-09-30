@@ -1,5 +1,9 @@
-import { Text as ChakraText, TextProps } from "@chakra-ui/react";
+import { Text as ChakraText, TextProps } from '@chakra-ui/react';
 
-export default ({ children, ...props }: TextProps) =>
-    <ChakraText fontFamily="heading" {...props}>{children}</ChakraText>
-
+export default function Heading({ children, ...props }: TextProps) {
+	return (
+		<ChakraText fontFamily="heading" {...props}>
+			{children}
+		</ChakraText>
+	);
+}

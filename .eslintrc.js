@@ -19,6 +19,7 @@ module.exports = {
     "plugin:@next/next/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
+    'plugin:etc/recommended',
   ],
   // Specifying Parser
   parser: "@typescript-eslint/parser",
@@ -38,7 +39,8 @@ module.exports = {
     "react",
     "@typescript-eslint",
     "filename-rules",
-    "react-refresh"
+    "react-refresh",
+    "etc",
   ],
   // Resolve imports
   settings: {
@@ -127,6 +129,9 @@ module.exports = {
         format: ["PascalCase", "UPPER_CASE"]
       }
     ],
-    "import/no-default-export": "off"
+    "import/no-default-export": "off",
+    'no-console': 'warn',
+    "etc/no-t": "error",
+    'etc/no-commented-out-code': 'warn'
   }
 }

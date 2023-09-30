@@ -21,7 +21,7 @@ export async function markdownToHtml(markdown: string): Promise<string> {
 				// GitHub does. The rehypeSanitize plugin ensures that the HTML stays
 				// safe, by filtering dangerous tags out, such as script and iframe.
 				.use(remarkRehype, { allowDangerousHtml: true })
-				// .use(rehypeRaw)
+				.use(rehypeRaw)
 				.use(rehypeSanitize)
 				.use(rehypeSlug)
 				.use(rehypeAutolinkHeadings, {

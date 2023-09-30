@@ -6,7 +6,7 @@ import {
 	Divider,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import { Markdown } from '../Markdown';
+import { Markdown } from '@/components/markdown/Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';

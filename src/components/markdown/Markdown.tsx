@@ -9,6 +9,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import rehypeHighlight from 'rehype-highlight';
 import { useEffect, useState } from 'react';
+import './markdown.css';
 
 async function markdownToHtml(markdown: string): Promise<string> {
 	return (

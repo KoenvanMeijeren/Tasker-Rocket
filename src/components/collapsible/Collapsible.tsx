@@ -10,7 +10,7 @@ import { Markdown } from '../Markdown';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Colors } from '../../../theme.config';
+import { colorConfig } from '../../../theme.config';
 import { useModeColors } from '@/hooks/useColors';
 import {
 	removeFileExtension,
@@ -98,7 +98,7 @@ export default function Collapsible({ path }: { path: string }) {
 				px={4}
 			>
 				<Box alignItems="center" display="flex" gap="10px">
-					<CheckCircleIcon boxSize="20px" color={Colors.green} />
+					<CheckCircleIcon boxSize="20px" color={colorConfig.green} />
 					<Text className="noselect" fontSize="18px">
 						{taskName}
 					</Text>

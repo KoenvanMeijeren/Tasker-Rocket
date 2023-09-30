@@ -8,11 +8,11 @@ import Collapsible from './collapsible/Collapsible';
 
 export function Content({ data }: { data: GitHubTreeItem[] }) {
 	const [dirs, files] = splitFilesAndDirs(data);
-	const sortedDirs = dirs.sort();
+	dirs.sort();
 
 	return (
 		<Box>
-			<FoldersSection data={sortedDirs} />
+			<FoldersSection data={dirs} />
 			<Stack
 				alignItems="flex-start"
 				display="block"

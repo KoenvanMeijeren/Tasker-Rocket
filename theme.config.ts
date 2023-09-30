@@ -32,7 +32,7 @@ export interface ColorConfig {
   green: string
 }
 
-export const Colors: ColorConfig = {
+export const colorConfig: ColorConfig = {
   dark: {
     backgroundSecondary: '#2d3748',
     backgroundPrimary: '#1c2334',

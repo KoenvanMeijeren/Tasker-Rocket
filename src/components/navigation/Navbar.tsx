@@ -36,12 +36,6 @@ export const LinkItems: Array<LinkItemProps> = [
 		icon: AiOutlineProject,
 		activatesOnPath: '/',
 	},
-	// {
-	// 	name: 'Project',
-	// 	href: '#',
-	// 	icon: TbLayoutBoard,
-	// 	activatesOnPath: '',
-	// },
 ];
 
 interface NavItemProps extends FlexProps {

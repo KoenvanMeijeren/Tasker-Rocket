@@ -10,7 +10,7 @@ import { BiSolidChevronRight } from 'react-icons/bi';
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
 
-export function pathToBreadcrumbs(path: string): {
+function pathToBreadcrumbs(path: string): {
 	name: string;
 	path: string;
 }[] {
@@ -39,7 +39,7 @@ export function pathToBreadcrumbs(path: string): {
 
 			return {
 				name: urlToReadableString(
-					replaceAll(breadcrumb, removedBreadcrumbCharacters, '')
+					replaceAll(breadcrumb, removedBreadcrumbCharacters, ''),
 				),
 				path: breadcrumbs.slice(0, index + 1).join('/'),
 			};
@@ -48,28 +48,27 @@ export function pathToBreadcrumbs(path: string): {
 }
 
 export function Breadcrumbs() {
-  const router = useRouter();
+	const router = useRouter();
 	const breadcrumbs = pathToBreadcrumbs(router.asPath);
 	if (breadcrumbs.length < 1) {
-		return <></>;
+		return null;
 	}
 
 	return (
-		<>
-			<Breadcrumb
-				spacing="8px"
-				separator={<BiSolidChevronRight color="gray.500" />}
-			>
-				{breadcrumbs.map((item, index: number) => {
-					return (
-						<BreadcrumbItem key={`breadcrumb-item-${index}-${item.path}`}>
-							<BreadcrumbLink href="#" onClick={() => router.push(item.path)}>
-								{index === 0 && <HiHome />} {item.name}
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-					);
-				})}
-			</Breadcrumb>
-		</>
+		<Breadcrumb
+			separator={<BiSolidChevronRight color="gray.500" />}
+			spacing="8px"
+		>
+			{breadcrumbs.map((item, index: number) => {
+				return (
+					<BreadcrumbItem key={`breadcrumb-item-${index}-${item.path}`}>
+						{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+						<BreadcrumbLink href="#" onClick={() => router.push(item.path)}>
+							{index === 0 ? <HiHome /> : null} {item.name}
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+				);
+			})}
+		</Breadcrumb>
 	);
 }

@@ -16,8 +16,7 @@ import { IconType } from 'react-icons';
 import { FiMenu } from 'react-icons/fi';
 import NextLink from 'next/link';
 import { themeConfig } from '../../../theme.config';
-import { AiOutlinePieChart, AiOutlineProject } from 'react-icons/ai';
-import { TbLayoutBoard } from 'react-icons/tb';
+import { AiOutlineProject } from 'react-icons/ai';
 import { TaskerLogo } from '@/components/icons/TaskerLogo';
 import { DesktopHeader } from '@/components/navigation/DesktopHeader';
 import { useRouter } from 'next/router';
@@ -33,6 +32,7 @@ export const LinkItems: Array<LinkItemProps> = [
 	{
 		name: 'Dashboard',
 		href: '/',
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		icon: AiOutlineProject,
 		activatesOnPath: '/',
 	},

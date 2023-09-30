@@ -36,11 +36,12 @@ export const codeExtensions: CodeExtensions = {
 	php: [php()],
 	txt: [],
 	lock: [],
-	'.env': [],
-	'.env.example': [],
-	'.gitattributes': [],
-	'.gitignore': [],
-	'.npmrc': [],
+	editorconfig: [],
+	env: [],
+	example: [],
+	gitattributes: [],
+	gitignore: [],
+	npmrc: [],
 };
 
 export interface ImageExtensions {

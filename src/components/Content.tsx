@@ -3,17 +3,15 @@ import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { FoldersSection } from './FoldersSection';
-// import { sortArrayByName } from '@/lib/utility/formatters';
 import VerticalDivider from './VerticalDivider';
 import Collapsible from './collapsible/Collapsible';
 
 export function Content({ data }: { data: GitHubTreeItem[] }) {
-	console.log(data)
 	const [dirs, files] = splitFilesAndDirs(data);
 	const sortedDirs = dirs.sort();
 
 	return (
-		<Box >
+		<Box>
 			<FoldersSection data={sortedDirs} />
 			<Stack
 				alignItems="flex-start"
@@ -25,13 +23,11 @@ export function Content({ data }: { data: GitHubTreeItem[] }) {
 			>
 				{files.map((item: GitHubTreeItem, index) => {
 					return (
-						<>
-							<Collapsible key={item.name} path={item.path} />
+						<Box key={item.sha}>
+							<Collapsible key={item.sha} path={item.path} />
 
-							{index != files.length - 1 ? (
-								<VerticalDivider />
-							) : null}
-						</>
+							{index != files.length - 1 ? <VerticalDivider /> : null}
+						</Box>
 					);
 				})}
 			</Stack>

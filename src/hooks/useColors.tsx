@@ -2,18 +2,29 @@ import { useColorModeValue } from '@chakra-ui/react';
 import { Colors } from '../../theme.config';
 
 export function useModeColors() {
-	const backgroundColorSecondary = useColorModeValue(
+	const backgroundColorSecondary: string = useColorModeValue(
 		Colors.light.backgroundSecondary,
-		Colors.dark.backgroundSecondary
+		Colors.dark.backgroundSecondary,
 	);
 
-	const backgroundColorPrimary = useColorModeValue(
+	const backgroundColorPrimary: string = useColorModeValue(
 		Colors.light.backgroundPrimary,
-		Colors.dark.backgroundPrimary
+		Colors.dark.backgroundPrimary,
 	);
-	const fontColor = useColorModeValue(Colors.light.font, Colors.dark.font);
+	const fontColor: string = useColorModeValue(
+		Colors.light.font,
+		Colors.dark.font,
+	);
 
-	const border = useColorModeValue(Colors.light.border, Colors.dark.border);
+	const border: string = useColorModeValue(
+		Colors.light.border,
+		Colors.dark.border,
+	);
 
-	return { backgroundColorSecondary,backgroundColorPrimary, fontColor, border };
+	return {
+		backgroundColorSecondary,
+		backgroundColorPrimary,
+		fontColor,
+		border,
+	};
 }

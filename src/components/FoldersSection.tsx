@@ -22,7 +22,7 @@ export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
 			transition="background-color 0.5s ease"
 			zIndex={2}
 		>
-			{/* header (collapsible) */}
+			{/* header -> collapsible */}
 			<Box
 				alignItems="center"
 				cursor="pointer"

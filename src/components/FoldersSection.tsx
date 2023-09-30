@@ -29,7 +29,7 @@ export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
                 justifyContent={'space-between'}
                 onClick={onToggle}
             >
-                <Heading className="noselect">Folders</Heading>
+                <Heading className="noselect">Mappen</Heading>
                 <ChevronDownIcon
                     transform={rotate}
                     transition={'all 0.2s linear'}

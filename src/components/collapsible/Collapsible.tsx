@@ -70,6 +70,8 @@ export default function Collapsible({ path }: { path: string }) {
 						/>
 					</Box>
 				)
+			case FileType.Unsupported:
+				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
 	}
 

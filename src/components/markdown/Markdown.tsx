@@ -9,8 +9,9 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import rehypeHighlight from 'rehype-highlight';
 import { useEffect, useState } from 'react';
+import './markdown.css';
 
-export async function markdownToHtml(markdown: string): Promise<string> {
+async function markdownToHtml(markdown: string): Promise<string> {
 	return (
 		(
 			await remark()
@@ -50,11 +51,7 @@ export function Markdown({ markdown }: { markdown: string }) {
 	}, [markdown]);
 
 	return (
-		<>
-			<div
-				className={`markdown-body`}
-				dangerouslySetInnerHTML={{ __html: html }}
-			></div>
-		</>
+		// eslint-disable-next-line react/no-danger
+		<div className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />
 	);
 }

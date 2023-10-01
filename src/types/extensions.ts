@@ -8,11 +8,13 @@ import { java } from '@codemirror/lang-java';
 import { sass } from '@codemirror/lang-sass';
 import { cpp } from '@codemirror/lang-cpp';
 import { hasKeyInMap } from '@/lib/utility/dataStructure';
+import { php } from '@codemirror/lang-php';
 
 export enum FileType {
 	Code,
 	Markdown,
 	Image,
+	Unsupported,
 }
 
 export interface CodeExtensions {
@@ -31,6 +33,15 @@ export const codeExtensions: CodeExtensions = {
 	java: [java()],
 	sass: [sass()],
 	cpp: [cpp()],
+	php: [php()],
+	txt: [],
+	lock: [],
+	editorconfig: [],
+	env: [],
+	example: [],
+	gitattributes: [],
+	gitignore: [],
+	npmrc: [],
 };
 
 export interface ImageExtensions {
@@ -48,10 +59,10 @@ export const imageExtensions: ImageExtensions = {
 	tiff: 'image/tiff',
 };
 
-export const determineFileType = (fileExtension: string) => {
+export const determineFileType = (fileExtension: string): FileType => {
 	if (fileExtension === 'md') return FileType.Markdown;
 	if (hasKeyInMap(codeExtensions, fileExtension)) return FileType.Code;
 	if (hasKeyInMap(imageExtensions, fileExtension)) return FileType.Image;
 
-	return FileType.Markdown;
+	return FileType.Unsupported;
 };

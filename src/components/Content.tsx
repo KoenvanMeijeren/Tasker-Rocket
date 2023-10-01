@@ -22,13 +22,11 @@ export function Content({ data }: { data: GitHubTreeItem[] }) {
 			>
 				{files.map((item: GitHubTreeItem, index) => {
 					return (
-						<>
-							<Collapsible key={item.name} path={item.path} />
+						<Box key={item.sha}>
+							<Collapsible key={item.sha} path={item.path} />
 
-							{index != files.length - 1 ? (
-								<VerticalDivider />
-							) : null}
-						</>
+							{index != files.length - 1 ? <VerticalDivider /> : null}
+						</Box>
 					);
 				})}
 			</Stack>

@@ -24,7 +24,7 @@ export default function Collapsible({ path }: { path: string }) {
 	const { backgroundColorSecondary, fontColor, border, codeMirror } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path)
+		decodeURIComponent(path),
 	);
 
 	if (error) {
@@ -40,86 +40,80 @@ export default function Collapsible({ path }: { path: string }) {
 	}
 
 	const task = data as GitHubTreeItem;
-	const fileExtension = urlToFileExtension(task.name)
+	const fileExtension = urlToFileExtension(task.name);
 	const content = Buffer.from(task.content ?? '', 'base64').toString('utf8');
 	const isMarkdown = fileExtension === 'md';
-	const taskName = isMarkdown ? removeFileExtension(task.name) : task.name
+	const taskName = isMarkdown ? removeFileExtension(task.name) : task.name;
 
 	const renderContent = () => {
 		const fileType = determineFileType(fileExtension);
 		switch (fileType) {
 			case FileType.Markdown:
-				return <Markdown markdown={content}></Markdown>
+				return <Markdown markdown={content} />;
 			case FileType.Image:
-				return <GitHubImageView
-					item={task}
-					imageType={fileExtension}
-				></GitHubImageView>
+				return <GitHubImageView imageType={fileExtension} item={task} />;
 			case FileType.Code:
 				return (
-					<Box >
+					<Box>
 						<CodeMirror
 							theme={codeMirror}
 							editable={false}
-							value={content}
 							extensions={codeExtensions[fileExtension]}
+							theme={codeMirrorTheme}
+							value={content}
 						/>
 					</Box>
-				)
+				);
+			case FileType.Unsupported:
+				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
-	}
+	};
 
 	return (
 		<Box
-			zIndex={2}
 			backgroundColor={backgroundColorSecondary}
 			borderRadius={8}
-			p={2}
-			boxShadow={'0px 4px 10px -3px rgba(0, 0, 0, 0.07)'}
+			boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
 			outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
-			transition={'outline-width 200ms ease'}
+			p={2}
+			transition="outline-width 200ms ease"
+			zIndex={2}
 		>
 			{/* Task header (collapsible) */}
 			<Box
-				cursor={'pointer'}
-				display={'flex'}
-				alignItems={'center'}
-				justifyContent={'space-between'}
+				alignItems="center"
+				cursor="pointer"
+				display="flex"
+				justifyContent="space-between"
 				onClick={onToggle}
 				px={4}
-
 			>
-				<Box display={'flex'} alignItems={'center'} gap={'10px'}>
-					<CheckCircleIcon boxSize={'20px'} color={Colors.green} />
-					<Text fontSize={'18px'} className="noselect">
+				<Box alignItems="center" display="flex" gap="10px">
+					<CheckCircleIcon boxSize="20px" color={colorConfig.green} />
+					<Text className="noselect" fontSize="18px">
 						{taskName}
 					</Text>
 				</Box>
 				<Box>
 					<ChevronDownIcon
-						transform={rotate}
-						transition={'all 0.2s linear'}
 						boxSize={10}
 						color={fontColor}
+						transform={rotate}
+						transition="all 0.2s linear"
 					/>
 				</Box>
 			</Box>
 
 			{/* Content */}
 			<Collapse in={isOpen}>
-				<Divider my={4} borderWidth={1.5} />
-				<Box py={4} px={4}>
-					<Box mb={6} display={'flex'} justifyContent={'flex-end'}>
-						<button className="btn btn-green">
-							{
-								<Box
-									display='flex'
-									alignItems={'center'}
-									gap={'8px'}>
-									<CheckCircleIcon color={'white'} />
-									<Text fontWeight={'medium'} >Done</Text>
-								</Box>
-							}
+				<Divider borderWidth={1.5} my={4} />
+				<Box px={4} py={4}>
+					<Box display="flex" justifyContent="flex-end" mb={6}>
+						<button className="btn btn-green" type="button">
+							<Box alignItems="center" display="flex" gap="8px">
+								<CheckCircleIcon color="white" />
+								<Text fontWeight="medium">Done</Text>
+							</Box>
 						</button>
 					</Box>
 					{renderContent()}

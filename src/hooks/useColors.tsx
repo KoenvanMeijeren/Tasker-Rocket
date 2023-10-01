@@ -3,16 +3,19 @@ import { Colors } from '../../theme.config';
 import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
 
 export function useModeColors() {
-	const backgroundColorSecondary = useColorModeValue(
-		Colors.light.backgroundSecondary,
-		Colors.dark.backgroundSecondary
+	const backgroundColorSecondary = useColorModeValue<string, string>(
+		colorConfig.light.backgroundSecondary,
+		colorConfig.dark.backgroundSecondary,
 	);
 
-	const backgroundColorPrimary = useColorModeValue(
-		Colors.light.backgroundPrimary,
-		Colors.dark.backgroundPrimary
+	const backgroundColorPrimary = useColorModeValue<string, string>(
+		colorConfig.light.backgroundPrimary,
+		colorConfig.dark.backgroundPrimary,
 	);
-	const fontColor = useColorModeValue(Colors.light.font, Colors.dark.font);
+	const fontColor = useColorModeValue<string, string>(
+		colorConfig.light.font,
+		colorConfig.dark.font,
+	);
 
 	const border = useColorModeValue(Colors.light.border, Colors.dark.border);
 	const codeMirror = useColorModeValue(githubLight, githubDark);

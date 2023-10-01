@@ -16,7 +16,23 @@ export const themeConfig: ThemeConfig = {
   activeColor: '#4bca9b',
 }
 
-export const Colors = { 
+export interface ColorConfig {
+  dark: {
+    backgroundSecondary: string,
+    backgroundPrimary: string,
+    border: string,
+    font: string
+  },
+  light: {
+    backgroundSecondary: string,
+    backgroundPrimary: string,
+    border: string,
+    font: string
+  },
+  green: string
+}
+
+export const colorConfig: ColorConfig = {
   dark: {
     backgroundSecondary: '#2d3748',
     backgroundPrimary: '#1c2334',

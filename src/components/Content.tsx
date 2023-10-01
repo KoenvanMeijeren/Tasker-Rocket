@@ -1,20 +1,17 @@
 'use client';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { Box, Stack } from '@chakra-ui/layout';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
+import { Box, Stack } from '@chakra-ui/layout';
 import { FoldersSection } from './FoldersSection';
-// import { sortArrayByName } from '@/lib/utility/formatters';
 import VerticalDivider from './VerticalDivider';
 import Collapsible from './collapsible/Collapsible';
 
 export function Content({ data }: { data: GitHubTreeItem[] }) {
-	console.log(data)
 	const [dirs, files] = splitFilesAndDirs(data);
-	const sortedDirs = dirs.sort();
 
 	return (
 		<Box >
-			<FoldersSection data={sortedDirs} />
+			<FoldersSection data={dirs} />
 			<Stack
 				alignItems="flex-start"
 				display="block"

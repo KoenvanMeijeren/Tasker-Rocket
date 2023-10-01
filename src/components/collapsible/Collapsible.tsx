@@ -1,31 +1,27 @@
-import {
-	useDisclosure,
-	Collapse,
-	Box,
-	Text,
-	Divider,
-	useColorModeValue,
-} from '@chakra-ui/react';
-import { Markdown } from '../Markdown';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Colors } from '../../../theme.config';
 import { useModeColors } from '@/hooks/useColors';
+import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { removeFileExtension, urlToFileExtension } from '@/lib/utility/formatters';
-import { hasKeyInMap } from '@/lib/utility/dataStructure';
-import GitHubImageView from '../GitHubImageView';
-import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
-import { FileType, codeExtensions, determineFileType, imageExtensions } from '@/types/extensions';
+import { FileType, codeExtensions, determineFileType } from '@/types/extensions';
+import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import {
+	Box,
+	Collapse,
+	Divider,
+	Text,
+	useDisclosure
+} from '@chakra-ui/react';
 import CodeMirror from '@uiw/react-codemirror';
+import { Colors } from '../../../theme.config';
+import GitHubImageView from '../GitHubImageView';
+import { Markdown } from '../Markdown';
 import './collapsible.css';
 
 export default function Collapsible({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const { backgroundColorSecondary, fontColor, border } = useModeColors();
-	const codeMirrorTheme = useColorModeValue(githubLight, githubDark);
+	const { backgroundColorSecondary, fontColor, border, codeMirror } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path)
@@ -63,7 +59,7 @@ export default function Collapsible({ path }: { path: string }) {
 				return (
 					<Box >
 						<CodeMirror
-							theme={codeMirrorTheme}
+							theme={codeMirror}
 							editable={false}
 							value={content}
 							extensions={codeExtensions[fileExtension]}

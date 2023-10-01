@@ -5,8 +5,11 @@ export function urlToReadableString(url: string): string {
 }
 
 export function urlToFileExtension(url: string): string {
-  return url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
+	return url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
 }
+
+export const removeFileExtension = (filename: string) =>
+	filename.replace(/\.[^/.]+$/, '');
 
 export function replaceAll(
 	input: string,

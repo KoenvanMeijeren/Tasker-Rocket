@@ -19,6 +19,7 @@ module.exports = {
     "plugin:@next/next/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
+    'plugin:etc/recommended',
   ],
   // Specifying Parser
   parser: "@typescript-eslint/parser",
@@ -38,7 +39,8 @@ module.exports = {
     "react",
     "@typescript-eslint",
     "filename-rules",
-    "react-refresh"
+    "react-refresh",
+    "etc",
   ],
   // Resolve imports
   settings: {
@@ -52,7 +54,7 @@ module.exports = {
     }
   },
   rules: {
-    "prettier/prettier": ["error", { useTabs: true, singleQuote: true, printWidth: 80 }],
+    "prettier/prettier": ["error", { useTabs: true, singleQuote: true, printWidth: 80,  endOfLine: "auto" }],
     "react/prefer-stateless-function": "error",
     "react/button-has-type": "error",
     "react/no-unused-prop-types": "error",
@@ -69,7 +71,7 @@ module.exports = {
       { destructureInSignature: "always" },
     ],
     "react/jsx-no-leaked-render": ["error", { validStrategies: ["ternary"] }],
-    "react/jsx-max-depth": ["error", { max: 5 }],
+    "react/jsx-max-depth": ["error", { max: 6 }],
     "react/function-component-definition": [
       "off"
     ],
@@ -127,7 +129,9 @@ module.exports = {
         format: ["PascalCase", "UPPER_CASE"]
       }
     ],
-    "filename-rules/match": [2, { ".ts": "camelCase", ".tsx": "PascalCase" }],
-    "import/no-default-export": "off"
+    "import/no-default-export": "off",
+    'no-console': 'warn',
+    "etc/no-t": "error",
+    'etc/no-commented-out-code': 'warn'
   }
 }

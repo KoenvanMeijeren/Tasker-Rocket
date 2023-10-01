@@ -18,25 +18,25 @@ export const dataFetcher = async ([input, init]: [
 	return response.json();
 };
 
-export function useDataFetcher<T>(
+export function useDataFetcher<DataType>(
 	url: string | URL | RequestInfo,
 	payload: RequestInit,
 	config: SWRConfiguration = {},
 ) {
-	return useSWR<T, Error>([url, payload], dataFetcher, {
+	return useSWR<DataType, Error>([url, payload], dataFetcher, {
 		shouldRetryOnError: false,
 		...config,
 	});
 }
 
-export function useAuthenticatedDataFetcher<T>(
+export function useAuthenticatedDataFetcher<DataType>(
 	url: string | URL | RequestInfo,
 	bearerToken: string,
 	headers: HeadersInit = {},
 	payload: RequestInit = {},
 	config: SWRConfiguration = {},
 ) {
-	return useDataFetcher<T>(
+	return useDataFetcher<DataType>(
 		url,
 		{
 			headers: {

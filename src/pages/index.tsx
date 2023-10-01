@@ -1,18 +1,20 @@
-import { Box, Heading } from '@chakra-ui/react';
-import { ProjectsOverview } from '@/components/project/ProjectsOverview';
+import { Content } from '@/components/Content';
+import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
-  return (
-    <Box mx={10}>
-      <Box mt={20}>
-        <Heading as="h1" size="4xl">
-          Dashboard
-        </Heading>
-      </Box>
+	const { data, error, isLoading } = useGitHubContentRootTree();
 
-      <Box mt={5}>
-        <ProjectsOverview />
-      </Box>
-    </Box>
-  )
+	if (error) {
+		return <div>laden mislukt...</div>;
+	}
+
+	if (isLoading) {
+		return <div>laden...</div>;
+	}
+
+	if (!data) {
+		return <div>Er zijn geen projects gevonden.</div>;
+	}
+
+	return <Content data={data} />;
 }

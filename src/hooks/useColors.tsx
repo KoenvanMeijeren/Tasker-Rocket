@@ -1,25 +1,33 @@
 import { useColorModeValue } from '@chakra-ui/react';
-import { Colors } from '../../theme.config';
-import { githubLight, githubDark } from '@uiw/codemirror-theme-github';
+import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
+import { colorConfig } from '../../theme.config';
 
 export function useModeColors() {
-	const backgroundColorSecondary = useColorModeValue<string, string>(
+	const backgroundColorSecondary = useColorModeValue(
 		colorConfig.light.backgroundSecondary,
 		colorConfig.dark.backgroundSecondary,
 	);
 
-	const backgroundColorPrimary = useColorModeValue<string, string>(
+	const backgroundColorPrimary = useColorModeValue(
 		colorConfig.light.backgroundPrimary,
 		colorConfig.dark.backgroundPrimary,
 	);
-	const fontColor = useColorModeValue<string, string>(
+	const fontColor = useColorModeValue(
 		colorConfig.light.font,
 		colorConfig.dark.font,
 	);
 
-	const border = useColorModeValue(Colors.light.border, Colors.dark.border);
+	const border = useColorModeValue(
+		colorConfig.light.border,
+		colorConfig.dark.border,
+	);
 	const codeMirror = useColorModeValue(githubLight, githubDark);
 
-
-	return { backgroundColorSecondary, backgroundColorPrimary, fontColor, border, codeMirror };
+	return {
+		backgroundColorSecondary,
+		backgroundColorPrimary,
+		fontColor,
+		border,
+		codeMirror,
+	};
 }

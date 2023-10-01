@@ -1,4 +1,3 @@
-import { extendTheme } from "@chakra-ui/react";
 
 export interface ThemeConfig {
   lightModeBgColor: string;
@@ -16,23 +15,7 @@ export const themeConfig: ThemeConfig = {
   activeColor: '#4bca9b',
 }
 
-export interface ColorConfig {
-  dark: {
-    backgroundSecondary: string,
-    backgroundPrimary: string,
-    border: string,
-    font: string
-  },
-  light: {
-    backgroundSecondary: string,
-    backgroundPrimary: string,
-    border: string,
-    font: string
-  },
-  green: string
-}
-
-export const colorConfig: ColorConfig = {
+export const colorConfig = {
   dark: {
     backgroundSecondary: '#2d3748',
     backgroundPrimary: '#1c2334',

@@ -10,7 +10,7 @@ export function Content({ data }: { data: GitHubTreeItem[] }) {
 	const [dirs, files] = splitFilesAndDirs(data);
 
 	return (
-		<Box >
+		<Box>
 			<FoldersSection data={dirs} />
 			<Stack
 				alignItems="flex-start"

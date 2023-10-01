@@ -1,27 +1,29 @@
 import { useModeColors } from '@/hooks/useColors';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { removeFileExtension, urlToFileExtension } from '@/lib/utility/formatters';
-import { FileType, codeExtensions, determineFileType } from '@/types/extensions';
-import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import {
-	Box,
-	Collapse,
-	Divider,
-	Text,
-	useDisclosure
-} from '@chakra-ui/react';
+	removeFileExtension,
+	urlToFileExtension,
+} from '@/lib/utility/formatters';
+import {
+	FileType,
+	codeExtensions,
+	determineFileType,
+} from '@/types/extensions';
+import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import CodeMirror from '@uiw/react-codemirror';
-import { Colors } from '../../../theme.config';
+import { colorConfig } from '../../../theme.config';
 import GitHubImageView from '../GitHubImageView';
-import { Markdown } from '../Markdown';
+import { Markdown } from '../markdown/Markdown';
 import './collapsible.css';
 
 export default function Collapsible({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const { backgroundColorSecondary, fontColor, border, codeMirror } = useModeColors();
+	const { backgroundColorSecondary, fontColor, border, codeMirror } =
+		useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
@@ -56,10 +58,9 @@ export default function Collapsible({ path }: { path: string }) {
 				return (
 					<Box>
 						<CodeMirror
-							theme={codeMirror}
 							editable={false}
 							extensions={codeExtensions[fileExtension]}
-							theme={codeMirrorTheme}
+							theme={codeMirror}
 							value={content}
 						/>
 					</Box>

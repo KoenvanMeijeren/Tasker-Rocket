@@ -26,7 +26,7 @@ export const colorConfig = {
     backgroundSecondary: 'white',
     backgroundPrimary: '#edf2f7',
     border: '#D2DBE3',
-    font: '#464b53'
+    font: '#464b53',
   },
   green: '#239964',
 }

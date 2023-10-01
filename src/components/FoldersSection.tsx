@@ -4,14 +4,20 @@ import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
-import Text from './textStyles/Text';
 import Heading from './textStyles/Heading';
+import Text from './textStyles/Text';
 
 export const FoldersSection = ({ data }: { data: GitHubTreeItem[] }) => {
 	const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
 	const { backgroundColorSecondary, backgroundColorPrimary, fontColor } =
 		useModeColors();
+
+	if (!data || data.length <= 0) {
+		return null;
+	}
+
+	console.log(data);
 
 	return (
 		<Box

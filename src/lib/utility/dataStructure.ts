@@ -1,4 +1,4 @@
-import { GitHubTreeItemType } from '@/types/githubTreeItemType';
+import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
 import { GitHubTreeItem } from '../repository/gitHubData';
 
 export function hasKeyInMap(map: object, key: string): boolean {
@@ -22,5 +22,5 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
 		}
 	});
 
-	return [dirs, files];
+	return { dirs, files } as GithubContent;
 };

@@ -33,12 +33,8 @@ export default function Collapsible({ path }: { path: string }) {
 		return <div>laden mislukt...</div>;
 	}
 
-	if (isLoading) {
-		return <div>laden...</div>;
-	}
-
-	if (!data) {
-		return <div>Er kon geen content gevonden worden.</div>;
+	if (isLoading || !data) {
+		return null;
 	}
 
 	const task = data as GitHubTreeItem;

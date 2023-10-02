@@ -129,6 +129,8 @@ module.exports = {
         format: ["PascalCase", "UPPER_CASE"]
       }
     ],
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-assignment":"off",
     "import/no-default-export": "off",
     'no-console': 'warn',
     "etc/no-t": "error",

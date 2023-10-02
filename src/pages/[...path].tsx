@@ -7,8 +7,9 @@ import { useRouter } from 'next/router';
 
 export default function ProjectContent() {
 	const router = useRouter();
-	const path = router.asPath;
+	const path = decodeURIComponent(router.asPath);
 
+	const parent = path.split('/').pop();
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
 	);
@@ -21,5 +22,5 @@ export default function ProjectContent() {
 		return <LoadingIndicator />;
 	}
 
-	return <Content data={data as GitHubTreeItem[]} />;
+	return <Content data={data as GitHubTreeItem[]} parent={parent || ''} />;
 }

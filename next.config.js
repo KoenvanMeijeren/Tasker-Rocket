@@ -4,7 +4,13 @@ const nextConfig = {
   env: {
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     GITHUB_CONTENT_REPOSITORY: process.env.GITHUB_CONTENT_REPOSITORY,
-  }
+  },
+  webpack: (config) => {
+    config.resolve = {
+      ...config.resolve,
+    }
+    return config
+  },
 }
 
 module.exports = nextConfig

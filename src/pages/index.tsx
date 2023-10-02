@@ -1,18 +1,17 @@
-import { Box, Heading } from '@chakra-ui/react';
-import { ProjectsOverview } from '@/components/project/ProjectsOverview';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { ProjectView } from '@/components/ProjectView';
+import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
-  return (
-    <Box mx={10}>
-      <Box mt={20}>
-        <Heading as="h1" size="4xl">
-          Dashboard
-        </Heading>
-      </Box>
+	const { data, error, isLoading } = useGitHubContentRootTree();
 
-      <Box mt={5}>
-        <ProjectsOverview />
-      </Box>
-    </Box>
-  )
+	if (error) {
+		return <div>laden mislukt...</div>;
+	}
+
+	if (isLoading || !data) {
+		return <LoadingIndicator />;
+	}
+
+	return <ProjectView data={data} />;
 }

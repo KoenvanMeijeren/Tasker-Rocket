@@ -1,0 +1,12 @@
+.btn {
+  @apply font-bold py-1 px-3 rounded;
+}
+
+.btn-green {
+  @apply text-white;
+  background-color: #239964;
+}
+
+.btn-green:hover {
+  @apply bg-green-500;
+}

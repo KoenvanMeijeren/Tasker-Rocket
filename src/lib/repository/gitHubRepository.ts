@@ -1,6 +1,6 @@
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { useAuthenticatedDataFetcher } from '@/lib/api/dataFetcher';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 
 export const gitHubConfig = {
 	base_url: 'https://api.github.com',
@@ -14,10 +14,13 @@ export function useGitHubContentRootTree() {
 		gitHubConfig.token,
 	);
 }
-
 export function useGitHubContentTree(path: string) {
-	return useAuthenticatedDataFetcher<GitHubTreeItem[] | GitHubTreeItem>(
+	const { data, isLoading, error } = useAuthenticatedDataFetcher<
+		GitHubTreeItem[] | GitHubTreeItem
+	>(
 		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
 		gitHubConfig.token,
 	);
+
+	return { data, isLoading, error };
 }

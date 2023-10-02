@@ -8,8 +8,8 @@ import { useRouter } from 'next/router';
 export default function ProjectContent() {
 	const router = useRouter();
 	const path = decodeURIComponent(router.asPath);
-
 	const parent = path.split('/').pop();
+
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
 	);

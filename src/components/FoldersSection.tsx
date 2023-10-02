@@ -19,10 +19,6 @@ export const FoldersSection = ({
 	const { backgroundColorSecondary, backgroundColorPrimary, fontColor } =
 		useModeColors();
 
-	if (!data || data.length <= 0) {
-		return null;
-	}
-
 	return (
 		<Box
 			backgroundColor={backgroundColorSecondary}
@@ -50,7 +46,7 @@ export const FoldersSection = ({
 			</Box>
 
 			{/* Content */}
-			<Collapse in={isOpen} onClick={onToggle}>
+			<Collapse in={isOpen}>
 				<Box display="flex" gap={4} overflowX="auto" py={3}>
 					{data.map((item: GitHubTreeItem) => {
 						return (

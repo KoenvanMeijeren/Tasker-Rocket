@@ -38,7 +38,9 @@ export function Content({
 
 	return (
 		<Box>
-			<FoldersSection data={content.dirs} label={parent ?? repositoryName} />
+			{content.dirs && content.dirs.length > 0 ? (
+				<FoldersSection data={content.dirs} label={parent ?? repositoryName} />
+			) : null}
 			<Stack
 				alignItems="flex-start"
 				display="block"

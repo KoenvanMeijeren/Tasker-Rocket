@@ -6,7 +6,7 @@ import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
 import VerticalDivider from './VerticalDivider';
-import Collapsible from './collapsible/Collapsible';
+import FileView from './fileView/FileView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
 	.split('/')
@@ -17,7 +17,7 @@ type Data = {
 	files: GitHubTreeItem[];
 };
 
-export function Content({
+export function ProjectView({
 	data,
 	parent,
 }: {
@@ -52,7 +52,7 @@ export function Content({
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
 						<Box key={item.url}>
-							<Collapsible key={item.url} path={item.path} />
+							<FileView key={item.url} path={item.path} />
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}
 						</Box>

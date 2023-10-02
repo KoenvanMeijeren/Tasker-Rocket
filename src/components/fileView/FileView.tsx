@@ -13,11 +13,11 @@ import {
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import CodeMirror from '@uiw/react-codemirror';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import GitHubImageView from '../GitHubImageView';
 import { Markdown } from '../markdown/Markdown';
-import './collapsible.css';
+import './fileView.css';
 
 type File = {
 	name: string;
@@ -26,9 +26,9 @@ type File = {
 	fileType: FileType;
 };
 
-export default function Collapsible({ path }: { path: string }) {
+export default function FileView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
-	const [file, setFile] = useState<File>({} as File);
+	const [file, setFile] = useState<File | undefined>(undefined);
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
 	const { backgroundColorSecondary, fontColor, border, codeMirror } =
@@ -62,15 +62,8 @@ export default function Collapsible({ path }: { path: string }) {
 		loadFile();
 	}, [item]);
 
-	if (error) {
-		return <div>laden mislukt...</div>;
-	}
-
-	if (isLoading || !data) {
-		return null;
-	}
-
-	const renderContent = () => {
+	const content = useMemo(() => {
+		if (!file) return;
 		switch (file.fileType) {
 			case FileType.Markdown:
 				return <Markdown markdown={file.content} />;
@@ -90,7 +83,15 @@ export default function Collapsible({ path }: { path: string }) {
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
-	};
+	}, [file, codeMirror, item]);
+
+	if (error) {
+		return <div>laden mislukt...</div>;
+	}
+
+	if (isLoading || !file) {
+		return null;
+	}
 
 	return (
 		<Box
@@ -139,7 +140,7 @@ export default function Collapsible({ path }: { path: string }) {
 							</Box>
 						</button>
 					</Box>
-					{renderContent()}
+					{content}
 				</Box>
 			</Collapse>
 		</Box>

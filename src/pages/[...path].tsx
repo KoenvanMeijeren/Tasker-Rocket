@@ -1,6 +1,6 @@
 'use client';
-import { Content } from '@/components/Content';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { ProjectView } from '@/components/ProjectView';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
@@ -22,5 +22,5 @@ export default function ProjectContent() {
 		return <LoadingIndicator />;
 	}
 
-	return <Content data={data as GitHubTreeItem[]} parent={parent || ''} />;
+	return <ProjectView data={data as GitHubTreeItem[]} parent={parent || ''} />;
 }

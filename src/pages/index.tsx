@@ -1,5 +1,5 @@
-import { Content } from '@/components/Content';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { ProjectView } from '@/components/ProjectView';
 import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
@@ -13,5 +13,5 @@ export default function Home() {
 		return <LoadingIndicator />;
 	}
 
-	return <Content data={data} />;
+	return <ProjectView data={data} />;
 }

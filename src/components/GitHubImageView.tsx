@@ -17,7 +17,6 @@ export default function GitHubImageView({
 	useEffect(() => {
 		const content = item.content ?? '';
 		const imageDataType = imageExtensions[imageType] ?? 'image/png';
-
 		setImageUrl(`data:${imageDataType};base64, ${content}`);
 	}, [item, imageType]);
 

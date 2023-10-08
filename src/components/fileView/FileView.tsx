@@ -13,13 +13,22 @@ import {
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import CodeMirror from '@uiw/react-codemirror';
+import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import GitHubImageView from '../GitHubImageView';
 import { Markdown } from '../markdown/Markdown';
-import './collapsible.css';
+import './fileView.css';
 
-export default function Collapsible({ path }: { path: string }) {
+type File = {
+	name: string;
+	content: string;
+	extension: string;
+	fileType: FileType;
+};
+
+export default function FileView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
+	const [file, setFile] = useState<File | undefined>(undefined);
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
 	const { backgroundColorSecondary, fontColor, border, codeMirror } =
@@ -28,47 +37,61 @@ export default function Collapsible({ path }: { path: string }) {
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
 	);
+	const item = data as GitHubTreeItem;
 
-	if (error) {
-		return <div>laden mislukt...</div>;
-	}
+	useEffect(() => {
+		if (!item) return;
+		const loadFile = () => {
+			const extension = urlToFileExtension(item.name);
+			const content = Buffer.from(item.content ?? '', 'base64').toString(
+				'utf8',
+			);
+			const fileType = determineFileType(extension);
+			const name =
+				fileType === FileType.Markdown
+					? removeFileExtension(item.name)
+					: item.name;
+			setFile({
+				name,
+				extension,
+				content,
+				fileType,
+			});
+		};
 
-	if (isLoading) {
-		return <div>laden...</div>;
-	}
+		loadFile();
+	}, [item]);
 
-	if (!data) {
-		return <div>Er kon geen content gevonden worden.</div>;
-	}
-
-	const task = data as GitHubTreeItem;
-	const fileExtension = urlToFileExtension(task.name);
-	const content = Buffer.from(task.content ?? '', 'base64').toString('utf8');
-	const isMarkdown = fileExtension === 'md';
-	const taskName = isMarkdown ? removeFileExtension(task.name) : task.name;
-
-	const renderContent = () => {
-		const fileType = determineFileType(fileExtension);
-		switch (fileType) {
+	const content = useMemo(() => {
+		if (!file) return;
+		switch (file.fileType) {
 			case FileType.Markdown:
-				return <Markdown markdown={content} />;
+				return <Markdown markdown={file.content} />;
 			case FileType.Image:
-				return <GitHubImageView imageType={fileExtension} item={task} />;
+				return <GitHubImageView imageType={file.extension} item={item} />;
 			case FileType.Code:
 				return (
 					<Box>
 						<CodeMirror
 							editable={false}
-							extensions={codeExtensions[fileExtension]}
+							extensions={codeExtensions[file.extension]}
 							theme={codeMirror}
-							value={content}
+							value={file.content}
 						/>
 					</Box>
 				);
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
-	};
+	}, [file, codeMirror, item]);
+
+	if (error) {
+		return <div>laden mislukt...</div>;
+	}
+
+	if (isLoading || !file) {
+		return null;
+	}
 
 	return (
 		<Box
@@ -92,7 +115,7 @@ export default function Collapsible({ path }: { path: string }) {
 				<Box alignItems="center" display="flex" gap="10px">
 					<CheckCircleIcon boxSize="20px" color={colorConfig.green} />
 					<Text className="noselect" fontSize="18px">
-						{taskName}
+						{file.name}
 					</Text>
 				</Box>
 				<Box>
@@ -117,7 +140,7 @@ export default function Collapsible({ path }: { path: string }) {
 							</Box>
 						</button>
 					</Box>
-					{renderContent()}
+					{content}
 				</Box>
 			</Collapse>
 		</Box>

@@ -1,12 +1,14 @@
 'use client';
-import { useRouter } from 'next/router';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { ProjectView } from '@/components/ProjectView';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
-import { Content } from '@/components/Content';
+import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import { useRouter } from 'next/router';
 
 export default function ProjectContent() {
 	const router = useRouter();
-	const path = router.asPath;
+	const path = decodeURIComponent(router.asPath);
+	const parent = path.split('/').pop();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
@@ -16,13 +18,9 @@ export default function ProjectContent() {
 		return <div>laden mislukt...</div>;
 	}
 
-	if (isLoading) {
-		return <div>laden...</div>;
+	if (isLoading || !data) {
+		return <LoadingIndicator />;
 	}
 
-	if (!data) {
-		return <div>Er kon geen content gevonden worden.</div>;
-	}
-
-	return <Content data={data as GitHubTreeItem[]} />;
+	return <ProjectView data={data as GitHubTreeItem[]} parent={parent || ''} />;
 }

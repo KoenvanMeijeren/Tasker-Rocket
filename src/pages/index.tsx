@@ -1,4 +1,5 @@
-import { Content } from '@/components/Content';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
+import { ProjectView } from '@/components/ProjectView';
 import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
@@ -8,13 +9,9 @@ export default function Home() {
 		return <div>laden mislukt...</div>;
 	}
 
-	if (isLoading) {
-		return <div>laden...</div>;
+	if (isLoading || !data) {
+		return <LoadingIndicator />;
 	}
 
-	if (!data) {
-		return <div>Er zijn geen projects gevonden.</div>;
-	}
-
-	return <Content data={data} />;
+	return <ProjectView data={data} />;
 }

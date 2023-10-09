@@ -109,21 +109,15 @@ export const fileExtensionsInfo: { [extension: string]: FileExtensionInfo } = {
 	webm: { type: FileType.Video, mimeType: 'audio/webm' },
 };
 
-export const determineFileType = (fileExtension: string): FileType => {
+export const findFileInfo = (fileExtension: string): FileExtensionInfo => {
 	const extension = fileExtension.toLowerCase();
-	if (hasKeyInMap(codeExtensions, extension)) return FileType.Code;
-	if (hasKeyInMap(fileExtensionsInfo, extension)) {
-		return fileExtensionsInfo[extension].type;
+	if (hasKeyInMap(codeExtensions, extension)) {
+		return { type: FileType.Code, mimeType: 'text/plain' };
 	}
 
-	return FileType.Unsupported;
-};
-
-export const determineFileMimeType = (fileExtension: string): string | null => {
-	const extension = fileExtension.toLowerCase();
 	if (hasKeyInMap(fileExtensionsInfo, extension)) {
-		return fileExtensionsInfo[extension].mimeType;
+		return fileExtensionsInfo[extension];
 	}
 
-	return null;
+	return { type: FileType.Unsupported, mimeType: 'application/octet-stream' };
 };

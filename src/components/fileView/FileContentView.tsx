@@ -5,11 +5,7 @@ import {
 	removeFileExtension,
 	urlToFileExtension,
 } from '@/lib/utility/formatters';
-import {
-	FileType,
-	determineFileType,
-	determineFileMimeType,
-} from '@/types/extensions';
+import { FileType, findFileInfo } from '@/types/extensions';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,17 +33,17 @@ export default function FileContentView({ path }: { path: string }) {
 		if (!item) return;
 		const loadFile = () => {
 			const extension = urlToFileExtension(item.name);
-			const fileType = determineFileType(extension);
+			const fileInfo = findFileInfo(extension);
 			const name =
-				fileType === FileType.Markdown
+				fileInfo.type === FileType.Markdown
 					? removeFileExtension(item.name)
 					: item.name;
 			setFile({
 				name,
 				extension,
 				content: item.content ?? '',
-				fileType,
-				mimeType: determineFileMimeType(extension) ?? '',
+				fileType: fileInfo.type,
+				mimeType: fileInfo.mimeType,
 			});
 		};
 

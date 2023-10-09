@@ -5,7 +5,11 @@ import {
 	removeFileExtension,
 	urlToFileExtension,
 } from '@/lib/utility/formatters';
-import { FileType, determineFileType } from '@/types/extensions';
+import {
+	FileType,
+	determineFileType,
+	determineFileMimeType,
+} from '@/types/extensions';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -15,14 +19,14 @@ import { Markdown } from '../markdown/Markdown';
 import './fileContentView.css';
 import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
+import PdfFileView from '@/components/fileView/PdfFileView';
 
 export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
 	const [file, setFile] = useState<File | undefined>(undefined);
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const { backgroundColorSecondary, fontColor, border, codeMirror } =
-		useModeColors();
+	const { backgroundColorSecondary, fontColor, border } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubContentTree(
 		decodeURIComponent(path),
@@ -45,7 +49,9 @@ export default function FileContentView({ path }: { path: string }) {
 				name,
 				extension,
 				content,
+				rawContent: item.content ?? '',
 				fileType,
+				mimeType: determineFileMimeType(extension) ?? '',
 			});
 		};
 
@@ -54,17 +60,27 @@ export default function FileContentView({ path }: { path: string }) {
 
 	const content = useMemo(() => {
 		if (!file) return;
+
+		if (file.content.length < 1) {
+			return <>Dit bestand is te groot om te bekijken.</>;
+		}
+
 		switch (file.fileType) {
 			case FileType.Markdown:
 				return <Markdown markdown={file.content} />;
 			case FileType.Image:
-				return <ImageView imageType={file.extension} item={item} />;
+				return <ImageView file={file} />;
 			case FileType.Code:
 				return <CodeView file={file} />;
+			case FileType.Pdf:
+				return <PdfFileView file={file} />;
+			case FileType.Docx:
+			case FileType.PowerPoint:
+			case FileType.Excel:
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
-	}, [file, item]);
+	}, [file]);
 
 	if (error) {
 		return <div>laden mislukt...</div>;

@@ -1,5 +1,5 @@
 import { useAuthenticatedDataFetcher } from '@/lib/api/dataFetcher';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 
 export const gitHubConfig = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { imageExtensions } from '@/types/extensions';
 import { Box, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';

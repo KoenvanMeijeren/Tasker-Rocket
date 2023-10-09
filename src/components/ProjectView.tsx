@@ -1,5 +1,5 @@
 'use client';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';

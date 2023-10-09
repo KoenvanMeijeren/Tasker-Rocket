@@ -1,5 +1,5 @@
 import { useModeColors } from '@/hooks/useColors';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import {
 	removeFileExtension,

@@ -1,14 +1,12 @@
 'use client';
 
 import { Box, Image } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { File } from '@/types/file';
+import { useMemo } from 'react';
 
 export default function ImageView({ file }: { file: File }) {
-	const [imageUrl, setImageUrl] = useState('');
-
-	useEffect(() => {
-		setImageUrl(`data:${file.mimeType};base64, ${file.content}`);
+	const imageUrl = useMemo(() => {
+		return `data:${file.mimeType};base64, ${file.content}`;
 	}, [file]);
 
 	return (

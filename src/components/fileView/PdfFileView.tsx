@@ -1,11 +1,9 @@
 import { File } from '@/types/file';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 export default function PdfFileView({ file }: { file: File }) {
-	const [pdfDataSrc, setPdfDataSrc] = useState('');
-
-	useEffect(() => {
-		setPdfDataSrc(`data:${file.mimeType};base64, ${file.content}`);
+	const pdfDataSrc = useMemo(() => {
+		return `data:${file.mimeType};base64, ${file.content}`;
 	}, [file]);
 
 	return (

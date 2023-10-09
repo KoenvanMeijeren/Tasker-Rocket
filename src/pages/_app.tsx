@@ -1,4 +1,4 @@
-import { Header } from '@/components/navigation/Header';
+import { Content } from '@/components/navigation/Content';
 import { SideBar } from '@/components/navigation/sideBar/SideBar';
 import { Providers } from '@/components/theme/providers';
 import '@/styles/globals.css';
@@ -11,13 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		<Providers>
 			<Flex minHeight="100vh" minWidth="100%">
 				<SideBar />
-
-				<Flex flex={1} flexDir="column">
-					<Header />
-
-					{/* content */}
-					<Component {...pageProps} />
-				</Flex>
+				<Content Component={Component} pageProps={pageProps} />
 			</Flex>
 		</Providers>
 	);

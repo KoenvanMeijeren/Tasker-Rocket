@@ -1,18 +1,15 @@
 import { Flex, Link, Menu, MenuButton } from '@chakra-ui/react';
 
 import { NavSize } from '@/types/navSize';
-import { IconType } from 'react-icons';
 import Heading from '../../textStyles/Heading';
 
 interface NavItemProps {
-	icon: IconType;
 	title: string;
 	active?: boolean;
 	navSize: NavSize;
 }
 
 export default function NavItem({
-	icon,
 	title,
 	active = false,
 	navSize,

@@ -1,21 +1,18 @@
 import { NavSize } from '@/types/navSize';
+import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
 import { IconButton, useColorModeValue } from '@chakra-ui/react';
-import { useState } from 'react';
-import {
-	FiBriefcase,
-	FiCalendar,
-	FiDollarSign,
-	FiMenu,
-	FiSettings,
-	FiUser,
-} from 'react-icons/fi';
+import { useMemo, useState } from 'react';
 import { themeConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 
 export const SideBar = () => {
 	const [navSize, changeNavSize] = useState(NavSize.Large);
+	const rotate = useMemo(
+		() => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
+		[navSize],
+	);
 
 	return (
 		<Flex
@@ -38,20 +35,11 @@ export const SideBar = () => {
 				alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
 				as="nav"
 			>
-				<NavItem
-					active
-					icon={FiCalendar}
-					navSize={navSize}
-					title="Race Simulator"
-				/>
-				<NavItem icon={FiUser} navSize={navSize} title="Reversi" />
-				<NavItem icon={FiDollarSign} navSize={navSize} title="Web Dev" />
-				<NavItem icon={FiBriefcase} navSize={navSize} title="QSD" />
-				<NavItem
-					icon={FiSettings}
-					navSize={navSize}
-					title="Games Programming"
-				/>
+				<NavItem active navSize={navSize} title="Race Simulator" />
+				<NavItem navSize={navSize} title="Reversi" />
+				<NavItem navSize={navSize} title="Web Dev" />
+				<NavItem navSize={navSize} title="QSD" />
+				<NavItem navSize={navSize} title="Games Programming" />
 			</Stack>
 
 			{/* collapse/expand button */}
@@ -59,12 +47,13 @@ export const SideBar = () => {
 				_hover={{ background: 'none' }}
 				aria-label=""
 				background="none"
-				icon={<FiMenu />}
-				mt={5}
+				icon={<ChevronLeftIcon boxSize={8} />}
 				onClick={() => {
 					if (navSize === NavSize.Small) changeNavSize(NavSize.Large);
 					else changeNavSize(NavSize.Small);
 				}}
+				transform={rotate}
+				transition="all 0.2s linear"
 			/>
 		</Flex>
 	);

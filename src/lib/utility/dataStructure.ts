@@ -1,5 +1,5 @@
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { GitHubTreeItem } from '../repository/gitHubData';
+import { GitHubTreeItem } from '../../types/gitHubData';
 
 export function hasKeyInMap(map: object, key: string): boolean {
 	return Object.keys(map).includes(key);

@@ -1,7 +1,7 @@
 'use client';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ProjectView } from '@/components/ProjectView';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
 

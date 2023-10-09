@@ -1,4 +1,4 @@
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 
 export enum GitHubTreeItemType {
 	Dir = 'dir',

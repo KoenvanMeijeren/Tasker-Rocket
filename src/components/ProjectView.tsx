@@ -1,12 +1,12 @@
 'use client';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
 import VerticalDivider from './VerticalDivider';
-import FileView from './fileView/FileView';
+import FileContentView from './fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
 	.split('/')
@@ -52,7 +52,7 @@ export function ProjectView({
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
 						<Box key={item.url}>
-							<FileView key={item.url} path={item.path} />
+							<FileContentView key={item.url} path={item.path} />
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}
 						</Box>

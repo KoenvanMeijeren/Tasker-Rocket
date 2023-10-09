@@ -1,5 +1,5 @@
 import { useModeColors } from '@/hooks/useColors';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, useDisclosure } from '@chakra-ui/react';

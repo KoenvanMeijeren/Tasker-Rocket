@@ -74,6 +74,8 @@ export default function FileContentView({ path }: { path: string }) {
 				return <CodeView file={file} />;
 			case FileType.Pdf:
 				return <PdfFileView file={file} />;
+			case FileType.Audio:
+			case FileType.Video:
 			case FileType.Docx:
 			case FileType.PowerPoint:
 			case FileType.Excel:

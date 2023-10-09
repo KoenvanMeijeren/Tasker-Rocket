@@ -8,7 +8,7 @@ export default function ImageView({ file }: { file: File }) {
 	const [imageUrl, setImageUrl] = useState('');
 
 	useEffect(() => {
-		setImageUrl(`data:${file.mimeType};base64, ${file.rawContent}`);
+		setImageUrl(`data:${file.mimeType};base64, ${file.content}`);
 	}, [file]);
 
 	return (

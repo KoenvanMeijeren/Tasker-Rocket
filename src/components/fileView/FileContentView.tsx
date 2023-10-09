@@ -15,11 +15,11 @@ import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
-import { Markdown } from '../markdown/Markdown';
 import './fileContentView.css';
 import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
+import MarkdownView from '@/components/fileView/MarkdownView';
 
 export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -37,9 +37,6 @@ export default function FileContentView({ path }: { path: string }) {
 		if (!item) return;
 		const loadFile = () => {
 			const extension = urlToFileExtension(item.name);
-			const content = Buffer.from(item.content ?? '', 'base64').toString(
-				'utf8',
-			);
 			const fileType = determineFileType(extension);
 			const name =
 				fileType === FileType.Markdown
@@ -48,8 +45,7 @@ export default function FileContentView({ path }: { path: string }) {
 			setFile({
 				name,
 				extension,
-				content,
-				rawContent: item.content ?? '',
+				content: item.content ?? '',
 				fileType,
 				mimeType: determineFileMimeType(extension) ?? '',
 			});
@@ -67,7 +63,7 @@ export default function FileContentView({ path }: { path: string }) {
 
 		switch (file.fileType) {
 			case FileType.Markdown:
-				return <Markdown markdown={file.content} />;
+				return <MarkdownView file={file} />;
 			case FileType.Image:
 				return <ImageView file={file} />;
 			case FileType.Code:

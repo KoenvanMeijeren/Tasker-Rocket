@@ -5,7 +5,7 @@ export default function PdfFileView({ file }: { file: File }) {
 	const [pdfDataSrc, setPdfDataSrc] = useState('');
 
 	useEffect(() => {
-		setPdfDataSrc(`data:${file.mimeType};base64, ${file.rawContent}`);
+		setPdfDataSrc(`data:${file.mimeType};base64, ${file.content}`);
 	}, [file]);
 
 	return (

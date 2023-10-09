@@ -5,7 +5,7 @@ import { imageExtensions } from '@/types/extensions';
 import { Box, Image } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
-export default function GitHubImageView({
+export default function ImageView({
 	item,
 	imageType,
 }: {

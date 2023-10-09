@@ -5,28 +5,18 @@ import {
 	removeFileExtension,
 	urlToFileExtension,
 } from '@/lib/utility/formatters';
-import {
-	FileType,
-	codeExtensions,
-	determineFileType,
-} from '@/types/extensions';
+import { FileType, determineFileType } from '@/types/extensions';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
-import CodeMirror from '@uiw/react-codemirror';
 import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
-import GitHubImageView from '../GitHubImageView';
+import ImageView from './ImageView';
 import { Markdown } from '../markdown/Markdown';
-import './fileView.css';
+import './fileContentView.css';
+import { File } from '@/types/file';
+import CodeView from '@/components/fileView/CodeView';
 
-type File = {
-	name: string;
-	content: string;
-	extension: string;
-	fileType: FileType;
-};
-
-export default function FileView({ path }: { path: string }) {
+export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
 	const [file, setFile] = useState<File | undefined>(undefined);
 
@@ -68,22 +58,13 @@ export default function FileView({ path }: { path: string }) {
 			case FileType.Markdown:
 				return <Markdown markdown={file.content} />;
 			case FileType.Image:
-				return <GitHubImageView imageType={file.extension} item={item} />;
+				return <ImageView imageType={file.extension} item={item} />;
 			case FileType.Code:
-				return (
-					<Box>
-						<CodeMirror
-							editable={false}
-							extensions={codeExtensions[file.extension]}
-							theme={codeMirror}
-							value={file.content}
-						/>
-					</Box>
-				);
+				return <CodeView file={file} />;
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}
-	}, [file, codeMirror, item]);
+	}, [file, item]);
 
 	if (error) {
 		return <div>laden mislukt...</div>;

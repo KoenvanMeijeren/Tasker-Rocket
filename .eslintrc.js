@@ -134,6 +134,7 @@ module.exports = {
     "import/no-default-export": "off",
     'no-console': 'warn',
     "etc/no-t": "error",
-    'etc/no-commented-out-code': 'warn'
+    'etc/no-commented-out-code': 'warn',
+    "jsx-a11y/media-has-caption": "off"
   }
 }

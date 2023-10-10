@@ -16,6 +16,8 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
+import AudioView from '@/components/fileView/AudioView';
+import VideoView from '@/components/fileView/VideoView';
 
 export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -67,7 +69,9 @@ export default function FileContentView({ path }: { path: string }) {
 			case FileType.Pdf:
 				return <PdfFileView file={file} />;
 			case FileType.Audio:
+				return <AudioView file={file} />;
 			case FileType.Video:
+				return <VideoView file={file} />;
 			case FileType.Docx:
 			case FileType.PowerPoint:
 			case FileType.Excel:

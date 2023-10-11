@@ -10,3 +10,15 @@
 .btn-green:hover {
   @apply bg-green-500;
 }
+
+.copy-btn {
+  @apply text-white;
+  background-color: #239964;
+  position: absolute;
+  top: 15px;
+  z-index: 2;
+}
+
+.pos-r {
+  position: relative;
+}

@@ -1,6 +1,7 @@
 import { isResponseNotFound, isResponseOk } from '@/lib/api/response';
 // eslint-disable-next-line import/named
 import useSWR, { SWRConfiguration } from 'swr';
+import { gitHubConfig } from '@/lib/repository/gitHubRepository';
 
 export const dataFetcher = async ([input, init]: [
 	RequestInfo | URL | string,
@@ -36,14 +37,24 @@ export function useAuthenticatedDataFetcher<DataType>(
 	payload: RequestInit = {},
 	config: SWRConfiguration = {},
 ) {
+	let requestHeaders: HeadersInit = {
+		'Content-Type': 'application/json',
+	};
+	if (gitHubConfig.is_private) {
+		requestHeaders = {
+			Authorization: `Bearer ${bearerToken}`,
+			...requestHeaders,
+		};
+	}
+
 	return useDataFetcher<DataType>(
 		url,
 		{
 			headers: {
-				Authorization: `Bearer ${bearerToken}`,
-				'Content-Type': 'application/json',
+				...requestHeaders,
 				...headers,
 			},
+			cache: gitHubConfig.is_private ? 'no-store' : 'default',
 			...payload,
 		},
 		config,

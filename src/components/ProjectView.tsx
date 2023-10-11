@@ -22,7 +22,7 @@ export function ProjectView({
 	parent,
 }: {
 	data: GitHubTreeItem[];
-	parent: string;
+	parent: string | undefined;
 }) {
 	const [content, setContent] = useState<Data | null>(null);
 
@@ -39,7 +39,10 @@ export function ProjectView({
 	return (
 		<Box>
 			{content.dirs && content.dirs.length > 0 ? (
-				<FoldersSection data={content.dirs} label={parent ?? repositoryName} />
+				<FoldersSection
+					data={content.dirs}
+					label={parent ?? repositoryName ?? 'Projecten'}
+				/>
 			) : null}
 			<Stack
 				alignItems="flex-start"

@@ -9,56 +9,63 @@ import VerticalDivider from './VerticalDivider';
 import FileContentView from './fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
-	.split('/')
-	.pop();
+    .split('/')
+    .pop();
 
 type Data = {
-	dirs: GitHubTreeItem[];
-	files: GitHubTreeItem[];
+    dirs: GitHubTreeItem[];
+    files: GitHubTreeItem[];
 };
 
 export function ProjectView({
-	data,
-	parent,
+    data,
+    parent,
 }: {
-	data: GitHubTreeItem[];
-	parent: string;
+    data: GitHubTreeItem[];
+    parent: string;
 }) {
-	const [content, setContent] = useState<Data | null>(null);
+    const [content, setContent] = useState<Data | null>(null);
 
-	useEffect(() => {
-		if (data) {
-			setContent(splitFilesAndDirs(data));
-		}
-	}, [data]);
+    useEffect(() => {
+        if (data) {
+            setContent(splitFilesAndDirs(data));
+        }
+    }, [data]);
 
-	if (!content) {
-		return null;
-	}
+    if (!content) {
+        return null;
+    }
 
-	return (
-		<Box>
-			{content.dirs && content.dirs.length > 0 ? (
-				<FoldersSection data={content.dirs} label={parent ?? repositoryName} />
-			) : null}
-			<Stack
-				alignItems="flex-start"
-				display="block"
-				flexDirection="column"
-				mb={3}
-				px="60px"
-				py="36px"
-			>
-				{content.files.map((item: GitHubTreeItem, index) => {
-					return (
-						<Box key={item.url}>
-							<FileContentView key={item.url} path={item.path} />
+    return (
+        <Box>
+            {content.dirs && content.dirs.length > 0 ? (
+                <FoldersSection
+                    data={content.dirs}
+                    label={parent ?? repositoryName}
+                />
+            ) : null}
+            <Stack
+                alignItems="flex-start"
+                display="block"
+                flexDirection="column"
+                mb={3}
+                px="60px"
+                py="36px"
+            >
+                {content.files.map((item: GitHubTreeItem, index) => {
+					console.log(item);
+					
+                    return (
+                        <Box key={item.url}>
+                            <FileContentView key={item.url} path={item.path} />
 
-							{index != content.files.length - 1 ? <VerticalDivider /> : null}
-						</Box>
-					);
-				})}
-			</Stack>
-		</Box>
-	);
+                            {index != content.files.length - 1 ? (
+                                <VerticalDivider />
+                            ) : null}
+                        </Box>
+                    );
+                })}
+            </Stack>
+        </Box>
+    );
 }

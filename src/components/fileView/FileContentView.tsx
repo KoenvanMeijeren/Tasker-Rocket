@@ -27,6 +27,7 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
+import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 
 export default function FileContentView({ path }: { path: string }) {
     const { isOpen, onToggle } = useDisclosure();
@@ -65,9 +66,31 @@ export default function FileContentView({ path }: { path: string }) {
     const content = useMemo(() => {
         if (!file) return;
 
+        const handleDownloadGit = () => {
+            const gh = 'https://github.com/';
+            const repo = getEnvValue(EnvOptions.GithubContentRepository);
+            const downloadLink = gh + repo + '/raw/main/' + item.path;
+            const link = document.createElement('a');
+            link.href = downloadLink;
+            link.download = file.name;
+            link.click();
+        };
+
         if (file.content.length < 1) {
             setFileViewable(false);
-            return <>Dit bestand is te groot om te bekijken.</>;
+            return (
+                <>
+                    Dit bestand is te groot om te bekijken.
+                    <Button
+                        className="btn btn-green"
+                        ml={3}
+                        onClick={handleDownloadGit}
+                        size="sm"
+                    >
+                        <DownloadIcon mr={1} /> Download
+                    </Button>
+                </>
+            );
         }
 
         switch (file.fileType) {
@@ -89,10 +112,18 @@ export default function FileContentView({ path }: { path: string }) {
                 return (
                     <>
                         De weergave van dit bestandstype wordt niet ondersteund.
+                        <Button
+                            className="btn btn-green"
+                            ml={3}
+                            onClick={handleDownloadGit}
+                            size="sm"
+                        >
+                            <DownloadIcon mr={1} /> Download
+                        </Button>
                     </>
                 );
         }
-    }, [file]);
+    }, [file, item.path]);
 
     if (error) {
         return <div>laden mislukt...</div>;

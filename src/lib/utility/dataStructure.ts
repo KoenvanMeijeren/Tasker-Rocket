@@ -1,5 +1,5 @@
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { GitHubTreeItem } from '../../types/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 
 export function hasKeyInMap(map: object, key: string): boolean {
 	return Object.keys(map).includes(key);
@@ -24,3 +24,39 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
 
 	return { dirs, files } as GithubContent;
 };
+
+export function blobToString(blob: Blob) {
+	const url = URL.createObjectURL(blob);
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', url, false);
+	xhr.send(null);
+	URL.revokeObjectURL(url);
+	return xhr.responseText;
+}
+
+export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
+	const newBlob = blob.slice(0, blob.size, mimeType);
+
+	return URL.createObjectURL(newBlob);
+};
+
+export function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer | null> {
+	return new Promise((resolve, reject) => {
+		const fileReader = new FileReader();
+
+		fileReader.onload = function (event) {
+			const arrayBuffer = event.target?.result;
+			if (arrayBuffer instanceof ArrayBuffer) {
+				resolve(arrayBuffer);
+			}
+
+			resolve(null);
+		};
+
+		fileReader.onerror = function () {
+			reject(new Error('Error reading the file as ArrayBuffer'));
+		};
+
+		fileReader.readAsArrayBuffer(blob);
+	});
+}

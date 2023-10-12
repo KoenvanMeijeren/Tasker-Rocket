@@ -1,9 +1,10 @@
 import { File } from '@/types/file';
 import { useMemo } from 'react';
+import { blobFileToUrl } from '@/lib/utility/dataStructure';
 
 export default function AudioView({ file }: { file: File }) {
 	const dataSrc = useMemo(() => {
-		return `data:${file.mimeType};base64, ${file.content}`;
+		return blobFileToUrl(file.content, file.mimeType);
 	}, [file]);
 
 	if (file.mimeType.length > 0) {

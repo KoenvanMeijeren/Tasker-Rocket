@@ -53,8 +53,6 @@ export function ProjectView({
                 py="36px"
             >
                 {content.files.map((item: GitHubTreeItem, index) => {
-					console.log(item);
-					
                     return (
                         <Box key={item.url}>
                             <FileContentView key={item.url} path={item.path} />

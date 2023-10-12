@@ -123,7 +123,7 @@ export default function FileContentView({ path }: { path: string }) {
                     </>
                 );
         }
-    }, [file, item.path]);
+    }, [file, item]);
 
     if (error) {
         return <div>laden mislukt...</div>;

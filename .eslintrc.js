@@ -54,7 +54,7 @@ module.exports = {
     }
   },
   rules: {
-    "prettier/prettier": ["error", { useTabs: true, singleQuote: true, printWidth: 80,  endOfLine: "auto" }],
+    "prettier/prettier": ["error", { useTabs: false, singleQuote: true, printWidth: 80,  endOfLine: "auto", tabWidth: 4, trailingComma: "es5", bracketSpacing: true, jsxBracketSameLine: false, arrowParens: "always", }],
     "react/prefer-stateless-function": "error",
     "react/button-has-type": "error",
     "react/no-unused-prop-types": "error",

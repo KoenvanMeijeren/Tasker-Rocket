@@ -1,24 +1,45 @@
 .btn {
-  @apply font-bold py-1 px-3 rounded;
+    @apply font-bold py-1 px-3 rounded;
 }
 
 .btn-green {
-  @apply text-white;
-  background-color: #239964;
+    @apply text-white;
+    background-color: #239964;
 }
 
 .btn-green:hover {
-  @apply bg-green-500;
+    @apply bg-green-500;
 }
 
 .copy-btn {
-  @apply text-white;
-  background-color: #239964;
-  position: absolute;
-  top: 15px;
-  z-index: 2;
+    @apply text-white;
+    background-color: #239964;
+    position: absolute;
+    top: 15px;
+    z-index: 2;
 }
 
 .pos-r {
-  position: relative;
+    position: relative;
+}
+
+.btn-group {
+    @apply flex;
+}
+
+.btn-group > .btn:not(:last-child) {
+    @apply rounded-r-none;
+}
+
+.btn-group > .btn:not(:first-child) {
+    @apply rounded-l-none;
+}
+
+.btn-group > .btn:not(:first-child):not(:last-child) {
+    @apply rounded-none;
+}
+
+.btn-gray {
+    @apply text-gray-300;
+    background-color: #666;
 }

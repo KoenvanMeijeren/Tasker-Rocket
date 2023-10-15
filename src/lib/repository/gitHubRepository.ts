@@ -1,3 +1,4 @@
+import { GithubTree } from '@/components/navigation/sideBar/SideBar';
 import { useAuthenticatedDataFetcher } from '@/lib/api/dataFetcher';
 import { GitHubTreeItem } from '@/lib/repository/gitHubData';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
@@ -10,7 +11,7 @@ export const gitHubConfig = {
 
 export function useGitHubContentRootTree(recursive = false) {
 	const path = recursive ? '/git/trees/main?recursive=1' : '/contents';
-	return useAuthenticatedDataFetcher<GitHubTreeItem[]>(
+	return useAuthenticatedDataFetcher<GitHubTreeItem[] | GithubTree>(
 		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
 		gitHubConfig.token,
 	);

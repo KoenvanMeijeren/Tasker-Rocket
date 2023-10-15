@@ -8,28 +8,22 @@ import { themeConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 
-class GitHubContentEntry {
-	constructor(
-		public path: string,
-		public type: string,
-		public tree?: GitHubContentEntry[],
-	) {}
-}
-
-type Item = {
-	mode: string;
+type GithubTreeItem = {
 	path: string;
-	sha: string;
-	size: number;
 	type: string;
 	url: string;
+	tree: GithubTreeItem[];
 };
 
-function buildTreeFromArray(array: Item[]) {
-	const map = {};
-
+function reconstructGithubTree(array: GithubTreeItem[]) {
+	const map = new Map<string, GithubTreeItem>();
 	array.forEach((item) => {
-		map[item.path] = new GitHubContentEntry(item.path, item.type, []);
+		map.set(item.path, {
+			path: item.path,
+			type: item.type,
+			url: item.url,
+			tree: [],
+		});
 	});
 
 	array.forEach((item) => {
@@ -38,19 +32,21 @@ function buildTreeFromArray(array: Item[]) {
 			return;
 		}
 		const parentPath = item.path.split(/(.*\/)(.+)/)[1].replace(/\/$/, '');
-
-		map[parentPath].tree.push(map[item.path]);
+		const parent = map.get(parentPath);
+		const curr = map.get(item.path);
+		if (!parent || !curr) throw new Error('parent or curr is undefined');
+		parent.tree.push(curr);
 	});
-	const root = map[array[0].path];
-	return root;
+
+	const rootItems = array.filter((item) => !item.path.includes('/'));
+	return rootItems.map((item) => map.get(item.path));
 }
 
 export const SideBar = () => {
 	const { data } = useGitHubContentRootTree(true);
 	if (data?.tree) {
-		const tree = data?.tree as Item[];
-		const items = tree.slice(1, 16);
-		const res = buildTreeFromArray(items);
+		const flatTree = data?.tree as GithubTreeItem[];
+		const res = reconstructGithubTree(flatTree);
 		console.log(res);
 	}
 

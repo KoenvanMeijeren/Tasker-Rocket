@@ -16,6 +16,7 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
+import PowerPointFileView from './PowerpointFileView';
 
 export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -35,15 +36,16 @@ export default function FileContentView({ path }: { path: string }) {
 			const extension = urlToFileExtension(item.name);
 			const fileInfo = findFileInfo(extension);
 			const name =
-				fileInfo.type === FileType.Markdown
+				fileInfo?.type === FileType.Markdown
 					? removeFileExtension(item.name)
 					: item.name;
 			setFile({
 				name,
 				extension,
 				content: item.content ?? '',
-				fileType: fileInfo.type,
-				mimeType: fileInfo.mimeType,
+				fileType: fileInfo?.type ?? FileType.Unsupported,
+				mimeType: fileInfo?.mimeType ?? '',
+				downloadUrl: item.download_url ?? '',
 			});
 		};
 
@@ -70,6 +72,7 @@ export default function FileContentView({ path }: { path: string }) {
 			case FileType.Video:
 			case FileType.Docx:
 			case FileType.PowerPoint:
+				return <PowerPointFileView file={file} />;
 			case FileType.Excel:
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;

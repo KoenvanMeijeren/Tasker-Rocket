@@ -6,4 +6,5 @@ export type File = {
 	extension: string;
 	fileType: FileType;
 	mimeType: string;
+	downloadUrl: string;
 };

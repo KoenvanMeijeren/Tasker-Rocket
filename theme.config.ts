@@ -29,6 +29,7 @@ export const colorConfig = {
     font: '#464b53',
   },
   green: '#239964',
+  grey: '#464b53'
 }
 
 

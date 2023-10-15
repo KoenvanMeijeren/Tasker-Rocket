@@ -1,3 +1,4 @@
+import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
@@ -7,7 +8,52 @@ import { themeConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 
+class GitHubContentEntry {
+	constructor(
+		public path: string,
+		public type: string,
+		public tree?: GitHubContentEntry[],
+	) {}
+}
+
+type Item = {
+	mode: string;
+	path: string;
+	sha: string;
+	size: number;
+	type: string;
+	url: string;
+};
+
+function buildTreeFromArray(array: Item[]) {
+	const map = {};
+
+	array.forEach((item) => {
+		map[item.path] = new GitHubContentEntry(item.path, item.type, []);
+	});
+
+	array.forEach((item) => {
+		//if root node, return
+		if (!item.path.includes('/')) {
+			return;
+		}
+		const parentPath = item.path.split(/(.*\/)(.+)/)[1].replace(/\/$/, '');
+
+		map[parentPath].tree.push(map[item.path]);
+	});
+	const root = map[array[0].path];
+	return root;
+}
+
 export const SideBar = () => {
+	const { data } = useGitHubContentRootTree(true);
+	if (data?.tree) {
+		const tree = data?.tree as Item[];
+		const items = tree.slice(1, 16);
+		const res = buildTreeFromArray(items);
+		console.log(res);
+	}
+
 	const [navSize, changeNavSize] = useState(NavSize.Large);
 	const rotate = useMemo(
 		() => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),

@@ -8,9 +8,10 @@ export const gitHubConfig = {
 	content_repository: getEnvValue(EnvOptions.GithubContentRepository),
 };
 
-export function useGitHubContentRootTree() {
+export function useGitHubContentRootTree(recursive = false) {
+	const path = recursive ? '/git/trees/main?recursive=1' : '/contents';
 	return useAuthenticatedDataFetcher<GitHubTreeItem[]>(
-		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents`,
+		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
 		gitHubConfig.token,
 	);
 }

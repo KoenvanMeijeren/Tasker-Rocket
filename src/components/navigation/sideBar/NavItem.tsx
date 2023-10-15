@@ -35,7 +35,12 @@ export default function NavItem({
 						<Flex>
 							<Heading color={active ? '#fff' : 'gray.500'}>TR</Heading>
 							{navSize === NavSize.Large ? (
-								<Heading display="flex" ml={5} noOfLines={1}>
+								<Heading
+									color={active ? '#fff' : 'gray.300'}
+									display="flex"
+									ml={5}
+									noOfLines={1}
+								>
 									{title}
 								</Heading>
 							) : null}

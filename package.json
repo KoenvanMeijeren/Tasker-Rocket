@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "tsc": "echo \"Running typescript check\" && tsc",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix"
   },
@@ -65,6 +66,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.4.16",
+    "@types/react-copy-to-clipboard": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
     "eslint-config-airbnb": "^19.0.4",

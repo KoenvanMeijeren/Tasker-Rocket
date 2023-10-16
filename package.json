@@ -11,7 +11,8 @@
     "start": "next start",
     "tsc": "echo \"Running typescript check\" && tsc",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix"
+    "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix",
+    "tests": "npm run lint && npm run tsc"
   },
   "dependencies": {
     "@chakra-ui/card": "^2.2.0",

@@ -55,7 +55,11 @@ export function ProjectView({
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
 						<Box key={item.url}>
-							<FileContentView key={item.url} path={item.path} />
+							<FileContentView
+								contentUrl={item.download_url ?? ''}
+								key={item.url}
+								name={item.name}
+							/>
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}
 						</Box>

@@ -6,13 +6,14 @@ import { useModeColors } from '@/hooks/useColors';
 import { useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyIcon } from '@chakra-ui/icons';
+import { blobToString } from '@/lib/utility/dataStructure';
 
 export default function CodeView({ file }: { file: File }) {
 	const { codeMirror } = useModeColors();
 	const [copied, setCopied] = useState(false);
 
 	const content = useMemo(() => {
-		return Buffer.from(file.content, 'base64').toString('utf8');
+		return blobToString(file.content);
 	}, [file]);
 
 	const handleCopy = () => {

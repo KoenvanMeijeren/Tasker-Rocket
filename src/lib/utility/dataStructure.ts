@@ -39,24 +39,3 @@ export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
 
 	return URL.createObjectURL(newBlob);
 };
-
-export function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer | null> {
-	return new Promise((resolve, reject) => {
-		const fileReader = new FileReader();
-
-		fileReader.onload = function (event) {
-			const arrayBuffer = event.target?.result;
-			if (arrayBuffer instanceof ArrayBuffer) {
-				resolve(arrayBuffer);
-			}
-
-			resolve(null);
-		};
-
-		fileReader.onerror = function () {
-			reject(new Error('Error reading the file as ArrayBuffer'));
-		};
-
-		fileReader.readAsArrayBuffer(blob);
-	});
-}

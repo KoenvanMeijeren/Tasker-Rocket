@@ -50,73 +50,85 @@ export const codeExtensions: CodeExtensions = {
 	npmrc: [],
 };
 
-export interface FileExtensions {
-	[key: string]: string;
-}
-
 export interface FileExtensionInfo {
 	type: FileType;
 	mimeType: string;
 }
 
-export const fileExtensionsInfo: { [extension: string]: FileExtensionInfo } = {
-	md: { type: FileType.Markdown, mimeType: 'text/plain' },
-	pdf: { type: FileType.Pdf, mimeType: 'application/pdf' },
+const fileExtensionsInfoMap = new Map<string, FileExtensionInfo>([
+	['md', { type: FileType.Markdown, mimeType: 'text/plain' }],
+	['pdf', { type: FileType.Pdf, mimeType: 'application/pdf' }],
+	['jpg', { type: FileType.Image, mimeType: 'image/jpg' }],
+	['jpeg', { type: FileType.Image, mimeType: 'image/jpeg' }],
+	['gif', { type: FileType.Image, mimeType: 'image/gif' }],
+	['svg', { type: FileType.Image, mimeType: 'image/svg+xml' }],
+	['webp', { type: FileType.Image, mimeType: 'image/webp' }],
+	['ico', { type: FileType.Image, mimeType: 'image/ico' }],
+	['png', { type: FileType.Image, mimeType: 'image/png' }],
+	['tiff', { type: FileType.Image, mimeType: 'image/tiff' }],
+	['doc', { type: FileType.Docx, mimeType: 'application/msword' }],
+	[
+		'docx',
+		{
+			type: FileType.Docx,
+			mimeType:
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		},
+	],
+	[
+		'ppt',
+		{ type: FileType.PowerPoint, mimeType: 'application/vnd.ms-powerpoint' },
+	],
+	[
+		'pptx',
+		{
+			type: FileType.PowerPoint,
+			mimeType:
+				'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		},
+	],
+	[
+		'odp',
+		{
+			type: FileType.PowerPoint,
+			mimeType: 'application/vnd.oasis.opendocument.presentation',
+		},
+	],
+	['xls', { type: FileType.Excel, mimeType: 'application/vnd.ms-excel' }],
+	[
+		'xlsx',
+		{
+			type: FileType.Excel,
+			mimeType:
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		},
+	],
+	[
+		'ods',
+		{
+			type: FileType.Excel,
+			mimeType: 'application/vnd.oasis.opendocument.spreadsheet',
+		},
+	],
+	['mp3', { type: FileType.Audio, mimeType: 'audio/mpeg' }],
+	['wav', { type: FileType.Audio, mimeType: 'audio/wav' }],
+	['avi', { type: FileType.Video, mimeType: 'video/x-msvideo' }],
+	['mp4', { type: FileType.Video, mimeType: 'video/mp4' }],
+	['webm', { type: FileType.Video, mimeType: 'audio/webm' }],
+]);
 
-	jpg: { type: FileType.Image, mimeType: 'image/jpg' },
-	jpeg: { type: FileType.Image, mimeType: 'image/jpeg' },
-	gif: { type: FileType.Image, mimeType: 'image/gif' },
-	svg: { type: FileType.Image, mimeType: 'image/svg+xml' },
-	webp: { type: FileType.Image, mimeType: 'image/webp' },
-	ico: { type: FileType.Image, mimeType: 'image/ico' },
-	png: { type: FileType.Image, mimeType: 'image/png' },
-	tiff: { type: FileType.Image, mimeType: 'image/tiff' },
-
-	doc: { type: FileType.Docx, mimeType: 'application/msword' },
-	docx: {
-		type: FileType.Docx,
-		mimeType:
-			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-	},
-
-	ppt: { type: FileType.PowerPoint, mimeType: 'application/vnd.ms-powerpoint' },
-	pptx: {
-		type: FileType.PowerPoint,
-		mimeType:
-			'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-	},
-	odp: {
-		type: FileType.PowerPoint,
-		mimeType: 'application/vnd.oasis.opendocument.presentation',
-	},
-
-	xls: { type: FileType.Excel, mimeType: 'application/vnd.ms-excel' },
-	xlsx: {
-		type: FileType.Excel,
-		mimeType:
-			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-	},
-	ods: {
-		type: FileType.Excel,
-		mimeType: 'application/vnd.oasis.opendocument.spreadsheet',
-	},
-
-	mp3: { type: FileType.Audio, mimeType: 'audio/mpeg' },
-	wav: { type: FileType.Audio, mimeType: 'audio/wav' },
-
-	avi: { type: FileType.Video, mimeType: 'video/x-msvideo' },
-	mp4: { type: FileType.Video, mimeType: 'video/mp4' },
-	webm: { type: FileType.Video, mimeType: 'audio/webm' },
-};
+export const fileExtensionsInfo: Map<string, FileExtensionInfo> =
+	fileExtensionsInfoMap;
 
 export const findFileInfo = (fileExtension: string): FileExtensionInfo => {
 	const extension = fileExtension.toLowerCase();
+
 	if (hasKeyInMap(codeExtensions, extension)) {
 		return { type: FileType.Code, mimeType: 'text/plain' };
 	}
 
-	if (hasKeyInMap(fileExtensionsInfo, extension)) {
-		return fileExtensionsInfo[extension];
+	if (fileExtensionsInfoMap.has(extension)) {
+		return fileExtensionsInfoMap.get(extension)!;
 	}
 
 	return { type: FileType.Unsupported, mimeType: 'application/octet-stream' };

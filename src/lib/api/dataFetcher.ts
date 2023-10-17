@@ -1,14 +1,15 @@
 import { isResponseNotFound, isResponseOk } from '@/lib/api/response';
-// eslint-disable-next-line import/named
-import useSWR, { SWRConfiguration } from 'swr';
-import { gitHubConfig } from '@/lib/repository/gitHubRepository';
+import useSWR, { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
-export const dataFetcher = async ([input, init]: [
-	RequestInfo | URL | string,
-	RequestInit,
-]) => {
-	const response = await fetch(input, init);
+interface FetcherOptions {
+	input: RequestInfo | URL | string;
+	init: RequestInit;
+}
+
+export const fetchData = async (options: FetcherOptions) => {
+	const response = await fetch(options.input, options.init);
+
 	if (isResponseNotFound(response)) {
 		return undefined;
 	}
@@ -17,164 +18,69 @@ export const dataFetcher = async ([input, init]: [
 		throw new Error('An error occurred while fetching the data.');
 	}
 
-	return response.json();
+	return response;
 };
 
-export const dataBlobFetcher = async ([input, init]: [
-	RequestInfo | URL | string,
-	RequestInit,
-]) => {
-	const response = await fetch(input, init);
-	if (isResponseNotFound(response)) {
-		return undefined;
-	}
-
-	if (!isResponseOk(response)) {
-		throw new Error('An error occurred while fetching the data.');
-	}
-
-	return response.blob();
+export const fetchJsonData = async (options: FetcherOptions) => {
+	return (await fetchData(options))?.json();
 };
 
-export const dataRawFetcher = async ([input, init]: [
-	RequestInfo | URL | string,
-	RequestInit,
-]) => {
-	const response = await fetch(input, init);
-	if (isResponseNotFound(response)) {
-		return undefined;
-	}
-
-	if (!isResponseOk(response)) {
-		throw new Error('An error occurred while fetching the data.');
-	}
-
-	const blob = await response.blob();
-	return blob?.text();
+export const fetchBlobData = async (options: FetcherOptions) => {
+	return (await fetchData(options))?.blob();
 };
 
-export function useDataFetcher<DataType>(
-	url: string | URL | RequestInfo,
-	payload: RequestInit,
+export interface SwrRequestInput {
+	url: string | URL | RequestInfo;
+	payload?: RequestInit;
+	bearerToken?: string;
+	isPrivateData?: boolean;
+}
+
+const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
+	const {
+		url,
+		payload = {},
+		bearerToken = '',
+		isPrivateData = false,
+	} = options;
+
+	const headers: HeadersInit = {
+		...payload.headers,
+		...(bearerToken.length > 0 && { Authorization: `Bearer ${bearerToken}` }),
+	};
+
+	return {
+		input: url,
+		init: {
+			...payload,
+			headers,
+			cache: isPrivateData ? 'no-store' : 'default',
+		},
+	};
+};
+
+export const useDataFetcher = <DataType>(
+	dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
+	options: SwrRequestInput,
 	config: SWRConfiguration = {},
-) {
-	return useSWR<DataType, Error>([url, payload], dataFetcher, {
+) => {
+	const fetcherOptions = convertToFetcherOptions(options);
+
+	return useSWR<DataType, Error>(fetcherOptions, dataFetcher, {
 		shouldRetryOnError: false,
 		...config,
 	});
-}
+};
 
-export function useImmutableDataFetcher<DataType>(
-	url: string | URL | RequestInfo,
-	payload: RequestInit,
+export const useImmutableDataFetcher = <DataType>(
+	dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
+	options: SwrRequestInput,
 	config: SWRConfiguration = {},
-) {
-	return useSWRImmutable<DataType, Error>([url, payload], dataFetcher, {
+) => {
+	const fetcherOptions = convertToFetcherOptions(options);
+
+	return useSWRImmutable<DataType, Error>(fetcherOptions, dataFetcher, {
 		shouldRetryOnError: false,
 		...config,
 	});
-}
-
-export function useImmutableDataRawFetcher(
-	url: string | URL | RequestInfo,
-	payload: RequestInit = {},
-	config: SWRConfiguration = {},
-) {
-	return useSWRImmutable<string | null | undefined, Error>(
-		[
-			url,
-			{
-				cache: 'no-store',
-				...payload,
-			},
-		],
-		dataRawFetcher,
-		{
-			shouldRetryOnError: false,
-			...config,
-		},
-	);
-}
-
-export function useImmutableDataBlobFetcher(
-	url: string | URL | RequestInfo,
-	payload: RequestInit = {},
-	config: SWRConfiguration = {},
-) {
-	return useSWRImmutable<Blob | null | undefined, Error>(
-		[
-			url,
-			{
-				cache: 'no-store',
-				...payload,
-			},
-		],
-		dataBlobFetcher,
-		{
-			shouldRetryOnError: false,
-			...config,
-		},
-	);
-}
-
-export function useAuthenticatedDataFetcher<DataType>(
-	url: string | URL | RequestInfo,
-	bearerToken: string,
-	headers: HeadersInit = {},
-	payload: RequestInit = {},
-	config: SWRConfiguration = {},
-) {
-	let requestHeaders: HeadersInit = {
-		'Content-Type': 'application/json',
-	};
-	if (gitHubConfig.is_private) {
-		requestHeaders = {
-			Authorization: `Bearer ${bearerToken}`,
-			...requestHeaders,
-		};
-	}
-
-	return useDataFetcher<DataType>(
-		url,
-		{
-			headers: {
-				...requestHeaders,
-				...headers,
-			},
-			cache: gitHubConfig.is_private ? 'no-store' : 'default',
-			...payload,
-		},
-		config,
-	);
-}
-
-export function useAuthenticatedImmutableDataFetcher<DataType>(
-	url: string | URL | RequestInfo,
-	bearerToken: string,
-	headers: HeadersInit = {},
-	payload: RequestInit = {},
-	config: SWRConfiguration = {},
-) {
-	let requestHeaders: HeadersInit = {
-		'Content-Type': 'application/json',
-	};
-	if (gitHubConfig.is_private) {
-		requestHeaders = {
-			Authorization: `Bearer ${bearerToken}`,
-			...requestHeaders,
-		};
-	}
-
-	return useImmutableDataFetcher<DataType>(
-		url,
-		{
-			headers: {
-				...requestHeaders,
-				...headers,
-			},
-			cache: gitHubConfig.is_private ? 'no-store' : 'default',
-			...payload,
-		},
-		config,
-	);
-}
+};

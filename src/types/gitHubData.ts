@@ -10,4 +10,5 @@ export interface GitHubTreeItem {
 	message: string | null;
 	content: string | null;
 	type: string;
+	unique_key: string | null;
 }

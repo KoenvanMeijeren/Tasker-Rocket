@@ -1,5 +1,6 @@
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
 import { GitHubTreeItem } from '@/types/gitHubData';
+import objectHash from 'object-hash';
 
 export function hasKeyInMap(map: object, key: string): boolean {
 	return Object.keys(map).includes(key);
@@ -15,6 +16,12 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
 	const dirs: GitHubTreeItem[] = [];
 	const files: GitHubTreeItem[] = [];
 	data.forEach((item) => {
+		item.unique_key = objectHash({
+			name: item.name,
+			path: item.path,
+			url: item.url,
+			type: item.type,
+		});
 		if (isDir(item)) {
 			dirs.push(item);
 		} else if (isFile(item)) {

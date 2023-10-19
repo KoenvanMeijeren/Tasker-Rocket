@@ -6,7 +6,14 @@ import {
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
+import {
+	Box,
+	Collapse,
+	Divider,
+	Icon,
+	Text,
+	useDisclosure,
+} from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
@@ -17,14 +24,20 @@ import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
+import { useAppDispatch, useAppSelector } from '@/lib/store/store';
+import { gitHubTreeItemsActions } from '@/lib/store/githubItemState/slice';
+import { RiTodoFill } from 'react-icons/ri';
 
 export default function FileContentView({
+	uniqueKey,
 	name,
 	contentUrl,
 }: {
+	uniqueKey: string;
 	name: string;
 	contentUrl: string;
 }) {
+	const storeDispatcher = useAppDispatch();
 	const { isOpen, onToggle } = useDisclosure();
 	const [file, setFile] = useState<File | undefined>(undefined);
 
@@ -32,6 +45,18 @@ export default function FileContentView({
 	const { backgroundColorSecondary, fontColor, border } = useModeColors();
 
 	const { data, error, isLoading } = useGitHubBlobContent(contentUrl);
+
+	const itemsState = useAppSelector((state) => state.itemsState);
+	const isItemCompleted = itemsState.items[uniqueKey] ?? false;
+
+	const handleTaskCompleterClick = () => {
+		storeDispatcher(
+			gitHubTreeItemsActions.changeState({
+				key: uniqueKey,
+				completed: !(itemsState.items[uniqueKey] ?? false),
+			}),
+		);
+	};
 
 	useEffect(() => {
 		if (!data) return;
@@ -106,7 +131,12 @@ export default function FileContentView({
 				px={4}
 			>
 				<Box alignItems="center" display="flex" gap="10px">
-					<CheckCircleIcon boxSize="20px" color={colorConfig.green} />
+					{isItemCompleted ? (
+						<CheckCircleIcon color={colorConfig.green} />
+					) : null}
+					{!isItemCompleted ? (
+						<Icon as={RiTodoFill} color={colorConfig.blue} />
+					) : null}
 					<Text className="noselect" fontSize="18px">
 						{file.name}
 					</Text>
@@ -126,10 +156,19 @@ export default function FileContentView({
 				<Divider borderWidth={1.5} my={4} />
 				<Box px={4} py={4}>
 					<Box display="flex" justifyContent="flex-end" mb={6}>
-						<button className="btn btn-green" type="button">
+						<button
+							className={isItemCompleted ? 'btn btn-danger' : 'btn btn-green'}
+							onClick={handleTaskCompleterClick}
+							type="button"
+						>
 							<Box alignItems="center" display="flex" gap="8px">
-								<CheckCircleIcon color="white" />
-								<Text fontWeight="medium">Done</Text>
+								{!isItemCompleted ? <CheckCircleIcon color="white" /> : null}
+								{isItemCompleted ? (
+									<Icon as={RiTodoFill} color="white" />
+								) : null}
+								<Text fontWeight="medium">
+									{isItemCompleted ? 'Actief maken' : 'Done'}
+								</Text>
 							</Box>
 						</button>
 					</Box>

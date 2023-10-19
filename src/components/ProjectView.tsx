@@ -57,8 +57,9 @@ export function ProjectView({
 						<Box key={item.url}>
 							<FileContentView
 								contentUrl={item.download_url ?? ''}
-								key={item.url}
+								key={item.unique_key ?? item.url}
 								name={item.name}
+								uniqueKey={item.unique_key ?? item.url}
 							/>
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}

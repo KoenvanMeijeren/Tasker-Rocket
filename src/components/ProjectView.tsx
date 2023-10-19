@@ -54,16 +54,13 @@ export function ProjectView({
 			>
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
-						<Box key={item.url}>
-							<FileContentView
-								contentUrl={item.download_url ?? ''}
-								key={item.unique_key ?? item.url}
-								name={item.name}
-								uniqueKey={item.unique_key ?? item.url}
-							/>
-
-							{index != content.files.length - 1 ? <VerticalDivider /> : null}
-						</Box>
+						<FileContentView
+							contentUrl={item.download_url ?? ''}
+							key={item.unique_key ?? item.url}
+							lastItem={index == content.files.length - 1}
+							name={item.name}
+							uniqueKey={item.unique_key ?? item.url}
+						/>
 					);
 				})}
 			</Stack>

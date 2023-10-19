@@ -27,15 +27,19 @@ import VideoView from '@/components/fileView/VideoView';
 import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import { gitHubTreeItemsActions } from '@/lib/store/githubItemState/slice';
 import { RiTodoFill } from 'react-icons/ri';
+import VerticalDivider from '@/components/VerticalDivider';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 
 export default function FileContentView({
 	uniqueKey,
 	name,
 	contentUrl,
+	lastItem,
 }: {
 	uniqueKey: string;
 	name: string;
 	contentUrl: string;
+	lastItem: boolean;
 }) {
 	const storeDispatcher = useAppDispatch();
 	const { isOpen, onToggle } = useDisclosure();
@@ -108,73 +112,78 @@ export default function FileContentView({
 	}
 
 	if (isLoading || !file) {
-		return null;
+		return <LoadingIndicator height="75px" />;
 	}
 
 	return (
-		<Box
-			backgroundColor={backgroundColorSecondary}
-			borderRadius={8}
-			boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
-			outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
-			p={2}
-			transition="outline-width 200ms ease"
-			zIndex={2}
-		>
-			{/* Task header (collapsible) */}
+		<>
 			<Box
-				alignItems="center"
-				cursor="pointer"
-				display="flex"
-				justifyContent="space-between"
-				onClick={onToggle}
-				px={4}
+				backgroundColor={backgroundColorSecondary}
+				borderRadius={8}
+				boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+				outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
+				p={2}
+				transition="outline-width 200ms ease"
+				zIndex={2}
 			>
-				<Box alignItems="center" display="flex" gap="10px">
-					{isItemCompleted ? (
-						<CheckCircleIcon color={colorConfig.green} />
-					) : null}
-					{!isItemCompleted ? (
-						<Icon as={RiTodoFill} color={colorConfig.blue} />
-					) : null}
-					<Text className="noselect" fontSize="18px">
-						{file.name}
-					</Text>
+				{/* Task header (collapsible) */}
+				<Box
+					alignItems="center"
+					cursor="pointer"
+					display="flex"
+					justifyContent="space-between"
+					onClick={onToggle}
+					px={4}
+				>
+					<Box alignItems="center" display="flex" gap="10px">
+						{isItemCompleted ? (
+							<CheckCircleIcon color={colorConfig.green} />
+						) : null}
+						{!isItemCompleted ? (
+							<Icon as={RiTodoFill} color={colorConfig.blue} />
+						) : null}
+						<Text className="noselect" fontSize="18px">
+							{file.name}
+						</Text>
+					</Box>
+					<Box>
+						<ChevronDownIcon
+							boxSize={10}
+							color={fontColor}
+							transform={rotate}
+							transition="all 0.2s linear"
+						/>
+					</Box>
 				</Box>
-				<Box>
-					<ChevronDownIcon
-						boxSize={10}
-						color={fontColor}
-						transform={rotate}
-						transition="all 0.2s linear"
-					/>
-				</Box>
+
+				{/* Content */}
+				<Collapse in={isOpen}>
+					<Divider borderWidth={1.5} my={4} />
+					<Box px={4} py={4}>
+						<Box display="flex" justifyContent="flex-end" mb={6}>
+							<button
+								className={isItemCompleted ? 'btn btn-danger' : 'btn btn-green'}
+								onClick={handleTaskCompleterClick}
+								type="button"
+							>
+								<Box alignItems="center" display="flex" gap="8px">
+									{!isItemCompleted ? <CheckCircleIcon color="white" /> : null}
+									{isItemCompleted ? (
+										<Icon as={RiTodoFill} color="white" />
+									) : null}
+									{/* eslint-disable-next-line react/jsx-max-depth */}
+									<Text fontWeight="medium">
+										{isItemCompleted ? 'Actief maken' : 'Done'}
+									</Text>
+								</Box>
+							</button>
+						</Box>
+						{content}
+					</Box>
+				</Collapse>
 			</Box>
 
-			{/* Content */}
-			<Collapse in={isOpen}>
-				<Divider borderWidth={1.5} my={4} />
-				<Box px={4} py={4}>
-					<Box display="flex" justifyContent="flex-end" mb={6}>
-						<button
-							className={isItemCompleted ? 'btn btn-danger' : 'btn btn-green'}
-							onClick={handleTaskCompleterClick}
-							type="button"
-						>
-							<Box alignItems="center" display="flex" gap="8px">
-								{!isItemCompleted ? <CheckCircleIcon color="white" /> : null}
-								{isItemCompleted ? (
-									<Icon as={RiTodoFill} color="white" />
-								) : null}
-								<Text fontWeight="medium">
-									{isItemCompleted ? 'Actief maken' : 'Done'}
-								</Text>
-							</Box>
-						</button>
-					</Box>
-					{content}
-				</Box>
-			</Collapse>
-		</Box>
+			{!lastItem ? <VerticalDivider /> : null}
+		</>
 	);
 }

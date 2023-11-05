@@ -38,7 +38,6 @@ export default function FileContentView({
 }) {
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
-    const [fileViewable, setFileViewable] = useState(true);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -64,44 +63,8 @@ export default function FileContentView({
         });
     }, [data, name]);
 
-    const handleDownload = useCallback(() => {
-        if (!file) return;
-
-        const fileContent = new Blob([file.content], { type: file.mimeType });
-        const fileNameParts = file.name.split('.');
-        const fileExtension =
-            fileNameParts.length > 1 ? fileNameParts.pop() : '';
-        const fileNameWithoutExtension = fileNameParts.join('.');
-        const fileName =
-            fileNameWithoutExtension.endsWith(fileExtension ?? '') ||
-            !fileExtension
-                ? fileNameWithoutExtension
-                : `${fileNameWithoutExtension}.${fileExtension}`;
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(fileContent);
-        link.download = fileName;
-        link.click();
-    }, [file]);
-
     const content = useMemo(() => {
         if (!file) return;
-
-        if (file.content.length < 1) {
-            setFileViewable(false);
-            return (
-                <>
-                    Dit bestand is te groot om te bekijken.
-                    <Button
-                        className="btn btn-green"
-                        ml={3}
-                        onClick={handleDownload}
-                        size="sm"
-                    >
-                        <DownloadIcon mr={1} /> Download
-                    </Button>
-                </>
-            );
-        }
 
         if (file.content.length < 1) {
             return <>Dit bestand bevat geen content.</>;
@@ -124,22 +87,13 @@ export default function FileContentView({
             case FileType.PowerPoint:
             case FileType.Excel:
             case FileType.Unsupported:
-                setFileViewable(false);
                 return (
                     <>
                         De weergave van dit bestandstype wordt niet ondersteund.
-                        <Button
-                            className="btn btn-green"
-                            ml={3}
-                            onClick={handleDownload}
-                            size="sm"
-                        >
-                            <DownloadIcon mr={1} /> Download
-                        </Button>
                     </>
                 );
         }
-    }, [file, handleDownload]);
+    }, [file]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -188,21 +142,7 @@ export default function FileContentView({
             <Collapse in={isOpen}>
                 <Divider borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
-                    <Box
-                        className="btn-group"
-                        display="flex"
-                        justifyContent="flex-end"
-                        mb={6}
-                    >
-                        {fileViewable ? (
-                            <Button
-                                className="btn btn-gray"
-                                onClick={handleDownload}
-                                size="sm"
-                            >
-                                <DownloadIcon />
-                            </Button>
-                        ) : null}
+                    <Box display="flex" justifyContent="flex-end" mb={6}>
                         <button className="btn btn-green" type="button">
                             <Box alignItems="center" display="flex" gap="8px">
                                 <CheckCircleIcon color="white" />

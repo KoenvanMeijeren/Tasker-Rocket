@@ -12,46 +12,49 @@ import { useEffect, useState } from 'react';
 import './markdown.css';
 
 async function markdownToHtml(markdown: string): Promise<string> {
-	return (
-		(
-			await remark()
-				.use(remarkParse)
-				.use(remarkGfm)
-				// Allow dangerous HTML, to be able to parse HTML inside markdown.
-				// This is necessary because we want to use the same features as
-				// GitHub does. The rehypeSanitize plugin ensures that the HTML stays
-				// safe, by filtering dangerous tags out, such as script and iframe.
-				.use(remarkRehype, { allowDangerousHtml: true })
-				.use(rehypeRaw)
-				.use(rehypeSanitize)
-				.use(rehypeSlug)
-				.use(rehypeAutolinkHeadings, {
-					properties: {
-						ariaHidden: 'true',
-						tabIndex: -1,
-						class: 'anchor',
-					},
-				})
-				.use(rehypeHighlight, {
-					detect: true,
-				})
-				.use(rehypeStringify)
-				.process(markdown)
-		).toString()
-	);
+    return (
+        (
+            await remark()
+                .use(remarkParse)
+                .use(remarkGfm)
+                // Allow dangerous HTML, to be able to parse HTML inside markdown.
+                // This is necessary because we want to use the same features as
+                // GitHub does. The rehypeSanitize plugin ensures that the HTML stays
+                // safe, by filtering dangerous tags out, such as script and iframe.
+                .use(remarkRehype, { allowDangerousHtml: true })
+                .use(rehypeRaw)
+                .use(rehypeSanitize)
+                .use(rehypeSlug)
+                .use(rehypeAutolinkHeadings, {
+                    properties: {
+                        ariaHidden: 'true',
+                        tabIndex: -1,
+                        class: 'anchor',
+                    },
+                })
+                .use(rehypeHighlight, {
+                    detect: true,
+                })
+                .use(rehypeStringify)
+                .process(markdown)
+        ).toString()
+    );
 }
 
 export function Markdown({ markdown }: { markdown: string }) {
-	const [html, setHtml] = useState('');
+    const [html, setHtml] = useState('');
 
-	useEffect(() => {
-		markdownToHtml(markdown)
-			.then(setHtml)
-			.catch(() => setHtml('kon de content niet goed inladen...'));
-	}, [markdown]);
+    useEffect(() => {
+        markdownToHtml(markdown)
+            .then(setHtml)
+            .catch(() => setHtml('kon de content niet goed inladen...'));
+    }, [markdown]);
 
-	return (
-		// eslint-disable-next-line react/no-danger
-		<div className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />
-	);
+    return (
+        <div
+            className="markdown-body"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: html }}
+        />
+    );
 }

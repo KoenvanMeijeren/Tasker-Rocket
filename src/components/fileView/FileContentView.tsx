@@ -48,8 +48,9 @@ export default function FileContentView({
 			content: data,
 			fileType: fileInfo.type,
 			mimeType: fileInfo.mimeType,
+			downloadUrl: contentUrl,
 		});
-	}, [data, name]);
+	}, [data, name, contentUrl]);
 
 	const content = useMemo(() => {
 		if (!file) return;

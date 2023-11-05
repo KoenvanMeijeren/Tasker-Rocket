@@ -26,7 +26,6 @@ export default function PdfFileView({ file }: { file: File }) {
             <Button onClick={enterFullScreen} colorScheme="blue">
                 <FaExpandArrowsAlt color="white" />
                 <Text style={{ marginLeft: '5px' }} color="white">
-                    {' '}
                     Full Screen
                 </Text>
             </Button>
@@ -44,7 +43,7 @@ export default function PdfFileView({ file }: { file: File }) {
                     width="100%"
                 >
                     <p>
-                        Kan PDF-bestand niet weergeven.{' '}
+                        Kan PDF-bestand niet weergeven.
                         <a href={dataSrc}>Download</a> in plaats daarvan.
                     </p>
                 </object>

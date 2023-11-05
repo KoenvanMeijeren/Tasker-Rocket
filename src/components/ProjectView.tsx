@@ -20,9 +20,11 @@ type Data = {
 export function ProjectView({
 	data,
 	parent,
+	openedFile,
 }: {
 	data: GitHubTreeItem[];
 	parent: string;
+	openedFile: string | null;
 }) {
 	const [content, setContent] = useState<Data | null>(null);
 
@@ -52,7 +54,11 @@ export function ProjectView({
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
 						<Box key={item.url}>
-							<FileView key={item.url} path={item.path} />
+							<FileView
+								defaultIsOpen={item.name === openedFile}
+								key={item.url}
+								path={item.path}
+							/>
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}
 						</Box>

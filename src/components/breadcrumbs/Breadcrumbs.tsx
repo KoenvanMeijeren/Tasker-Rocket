@@ -1,11 +1,14 @@
 'use client';
 
-import { HiHome } from 'react-icons/hi';
-import { useRouter } from 'next/router';
-import { replaceAll, urlToReadableString } from '@/lib/utility/formatters';
+import {
+	removeQueryParamsFromURl,
+	replaceAll,
+	urlToReadableString,
+} from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
-import React from 'react';
+import { useRouter } from 'next/router';
 import { BiSolidChevronRight } from 'react-icons/bi';
+import { HiHome } from 'react-icons/hi';
 
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -14,7 +17,7 @@ function pathToBreadcrumbs(path: string): {
 	name: string;
 	path: string;
 }[] {
-	const url = decodeURIComponent(path);
+	const url = removeQueryParamsFromURl(decodeURIComponent(path));
 	if (url === '/') {
 		return [];
 	}

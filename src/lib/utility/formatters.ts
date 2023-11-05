@@ -22,3 +22,16 @@ export function replaceAll(
 
 	return input;
 }
+
+export function getFileNameFromUrl(url: string) {
+	const parts = url.split('/');
+	const name = parts[parts.length - 1];
+	return name;
+}
+
+export const getParentFromUrl = (url: string) => {
+	if (!url.includes('/')) return '';
+	return url.split(/(.*\/)(.+)/)[1].replace(/\/$/, '');
+};
+
+export const removeQueryParamsFromURl = (url: string) => url.split('?')[0];

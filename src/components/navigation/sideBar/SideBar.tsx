@@ -1,4 +1,5 @@
 import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
+import { getFileNameFromUrl, getParentFromUrl } from '@/lib/utility/formatters';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
@@ -8,23 +9,25 @@ import { themeConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 
-type GithubTreeItem = {
+export type GithubTreeMenuItem = {
 	path: string;
+	name: string;
 	type: string;
 	url: string;
-	tree: GithubTreeItem[];
+	tree: GithubTreeMenuItem[];
 };
 
 export type GithubTree = {
-	tree: GithubTreeItem[];
+	tree: GithubTreeMenuItem[];
 	url: string;
 };
 
-function reconstructGithubTree(array: GithubTreeItem[]) {
-	const map = new Map<string, GithubTreeItem>();
+function reconstructGithubTree(array: GithubTreeMenuItem[]) {
+	const map = new Map<string, GithubTreeMenuItem>();
 	array.forEach((item) => {
 		map.set(item.path, {
 			path: item.path,
+			name: getFileNameFromUrl(item.path),
 			type: item.type,
 			url: item.url,
 			tree: [],
@@ -36,7 +39,8 @@ function reconstructGithubTree(array: GithubTreeItem[]) {
 		if (!item.path.includes('/')) {
 			return;
 		}
-		const parentPath = item.path.split(/(.*\/)(.+)/)[1].replace(/\/$/, '');
+		const parentPath = getParentFromUrl(item.path);
+
 		const parent = map.get(parentPath);
 		const curr = map.get(item.path);
 		if (!parent || !curr) throw new Error('parent or curr is undefined');
@@ -49,7 +53,7 @@ function reconstructGithubTree(array: GithubTreeItem[]) {
 
 export const SideBar = () => {
 	let { data } = useGitHubContentRootTree(true);
-	const [tree, setTree] = useState<GithubTreeItem[]>([]);
+	const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
 	const [navSize, changeNavSize] = useState(NavSize.Large);
 
 	useEffect(() => {
@@ -73,11 +77,12 @@ export const SideBar = () => {
 			flexDir="column"
 			justifyContent="space-between"
 			maxHeight="100vh"
+			maxWidth="100vw"
 			minHeight="100vh"
 			p={2}
 			pos="sticky"
 			transition="0.5s ease"
-			w={navSize === NavSize.Small ? '75px' : '200px'}
+			w={navSize === NavSize.Small ? '75px' : ''}
 		>
 			<SideBarLogo navSize={navSize} />
 
@@ -86,9 +91,10 @@ export const SideBar = () => {
 				alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
 				as="nav"
 			>
+				{/* Write an implementation where the tree is rendered recursively in collapsibles, so each githubtreeitem is a collpasible with their children in them, the children can be collapsibles or just a normal navitem if leaf node. */}
 				<>
 					{tree.map((item) => (
-						<NavItem key={item.path} navSize={navSize} title={item.path} />
+						<NavItem key={item.path} navSize={navSize} treeItem={item} />
 					))}
 				</>
 			</Stack>

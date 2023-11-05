@@ -26,8 +26,21 @@ type File = {
 	fileType: FileType;
 };
 
-export default function FileView({ path }: { path: string }) {
-	const { isOpen, onToggle } = useDisclosure();
+export default function FileView({
+	path,
+	defaultIsOpen,
+}: {
+	path: string;
+	defaultIsOpen: boolean;
+}) {
+	const { isOpen, onToggle } = useDisclosure({ defaultIsOpen });
+	// Update the 'isOpen' state when 'defaultIsOpen' changes
+	useEffect(() => {
+		if (defaultIsOpen !== isOpen) {
+			onToggle();
+		}
+	}, [defaultIsOpen]);
+
 	const [file, setFile] = useState<File | undefined>(undefined);
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';

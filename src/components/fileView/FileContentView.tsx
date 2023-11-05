@@ -16,7 +16,7 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
-import PowerPointFileView from './PowerpointFileView';
+import OfficeFileView from './OfficeFileView';
 
 export default function FileContentView({ path }: { path: string }) {
 	const { isOpen, onToggle } = useDisclosure();
@@ -71,9 +71,11 @@ export default function FileContentView({ path }: { path: string }) {
 			case FileType.Audio:
 			case FileType.Video:
 			case FileType.Docx:
+				return <OfficeFileView file={file} />;
 			case FileType.PowerPoint:
-				return <PowerPointFileView file={file} />;
+				return <OfficeFileView file={file} />;
 			case FileType.Excel:
+				return <OfficeFileView file={file} />;
 			case FileType.Unsupported:
 				return <>De weergave van dit bestandstype wordt niet ondersteund.</>;
 		}

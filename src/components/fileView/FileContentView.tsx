@@ -5,20 +5,9 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
-import {
-    CheckCircleIcon,
-    ChevronDownIcon,
-    DownloadIcon,
-} from '@chakra-ui/icons';
-import {
-    Box,
-    Button,
-    Collapse,
-    Divider,
-    Text,
-    useDisclosure,
-} from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
+import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';

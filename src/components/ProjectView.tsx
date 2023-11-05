@@ -22,7 +22,7 @@ export function ProjectView({
     parent,
 }: {
     data: GitHubTreeItem[];
-    parent: string;
+    parent: string | undefined;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 
@@ -41,7 +41,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={parent ?? repositoryName}
+                    label={parent ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -55,7 +55,11 @@ export function ProjectView({
                 {content.files.map((item: GitHubTreeItem, index) => {
                     return (
                         <Box key={item.url}>
-                            <FileContentView key={item.url} path={item.path} />
+                            <FileContentView
+                                contentUrl={item.download_url ?? ''}
+                                key={item.url}
+                                name={item.name}
+                            />
 
                             {index != content.files.length - 1 ? (
                                 <VerticalDivider />

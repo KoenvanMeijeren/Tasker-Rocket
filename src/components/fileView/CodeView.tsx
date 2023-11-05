@@ -6,13 +6,14 @@ import { useModeColors } from '@/hooks/useColors';
 import { useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyIcon } from '@chakra-ui/icons';
+import { blobToString } from '@/lib/utility/dataStructure';
 
 export default function CodeView({ file }: { file: File }) {
     const { codeMirror } = useModeColors();
     const [copied, setCopied] = useState(false);
 
     const content = useMemo(() => {
-        return Buffer.from(file.content, 'base64').toString('utf8');
+        return blobToString(file.content);
     }, [file]);
 
     const handleCopy = () => {
@@ -26,12 +27,7 @@ export default function CodeView({ file }: { file: File }) {
         <Box className="pos-r">
             <Flex alignItems="center" justifyContent="flex-end" mb={2}>
                 <CopyToClipboard onCopy={handleCopy} text={content}>
-                    <Button
-                        className="copy-btn"
-                        colorScheme="green"
-                        mr={2}
-                        size="sm"
-                    >
+                    <Button className="copy-btn" colorScheme="green" mr={2} size="sm">
                         <CopyIcon mr={1} />
                         {copied ? 'Copied!' : 'Copy'}
                     </Button>

@@ -54,7 +54,7 @@ export interface FileExtensions {
 	[key: string]: string;
 }
 
-interface FileExtensionInfo {
+export interface FileExtensionInfo {
 	type: FileType;
 	mimeType: string;
 }

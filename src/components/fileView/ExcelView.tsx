@@ -15,7 +15,9 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { File } from '@/types/file';
 
 export default function ExcelView({ file }: { file: File }) {
-    const [excelData, setExcelData] = useState([]);
+    const [excelData, setExcelData] = useState<Array<Record<string, unknown>>>(
+        []
+    );
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage] = useState(10);
@@ -32,9 +34,10 @@ export default function ExcelView({ file }: { file: File }) {
                 const wsname = wb.SheetNames[0];
                 const ws = wb.Sheets[wsname];
                 const data = XLSX.utils.sheet_to_json(ws);
-
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
                 setExcelData(data);
-                setLoading(false); // Mark loading as complete
+                setLoading(false);
             };
         }
     }, [file]);
@@ -42,11 +45,12 @@ export default function ExcelView({ file }: { file: File }) {
     const filteredData = excelData
         .filter((row) => {
             if (searchTerm === '') return true;
-            return Object.values(row).some((value) =>
-                value
-                    .toString()
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
+            return Object.values(row).some(
+                (value) =>
+                    value
+                        ?.toString()
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
             );
         })
         .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
@@ -85,7 +89,9 @@ export default function ExcelView({ file }: { file: File }) {
                                         <Tr key={i}>
                                             {Object.values(row).map(
                                                 (value, j) => (
-                                                    <Td key={j}>{value}</Td>
+                                                    <Td key={j}>
+                                                        {String(value)}
+                                                    </Td>
                                                 )
                                             )}
                                         </Tr>
@@ -97,10 +103,10 @@ export default function ExcelView({ file }: { file: File }) {
                                     <Button
                                         className="pagination-btn"
                                         colorScheme="teal"
-                                        size={'sm'}
                                         onClick={() =>
                                             setCurrentPage(currentPage - 1)
                                         }
+                                        size="sm"
                                     >
                                         <FaAngleLeft />
                                     </Button>
@@ -114,11 +120,11 @@ export default function ExcelView({ file }: { file: File }) {
                                 {currentPage !== totalPages ? (
                                     <Button
                                         className="pagination-btn"
-                                        size={'sm'}
                                         colorScheme="teal"
                                         onClick={() =>
                                             setCurrentPage(currentPage + 1)
                                         }
+                                        size="sm"
                                     >
                                         <FaAngleRight />
                                     </Button>

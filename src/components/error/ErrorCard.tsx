@@ -11,7 +11,7 @@ function dismiss() {
 	if (element) {
 		element.remove();
 	}
-	// delay for a second and run onDismiss
+	// Reload the page
 	onDismiss();
 }
 
@@ -20,8 +20,10 @@ function ErrorCard(error: string): JSX.Element {
 		<div className="error-card">
 			<div className="error-content">
 				<h1>Something went wrong</h1>
-				<p className="text-red-800">{error}</p>
-				<p>The page will be reloaded automatically.</p>
+				<p className="font-semibold">{error}</p>
+				<p>
+					The page will be reloaded automatically when you dismiss this message.
+				</p>
 				<button onClick={dismiss} type="button">
 					I understand
 				</button>

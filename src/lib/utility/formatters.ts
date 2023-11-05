@@ -1,24 +1,24 @@
 export function urlToReadableString(url: string): string {
-	const result = url.charAt(0).toUpperCase() + url.slice(1);
+    const result = url.charAt(0).toUpperCase() + url.slice(1);
 
-	return decodeURIComponent(result);
+    return decodeURIComponent(result);
 }
 
 export function urlToFileExtension(url: string): string {
-	return url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
+    return url.toLowerCase().split('.').pop()?.split('?')[0] ?? '';
 }
 
 export const removeFileExtension = (filename: string) =>
-	filename.replace(/\.[^/.]+$/, '');
+    filename.replace(/\.[^/.]+$/, '');
 
 export function replaceAll(
-	input: string,
-	searchValues: string[] | RegExp[],
-	replaceValue: string,
+    input: string,
+    searchValues: string[] | RegExp[],
+    replaceValue: string
 ) {
-	for (const searchValue of searchValues) {
-		input = input.replaceAll(searchValue, replaceValue);
-	}
+    for (const searchValue of searchValues) {
+        input = input.replaceAll(searchValue, replaceValue);
+    }
 
-	return input;
+    return input;
 }

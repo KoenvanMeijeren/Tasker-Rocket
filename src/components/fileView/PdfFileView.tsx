@@ -12,10 +12,11 @@ export default function PdfFileView({ file }: { file: File }) {
         return blobFileToUrl(file.content, file.mimeType);
     }, [file]);
 
-    const enterFullScreen = async () => {
+    const enterFullScreen = () => {
         const viewer = viewerRef.current as HTMLDivElement;
         if (viewer.requestFullscreen) {
-            viewer.requestFullscreen().catch((error) => {
+            viewer.requestFullscreen().catch((error: unknown) => {
+                // eslint-disable-next-line no-console
                 console.log(error);
             });
         }
@@ -23,9 +24,9 @@ export default function PdfFileView({ file }: { file: File }) {
 
     return (
         <div>
-            <Button onClick={enterFullScreen} colorScheme="blue">
+            <Button colorScheme="blue" onClick={enterFullScreen}>
                 <FaExpandArrowsAlt color="white" />
-                <Text style={{ marginLeft: '5px' }} color="white">
+                <Text color="white" style={{ marginLeft: '5px' }}>
                     Full Screen
                 </Text>
             </Button>

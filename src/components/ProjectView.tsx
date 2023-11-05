@@ -1,12 +1,12 @@
 'use client';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
 import VerticalDivider from './VerticalDivider';
-import FileView from './fileView/FileView';
+import FileContentView from './fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
 	.split('/')
@@ -22,7 +22,7 @@ export function ProjectView({
 	parent,
 }: {
 	data: GitHubTreeItem[];
-	parent: string;
+	parent: string | undefined;
 }) {
 	const [content, setContent] = useState<Data | null>(null);
 
@@ -39,7 +39,10 @@ export function ProjectView({
 	return (
 		<Box>
 			{content.dirs && content.dirs.length > 0 ? (
-				<FoldersSection data={content.dirs} label={parent ?? repositoryName} />
+				<FoldersSection
+					data={content.dirs}
+					label={parent ?? repositoryName ?? 'Projecten'}
+				/>
 			) : null}
 			<Stack
 				alignItems="flex-start"
@@ -52,7 +55,11 @@ export function ProjectView({
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
 						<Box key={item.url}>
-							<FileView key={item.url} path={item.path} />
+							<FileContentView
+								contentUrl={item.download_url ?? ''}
+								key={item.url}
+								name={item.name}
+							/>
 
 							{index != content.files.length - 1 ? <VerticalDivider /> : null}
 						</Box>

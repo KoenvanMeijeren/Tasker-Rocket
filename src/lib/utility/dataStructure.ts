@@ -1,5 +1,5 @@
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { GitHubTreeItem } from '../repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 
 export function hasKeyInMap(map: object, key: string): boolean {
 	return Object.keys(map).includes(key);
@@ -23,4 +23,19 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
 	});
 
 	return { dirs, files } as GithubContent;
+};
+
+export function blobToString(blob: Blob) {
+	const url = URL.createObjectURL(blob);
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', url, false);
+	xhr.send(null);
+	URL.revokeObjectURL(url);
+	return xhr.responseText;
+}
+
+export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
+	const newBlob = blob.slice(0, blob.size, mimeType);
+
+	return URL.createObjectURL(newBlob);
 };

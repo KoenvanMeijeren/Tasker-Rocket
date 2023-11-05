@@ -13,5 +13,5 @@ export default function Home() {
 		return <LoadingIndicator />;
 	}
 
-	return <ProjectView data={data} />;
+	return <ProjectView data={data} parent={undefined} />;
 }

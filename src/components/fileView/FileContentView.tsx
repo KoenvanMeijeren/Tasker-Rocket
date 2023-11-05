@@ -18,7 +18,7 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -26,7 +26,6 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 
@@ -65,18 +64,27 @@ export default function FileContentView({
         });
     }, [data, name]);
 
-    const content = useMemo(() => {
+    const handleDownload = useCallback(() => {
         if (!file) return;
 
-        const handleDownloadGit = () => {
-            const gh = 'https://github.com/';
-            const repo = getEnvValue(EnvOptions.GithubContentRepository);
-            const downloadLink = gh + repo + '/raw/main/' + item.path;
-            const link = document.createElement('a');
-            link.href = downloadLink;
-            link.download = file.name;
-            link.click();
-        };
+        const fileContent = new Blob([file.content], { type: file.mimeType });
+        const fileNameParts = file.name.split('.');
+        const fileExtension =
+            fileNameParts.length > 1 ? fileNameParts.pop() : '';
+        const fileNameWithoutExtension = fileNameParts.join('.');
+        const fileName =
+            fileNameWithoutExtension.endsWith(fileExtension ?? '') ||
+            !fileExtension
+                ? fileNameWithoutExtension
+                : `${fileNameWithoutExtension}.${fileExtension}`;
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(fileContent);
+        link.download = fileName;
+        link.click();
+    }, [file]);
+
+    const content = useMemo(() => {
+        if (!file) return;
 
         if (file.content.length < 1) {
             setFileViewable(false);
@@ -86,7 +94,7 @@ export default function FileContentView({
                     <Button
                         className="btn btn-green"
                         ml={3}
-                        onClick={handleDownloadGit}
+                        onClick={handleDownload}
                         size="sm"
                     >
                         <DownloadIcon mr={1} /> Download
@@ -123,7 +131,7 @@ export default function FileContentView({
                         <Button
                             className="btn btn-green"
                             ml={3}
-                            onClick={handleDownloadGit}
+                            onClick={handleDownload}
                             size="sm"
                         >
                             <DownloadIcon mr={1} /> Download
@@ -131,7 +139,7 @@ export default function FileContentView({
                     </>
                 );
         }
-    }, [file]);
+    }, [file, handleDownload]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -140,22 +148,6 @@ export default function FileContentView({
     if (isLoading || !file) {
         return null;
     }
-
-    const handleDownload = () => {
-        const link = document.createElement('a');
-        const fileNameParts = file.name.split('.');
-        const fileExtension =
-            fileNameParts.length > 1 ? fileNameParts.pop() : '';
-        const fileNameWithoutExtension = fileNameParts.join('.');
-        const fileName =
-            fileNameWithoutExtension.endsWith(fileExtension ?? '') ||
-            !fileExtension
-                ? fileNameWithoutExtension
-                : `${fileNameWithoutExtension}.${fileExtension}`;
-        link.href = `data:${file.mimeType};base64,${file.content}`;
-        link.download = fileName;
-        link.click();
-    };
 
     return (
         <Box

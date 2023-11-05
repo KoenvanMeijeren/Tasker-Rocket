@@ -10,7 +10,8 @@ export default function PdfFileView({ file }: { file: File }) {
     return (
         <object data={dataSrc} height="600px" type={file.mimeType} width="100%">
             <p>
-                Kan PDF-bestand niet weergeven. <a href={dataSrc}>Download</a> in plaats daarvan.
+                Kan PDF-bestand niet weergeven. <a href={dataSrc}>Download</a>{' '}
+                in plaats daarvan.
             </p>
         </object>
     );

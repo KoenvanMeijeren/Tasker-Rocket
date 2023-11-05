@@ -32,3 +32,8 @@
 .pagination-btn:hover {
     @apply bg-green-500;
 }
+
+.pagination-text {
+    @apply font-bold;
+    margin: 0 10px;
+}

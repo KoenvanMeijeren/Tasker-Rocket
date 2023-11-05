@@ -114,7 +114,7 @@ export default function ExcelView({ file }: { file: File }) {
                                     // eslint-disable-next-line react/jsx-no-useless-fragment
                                     <></>
                                 )}
-                                <span>
+                                <span className="pagination-text">
                                     {currentPage} of {totalPages}
                                 </span>
                                 {currentPage !== totalPages ? (

@@ -95,6 +95,10 @@ export default function FileContentView({
             );
         }
 
+        if (file.content.length < 1) {
+            return <>Dit bestand bevat geen content.</>;
+        }
+
         switch (file.fileType) {
             case FileType.Markdown:
                 return <MarkdownView file={file} />;
@@ -105,7 +109,9 @@ export default function FileContentView({
             case FileType.Pdf:
                 return <PdfFileView file={file} />;
             case FileType.Audio:
+                return <AudioView file={file} />;
             case FileType.Video:
+                return <VideoView file={file} />;
             case FileType.Docx:
             case FileType.PowerPoint:
             case FileType.Excel:

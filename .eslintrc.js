@@ -29,26 +29,13 @@ module.exports = {
         tsconfigRootDir: '.',
         project: ['./tsconfig.json'],
     },
-    react: {
-      version: "18.x"
-    }
-  },
-  rules: {
-    "prettier/prettier": ["error", { useTabs: false, singleQuote: true, printWidth: 80,  endOfLine: "auto", tabWidth: 4, trailingComma: "es5", bracketSpacing: true, jsxBracketSameLine: false, arrowParens: "always", }],
-    "react/prefer-stateless-function": "error",
-    "react/button-has-type": "error",
-    "react/no-unused-prop-types": "error",
-    "react/jsx-pascal-case": "error",
-    "react/jsx-no-script-url": "error",
-    "react/no-children-prop": "error",
-    "react/no-danger": "error",
-    "react/no-danger-with-children": "error",
-    "react/no-unstable-nested-components": ["error", { allowAsProps: true }],
-    "react/jsx-fragments": "error",
-    "react/destructuring-assignment": [
-      "error",
-      "always",
-      { destructureInSignature: "always" },
+    // Configuring third-party plugins
+    plugins: [
+        'react',
+        '@typescript-eslint',
+        'filename-rules',
+        'react-refresh',
+        'etc',
     ],
     // Resolve imports
     settings: {

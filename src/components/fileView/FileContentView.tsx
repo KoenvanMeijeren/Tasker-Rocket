@@ -17,6 +17,7 @@ import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
+import ExcelView from './ExcelView';
 
 export default function FileContentView({
     name,
@@ -75,6 +76,7 @@ export default function FileContentView({
             case FileType.Docx:
             case FileType.PowerPoint:
             case FileType.Excel:
+                return <ExcelView file={file} />;
             case FileType.Unsupported:
                 return (
                     <>

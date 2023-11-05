@@ -1,6 +1,5 @@
 import { useModeColors } from '@/hooks/useColors';
-import { GitHubTreeItem } from '@/types/gitHubData';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import { useGitHubBlobContent } from '@/lib/repository/gitHubRepository';
 import {
 	removeFileExtension,
 	urlToFileExtension,
@@ -16,47 +15,47 @@ import { File } from '@/types/file';
 import CodeView from '@/components/fileView/CodeView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
-import OfficeFileView from './OfficeFileView';
+import OfficeFileView from '@/components/fileView/OfficeFileView';
+import AudioView from '@/components/fileView/AudioView';
+import VideoView from '@/components/fileView/VideoView';
 
-export default function FileContentView({ path }: { path: string }) {
+export default function FileContentView({
+	name,
+	contentUrl,
+}: {
+	name: string;
+	contentUrl: string;
+}) {
 	const { isOpen, onToggle } = useDisclosure();
 	const [file, setFile] = useState<File | undefined>(undefined);
 
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
 	const { backgroundColorSecondary, fontColor, border } = useModeColors();
 
-	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path),
-	);
-	const item = data as GitHubTreeItem;
+	const { data, error, isLoading } = useGitHubBlobContent(contentUrl);
 
 	useEffect(() => {
-		if (!item) return;
-		const loadFile = () => {
-			const extension = urlToFileExtension(item.name);
-			const fileInfo = findFileInfo(extension);
-			const name =
-				fileInfo?.type === FileType.Markdown
-					? removeFileExtension(item.name)
-					: item.name;
-			setFile({
-				name,
-				extension,
-				content: item.content ?? '',
-				fileType: fileInfo?.type ?? FileType.Unsupported,
-				mimeType: fileInfo?.mimeType ?? '',
-				downloadUrl: item.download_url ?? '',
-			});
-		};
+		if (!data) return;
 
-		loadFile();
-	}, [item]);
+		const extension = urlToFileExtension(name);
+		const fileInfo = findFileInfo(extension);
+		const itemName =
+			fileInfo.type === FileType.Markdown ? removeFileExtension(name) : name;
+
+		setFile({
+			name: itemName,
+			extension,
+			content: data,
+			fileType: fileInfo.type,
+			mimeType: fileInfo.mimeType,
+		});
+	}, [data, name]);
 
 	const content = useMemo(() => {
 		if (!file) return;
 
 		if (file.content.length < 1) {
-			return <>Dit bestand is te groot om te bekijken.</>;
+			return <>Dit bestand bevat geen content.</>;
 		}
 
 		switch (file.fileType) {
@@ -69,7 +68,9 @@ export default function FileContentView({ path }: { path: string }) {
 			case FileType.Pdf:
 				return <PdfFileView file={file} />;
 			case FileType.Audio:
+				return <AudioView file={file} />;
 			case FileType.Video:
+				return <VideoView file={file} />;
 			case FileType.Docx:
 				return <OfficeFileView file={file} />;
 			case FileType.PowerPoint:

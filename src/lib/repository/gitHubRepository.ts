@@ -25,10 +25,6 @@ export function useGitHubContentTree(path: string) {
     return { data, isLoading, error };
 }
 
-export function useGitHubContentRootTree() {
-    return useGitHubContentTree('');
-}
-
 export function useGitHubBlobContent(url: string) {
     return useImmutableDataFetcher(fetchBlobData, {
         url,

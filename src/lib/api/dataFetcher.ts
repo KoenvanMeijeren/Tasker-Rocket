@@ -61,19 +61,6 @@ const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
     };
 };
 
-export const useDataFetcher = <DataType>(
-    dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
-    options: SwrRequestInput,
-    config: SWRConfiguration = {}
-) => {
-    const fetcherOptions = convertToFetcherOptions(options);
-
-    return useSWR<DataType, Error>(fetcherOptions, dataFetcher, {
-        shouldRetryOnError: false,
-        ...config,
-    });
-};
-
 export const useImmutableDataFetcher = <DataType>(
     dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
     options: SwrRequestInput,

@@ -22,3 +22,18 @@
 .pos-r {
     position: relative;
 }
+
+.pagination-btn {
+    @apply font-bold py-1 px-3 rounded;
+    @apply text-white;
+    background-color: #239964;
+}
+
+.pagination-btn:hover {
+    @apply bg-green-500;
+}
+
+.pagination-text {
+    @apply font-bold;
+    margin: 0 10px;
+}

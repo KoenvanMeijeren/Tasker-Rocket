@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@/types/response';
-import useSWR, { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
+import { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
 interface FetcherOptions {

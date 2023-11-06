@@ -21,14 +21,14 @@ export function ProjectView({
     data,
     parent,
 }: {
-    data: GitHubTreeItem[];
+    data: GitHubTreeItem[] | GitHubTreeItem;
     parent: string | undefined;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {
         if (data) {
-            setContent(splitFilesAndDirs(data));
+            setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
         }
     }, [data]);
 

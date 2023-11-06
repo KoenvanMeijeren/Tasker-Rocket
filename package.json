@@ -10,7 +10,7 @@
         "build": "next build",
         "start": "next start",
         "tsc": "echo \"Running typescript check\" && tsc",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.md",
         "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix",
         "prettier": "prettier . --check",
         "prettier:fix": "prettier . --write",

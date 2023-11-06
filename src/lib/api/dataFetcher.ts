@@ -1,4 +1,4 @@
-import { isResponseNotFound, isResponseOk } from '@/lib/api/response';
+import { HttpStatusCode } from '@/types/response';
 import useSWR, { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -10,11 +10,11 @@ interface FetcherOptions {
 export const fetchData = async (options: FetcherOptions) => {
     const response = await fetch(options.input, options.init);
 
-    if (isResponseNotFound(response)) {
+    if (response.status === HttpStatusCode.NotFound.valueOf()) {
         return undefined;
     }
 
-    if (!isResponseOk(response)) {
+    if (response.status !== HttpStatusCode.Ok.valueOf()) {
         throw new Error('An error occurred while fetching the data.');
     }
 

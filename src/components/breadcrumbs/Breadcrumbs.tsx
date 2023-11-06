@@ -64,9 +64,9 @@ export function Breadcrumbs() {
                     <BreadcrumbItem
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
-                        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
                         <BreadcrumbLink
                             href="#"
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => router.push(item.path)}
                         >
                             {index === 0 ? <HiHome /> : null} {item.name}

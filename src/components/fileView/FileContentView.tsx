@@ -5,9 +5,20 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
-import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Divider, Text, useDisclosure } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import {
+    CheckCircleIcon,
+    ChevronDownIcon,
+    DownloadIcon,
+} from '@chakra-ui/icons';
+import {
+    Box,
+    Button,
+    Collapse,
+    Divider,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -27,6 +38,7 @@ export default function FileContentView({
 }) {
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
+    const [fileViewable, setFileViewable] = useState(true);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -52,6 +64,16 @@ export default function FileContentView({
         });
     }, [data, name]);
 
+    const handleDownload = useCallback(() => {
+        if (!file) return;
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(file.content);
+        // if file.name ends with .file.extension, remove the extension
+        const fileName = removeFileExtension(file.name);
+        link.download = fileName + '.' + file.extension;
+        link.click();
+    }, [file]);
+
     const content = useMemo(() => {
         if (!file) return;
 
@@ -76,13 +98,22 @@ export default function FileContentView({
             case FileType.PowerPoint:
             case FileType.Excel:
             case FileType.Unsupported:
+                setFileViewable(false);
                 return (
                     <>
                         De weergave van dit bestandstype wordt niet ondersteund.
+                        <Button
+                            className="btn btn-green"
+                            ml={3}
+                            onClick={handleDownload}
+                            size="sm"
+                        >
+                            <DownloadIcon mr={1} /> Download
+                        </Button>
                     </>
                 );
         }
-    }, [file]);
+    }, [file, handleDownload]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -131,7 +162,21 @@ export default function FileContentView({
             <Collapse in={isOpen}>
                 <Divider borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
-                    <Box display="flex" justifyContent="flex-end" mb={6}>
+                    <Box
+                        className="btn-group"
+                        display="flex"
+                        justifyContent="flex-end"
+                        mb={6}
+                    >
+                        {fileViewable ? (
+                            <Button
+                                className="btn btn-gray"
+                                onClick={handleDownload}
+                                size="sm"
+                            >
+                                <DownloadIcon />
+                            </Button>
+                        ) : null}
                         <button className="btn btn-green" type="button">
                             <Box alignItems="center" display="flex" gap="8px">
                                 <CheckCircleIcon color="white" />

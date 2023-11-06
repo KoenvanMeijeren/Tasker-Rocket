@@ -66,20 +66,11 @@ export default function FileContentView({
 
     const handleDownload = useCallback(() => {
         if (!file) return;
-
-        const fileContent = new Blob([file.content], { type: file.mimeType });
-        const fileNameParts = file.name.split('.');
-        const fileExtension =
-            fileNameParts.length > 1 ? fileNameParts.pop() : '';
-        const fileNameWithoutExtension = fileNameParts.join('.');
-        const fileName =
-            fileNameWithoutExtension.endsWith(fileExtension ?? '') ||
-            !fileExtension
-                ? fileNameWithoutExtension
-                : `${fileNameWithoutExtension}.${fileExtension}`;
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(fileContent);
-        link.download = fileName;
+        link.href = window.URL.createObjectURL(file.content);
+        // if file.name ends with .file.extension, remove the extension
+        const fileName = removeFileExtension(file.name);
+        link.download = fileName + '.' + file.extension;
         link.click();
     }, [file]);
 

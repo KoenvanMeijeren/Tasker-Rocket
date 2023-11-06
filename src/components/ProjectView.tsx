@@ -9,63 +9,65 @@ import VerticalDivider from './VerticalDivider';
 import FileContentView from './fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
-	.split('/')
-	.pop();
+    .split('/')
+    .pop();
 
 type Data = {
-	dirs: GitHubTreeItem[];
-	files: GitHubTreeItem[];
+    dirs: GitHubTreeItem[];
+    files: GitHubTreeItem[];
 };
 
 export function ProjectView({
-	data,
-	parent,
+    data,
+    parent,
 }: {
-	data: GitHubTreeItem[] | GitHubTreeItem;
-	parent: string | undefined;
+    data: GitHubTreeItem[] | GitHubTreeItem;
+    parent: string | undefined;
 }) {
-	const [content, setContent] = useState<Data | null>(null);
+    const [content, setContent] = useState<Data | null>(null);
 
-	useEffect(() => {
-		if (data) {
-			setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-		}
-	}, [data]);
+    useEffect(() => {
+        if (data) {
+            setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
+        }
+    }, [data]);
 
-	if (!content) {
-		return null;
-	}
+    if (!content) {
+        return null;
+    }
 
-	return (
-		<Box>
-			{content.dirs && content.dirs.length > 0 ? (
-				<FoldersSection
-					data={content.dirs}
-					label={parent ?? repositoryName ?? 'Projecten'}
-				/>
-			) : null}
-			<Stack
-				alignItems="flex-start"
-				display="block"
-				flexDirection="column"
-				mb={3}
-				px="60px"
-				py="36px"
-			>
-				{content.files.map((item: GitHubTreeItem, index) => {
-					return (
-						<Box key={item.url}>
-							<FileContentView
-								contentUrl={item.download_url ?? ''}
-								key={item.url}
-								name={item.name}
-							/>
+    return (
+        <Box>
+            {content.dirs && content.dirs.length > 0 ? (
+                <FoldersSection
+                    data={content.dirs}
+                    label={parent ?? repositoryName ?? 'Projecten'}
+                />
+            ) : null}
+            <Stack
+                alignItems="flex-start"
+                display="block"
+                flexDirection="column"
+                mb={3}
+                px="60px"
+                py="36px"
+            >
+                {content.files.map((item: GitHubTreeItem, index) => {
+                    return (
+                        <Box key={item.url}>
+                            <FileContentView
+                                contentUrl={item.download_url ?? ''}
+                                key={item.url}
+                                name={item.name}
+                            />
 
-							{index != content.files.length - 1 ? <VerticalDivider /> : null}
-						</Box>
-					);
-				})}
-			</Stack>
-		</Box>
-	);
+                            {index != content.files.length - 1 ? (
+                                <VerticalDivider />
+                            ) : null}
+                        </Box>
+                    );
+                })}
+            </Stack>
+        </Box>
+    );
 }

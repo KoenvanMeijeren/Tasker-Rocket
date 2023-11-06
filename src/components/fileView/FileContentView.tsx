@@ -78,23 +78,6 @@ export default function FileContentView({
         if (!file) return;
 
         if (file.content.length < 1) {
-            setFileViewable(false);
-            return (
-                <>
-                    Dit bestand is te groot om te bekijken.
-                    <Button
-                        className="btn btn-green"
-                        ml={3}
-                        onClick={handleDownload}
-                        size="sm"
-                    >
-                        <DownloadIcon mr={1} /> Download
-                    </Button>
-                </>
-            );
-        }
-
-        if (file.content.length < 1) {
             return <>Dit bestand bevat geen content.</>;
         }
 

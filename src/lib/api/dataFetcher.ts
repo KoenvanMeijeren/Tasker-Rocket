@@ -29,6 +29,9 @@ export const fetchBlobData = async (options: FetcherOptions) => {
     return (await fetchData(options))?.blob();
 };
 
+/**
+ * The input for the SWR hook.
+ */
 export interface SwrRequestInput {
     url: string | URL | RequestInfo;
     payload?: RequestInit;
@@ -36,7 +39,15 @@ export interface SwrRequestInput {
     isPrivateData?: boolean;
 }
 
-const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
+/**
+ * A wrapper for the SWR hook, which uses the immutable data fetching.
+ */
+export const useImmutableDataFetcher = <DataType>(
+    dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
+    options: SwrRequestInput,
+    config: SWRConfiguration = {}
+) => {
+    // Default values for the request input
     const {
         url,
         payload = {},
@@ -44,6 +55,7 @@ const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
         isPrivateData = false,
     } = options;
 
+    // The headers are merged with the payload headers.
     const headers: HeadersInit = {
         ...payload.headers,
         ...(bearerToken.length > 0 && {
@@ -51,7 +63,8 @@ const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
         }),
     };
 
-    return {
+    // Prepare the fetcher options for the SWR hook.
+    const fetcherOptions: FetcherOptions = {
         input: url,
         init: {
             ...payload,
@@ -59,15 +72,8 @@ const convertToFetcherOptions = (options: SwrRequestInput): FetcherOptions => {
             cache: isPrivateData ? 'no-store' : 'default',
         },
     };
-};
 
-export const useImmutableDataFetcher = <DataType>(
-    dataFetcher: BareFetcher<DataType> | Fetcher<DataType> | null,
-    options: SwrRequestInput,
-    config: SWRConfiguration = {}
-) => {
-    const fetcherOptions = convertToFetcherOptions(options);
-
+    // Use the SWR hook with the prepared fetcher options.
     return useSWRImmutable<DataType, Error>(fetcherOptions, dataFetcher, {
         shouldRetryOnError: false,
         ...config,

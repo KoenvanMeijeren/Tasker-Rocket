@@ -19,6 +19,7 @@ cp .env.example .env
 ### Make GitHub access token
 
 To be able to use the GitHub API you need to create a personal access token. This can be done by following the steps below:
+
 1. Go to [GitHub](https://github.com) and login to your account.
 2. Go to [Settings -> Developer Settings -> Tokens ](https://github.com/settings/tokens) and click on `Generate new token`.
 3. Give the token a name and select the `repo` scope and `admin:org -> read:org` premissions.
@@ -43,7 +44,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Updates
 
-It's important to keep our dependencies up to date, so packages 
+It's important to keep our dependencies up to date, so packages
 should be updated regularly using the instructions below.
 
 ### Minor-updates

@@ -22,24 +22,3 @@
 .pos-r {
     position: relative;
 }
-
-.btn-group {
-    @apply flex;
-}
-
-.btn-group > .btn:not(:last-child) {
-    @apply rounded-r-none;
-}
-
-.btn-group > .btn:not(:first-child) {
-    @apply rounded-l-none;
-}
-
-.btn-group > .btn:not(:first-child):not(:last-child) {
-    @apply rounded-none;
-}
-
-.btn-gray {
-    @apply text-gray-300;
-    background-color: #666;
-}

@@ -10,9 +10,11 @@
         "build": "next build",
         "start": "next start",
         "tsc": "echo \"Running typescript check\" && tsc",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.md",
         "lint:fix": "eslint \"src/**/*.ts{,x}\" --fix",
-        "tests": "npm run lint && npm run tsc"
+        "prettier": "prettier . --check",
+        "prettier:fix": "prettier . --write",
+        "tests": "npm run lint && npm run prettier && npm run tsc"
     },
     "dependencies": {
         "@chakra-ui/card": "^2.2.0",

@@ -1,9 +1,9 @@
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ProjectView } from '@/components/ProjectView';
-import { useGitHubContentRootTree } from '@/lib/repository/gitHubRepository';
+import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {
-    const { data, error, isLoading } = useGitHubContentRootTree();
+    const { data, error, isLoading } = useGitHubContentTree('');
 
     if (error) {
         return <div>laden mislukt...</div>;

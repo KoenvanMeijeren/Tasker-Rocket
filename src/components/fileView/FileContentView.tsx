@@ -1,5 +1,5 @@
 import { useModeColors } from '@/hooks/useColors';
-import { useGitHubBlobContent } from '@/lib/repository/gitHubRepository';
+import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
     removeFileExtension,
     urlToFileExtension,
@@ -43,7 +43,7 @@ export default function FileContentView({
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
 
-    const { data, error, isLoading } = useGitHubBlobContent(contentUrl);
+    const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
     useEffect(() => {
         if (!data) return;

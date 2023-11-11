@@ -34,7 +34,7 @@ import {
     gitHubTreeItemsActions,
     isGitHubTreeItemCompleted,
 } from '@/lib/redux/slices/githubTreeItemsSlice';
-import VerticalDivider from '@/components/VerticalDivider';
+import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 

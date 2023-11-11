@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/react';
-import { colorConfig } from '../../theme.config';
+import { colorConfig } from '../../../theme.config';
 
 export const LoadingIndicator = ({ height }: { height?: string }) => (
     <Box

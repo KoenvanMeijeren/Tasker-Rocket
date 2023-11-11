@@ -1,5 +1,5 @@
-import { LoadingIndicator } from '@/components/LoadingIndicator';
-import { ProjectView } from '@/components/ProjectView';
+import { LoadingIndicator } from '@/components/general/LoadingIndicator';
+import { ProjectView } from '@/components/project/ProjectView';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 
 export default function Home() {

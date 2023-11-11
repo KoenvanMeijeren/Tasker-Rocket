@@ -6,7 +6,7 @@ import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
-import FileContentView from './fileView/FileContentView';
+import FileContentView from '../fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')

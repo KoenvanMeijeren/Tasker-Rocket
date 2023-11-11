@@ -48,7 +48,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={parent?.unique_key ?? repositoryName ?? 'Projecten'}
+                    label={parent?.name ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -61,16 +61,14 @@ export function ProjectView({
             >
                 {content.files.map((item: GitHubTreeItem, index) => {
                     return (
-                        <div key={item.unique_key ?? item.url}>
-                            <FileContentView
-                                contentUrl={item.download_url ?? ''}
-                                key={item.unique_key ?? item.url}
-                                lastItem={index == content.files.length - 1}
-                                name={item.name}
-                                parentKey={parent?.unique_key ?? 'default'}
-                                uniqueKey={item.unique_key ?? item.url}
-                            />
-                        </div>
+                        <FileContentView
+                            contentUrl={item.download_url ?? ''}
+                            key={item.unique_key ?? item.url}
+                            lastItem={index == content.files.length - 1}
+                            name={item.name}
+                            parentKey={parent?.unique_key ?? 'default'}
+                            uniqueKey={item.unique_key ?? item.url}
+                        />
                     );
                 })}
             </Stack>

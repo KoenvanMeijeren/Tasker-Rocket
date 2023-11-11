@@ -44,6 +44,7 @@
     "eslint-config-next": "^13.4.19",
     "github-markdown-css": "^5.2.0",
     "highlight.js": "^11.8.0",
+    "lodash": "^4.17.21",
     "next": "^13.4.12",
     "object-hash": "^3.0.0",
     "postcss": "^8.4.29",

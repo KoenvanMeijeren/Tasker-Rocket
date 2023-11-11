@@ -8,7 +8,7 @@ export function setupGitHubItemStateListeners(
 ): Unsubscribe {
 	const listeners = [
 		startListening({
-			actionCreator: gitHubTreeItemsActions.changeState,
+			actionCreator: gitHubTreeItemsActions.toggleCompleted,
 			effect: () => {},
 		}),
 	];

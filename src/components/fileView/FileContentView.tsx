@@ -25,17 +25,22 @@ import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 import { useAppDispatch, useAppSelector } from '@/lib/store/store';
-import { gitHubTreeItemsActions } from '@/lib/store/githubItemState/slice';
+import {
+	gitHubTreeItemsActions,
+	isGitHubTreeItemCompleted,
+} from '@/lib/store/githubItemState/slice';
 import { RiTodoFill } from 'react-icons/ri';
 import VerticalDivider from '@/components/VerticalDivider';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 
 export default function FileContentView({
+	parentKey,
 	uniqueKey,
 	name,
 	contentUrl,
 	lastItem,
 }: {
+	parentKey: string;
 	uniqueKey: string;
 	name: string;
 	contentUrl: string;
@@ -50,14 +55,18 @@ export default function FileContentView({
 
 	const { data, error, isLoading } = useGitHubBlobContent(contentUrl);
 
-	const itemsState = useAppSelector((state) => state.itemsState);
-	const isItemCompleted = itemsState.items[uniqueKey] ?? false;
+	const itemsState = useAppSelector((state) => state.items);
+	const isItemCompleted = isGitHubTreeItemCompleted(
+		itemsState,
+		parentKey,
+		uniqueKey,
+	);
 
-	const handleTaskCompleterClick = () => {
+	const toggleTaskCompleted = () => {
 		storeDispatcher(
-			gitHubTreeItemsActions.changeState({
-				key: uniqueKey,
-				completed: !(itemsState.items[uniqueKey] ?? false),
+			gitHubTreeItemsActions.toggleCompleted({
+				parentKey: parentKey,
+				itemKey: uniqueKey,
 			}),
 		);
 	};
@@ -143,7 +152,7 @@ export default function FileContentView({
 							<Icon as={RiTodoFill} color={colorConfig.blue} />
 						) : null}
 						<Text className="noselect" fontSize="18px">
-							{file.name}
+							{file.name} - {parentKey}
 						</Text>
 					</Box>
 					<Box>
@@ -163,7 +172,7 @@ export default function FileContentView({
 						<Box display="flex" justifyContent="flex-end" mb={6}>
 							<button
 								className={isItemCompleted ? 'btn btn-danger' : 'btn btn-green'}
-								onClick={handleTaskCompleterClick}
+								onClick={toggleTaskCompleted}
 								type="button"
 							>
 								<Box alignItems="center" display="flex" gap="8px">

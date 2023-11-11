@@ -1,11 +1,11 @@
 'use client';
-import { GitHubTreeItem } from '@/types/gitHubData';
+
+import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
-import VerticalDivider from './VerticalDivider';
 import FileContentView from './fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
@@ -22,14 +22,14 @@ export function ProjectView({
 	parent,
 }: {
 	data: GitHubTreeItem[] | GitHubTreeItem;
-	parent: string | undefined;
+	parent: GitHubTreeParentItem | null;
 }) {
 	const [content, setContent] = useState<Data | null>(null);
 
 	useEffect(() => {
-		if (data) {
-			setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-		}
+		if (!data) return;
+
+		setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
 	}, [data]);
 
 	if (!content) {
@@ -41,7 +41,7 @@ export function ProjectView({
 			{content.dirs && content.dirs.length > 0 ? (
 				<FoldersSection
 					data={content.dirs}
-					label={parent ?? repositoryName ?? 'Projecten'}
+					label={parent?.parentKey ?? repositoryName ?? 'Projecten'}
 				/>
 			) : null}
 			<Stack
@@ -54,13 +54,16 @@ export function ProjectView({
 			>
 				{content.files.map((item: GitHubTreeItem, index) => {
 					return (
-						<FileContentView
-							contentUrl={item.download_url ?? ''}
-							key={item.unique_key ?? item.url}
-							lastItem={index == content.files.length - 1}
-							name={item.name}
-							uniqueKey={item.unique_key ?? item.url}
-						/>
+						<div key={item.unique_key ?? item.url}>
+							<FileContentView
+								contentUrl={item.download_url ?? ''}
+								key={item.unique_key ?? item.url}
+								lastItem={index == content.files.length - 1}
+								name={item.name}
+								parentKey={parent?.parentKey ?? 'default'}
+								uniqueKey={item.unique_key ?? item.url}
+							/>
+						</div>
 					);
 				})}
 			</Stack>

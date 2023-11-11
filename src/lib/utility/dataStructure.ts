@@ -12,16 +12,21 @@ export const isFile = (file: GitHubTreeItem) =>
 export const isDir = (file: GitHubTreeItem) =>
 	file.type === (GitHubTreeItemType.Dir as string);
 
+export const hashItem = (item: GitHubTreeItem) => {
+	item.unique_key = objectHash({
+		name: item.name,
+		path: item.path,
+		url: item.url,
+		type: item.type,
+	});
+};
+
 export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
 	const dirs: GitHubTreeItem[] = [];
 	const files: GitHubTreeItem[] = [];
 	data.forEach((item) => {
-		item.unique_key = objectHash({
-			name: item.name,
-			path: item.path,
-			url: item.url,
-			type: item.type,
-		});
+		hashItem(item);
+
 		if (isDir(item)) {
 			dirs.push(item);
 		} else if (isFile(item)) {

@@ -6,10 +6,10 @@ import { Box, Collapse, Icon, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import Heading from './textStyles/Heading';
 import Text from './textStyles/Text';
-import { useAppSelector } from '@/lib/store/store';
-import { isGitHubTreeFolderCompleted } from '@/lib/store/githubItemState/slice';
+import { isGitHubTreeFolderCompleted } from '@/lib/redux/slices/githubTreeItemsSlice';
 import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
+import { useAppSelector } from '@/lib/redux/hooks';
 
 type GitHubTreeFolder = {
     name: string;
@@ -26,7 +26,7 @@ export const FoldersSection = ({
     data: GitHubTreeItem[];
     label: string;
 }) => {
-    const itemsState = useAppSelector((state) => state.items);
+    const itemsState = useAppSelector((state) => state.gitHubItems);
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, fontColor } =

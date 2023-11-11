@@ -3,25 +3,19 @@
 import theme from '@/components/theme/theme';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider } from '@chakra-ui/react';
-import { useEffect } from 'react';
-import { Unsubscribe } from '@reduxjs/toolkit';
-import { startAppListening, store } from '@/lib/store/store';
-import { setupGitHubItemStateListeners } from '@/lib/store/githubItemState/listener';
+import { persistedStore, store } from '@/lib/redux/store';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    useEffect(() => {
-        const subscriptions: Unsubscribe[] = [
-            setupGitHubItemStateListeners(startAppListening),
-        ];
-
-        return () => subscriptions.forEach((unsubscribe) => unsubscribe());
-    }, []);
-
     return (
         <CacheProvider>
             <ChakraProvider theme={theme}>
-                <Provider store={store}>{children}</Provider>
+                <Provider store={store}>
+                    <PersistGate persistor={persistedStore}>
+                        {children}
+                    </PersistGate>
+                </Provider>
             </ChakraProvider>
         </CacheProvider>
     );

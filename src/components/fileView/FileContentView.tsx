@@ -30,13 +30,13 @@ import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 import ExcelView from './ExcelView';
-import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import {
     gitHubTreeItemsActions,
     isGitHubTreeItemCompleted,
-} from '@/lib/store/githubItemState/slice';
+} from '@/lib/redux/slices/githubTreeItemsSlice';
 import VerticalDivider from '@/components/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 
 export default function FileContentView({
     parentKey,
@@ -61,7 +61,7 @@ export default function FileContentView({
 
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
-    const itemsState = useAppSelector((state) => state.items);
+    const itemsState = useAppSelector((state) => state.gitHubItems);
     const isItemCompleted = isGitHubTreeItemCompleted(
         itemsState,
         parentKey,

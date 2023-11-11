@@ -36,8 +36,8 @@ export const isGitHubTreeFolderCompleted = (
         : false;
 };
 
-export const gitHubTreeItemsStateSlice = createSlice({
-    name: 'items',
+export const gitHubTreeItemsSlice = createSlice({
+    name: 'gitHubItems',
     initialState: {} as GitHubTreeItemsState,
     reducers: {
         toggleCompleted(
@@ -61,4 +61,4 @@ export const gitHubTreeItemsStateSlice = createSlice({
     },
 });
 
-export const gitHubTreeItemsActions = gitHubTreeItemsStateSlice.actions;
+export const gitHubTreeItemsActions = gitHubTreeItemsSlice.actions;

@@ -51,9 +51,9 @@ export function Markdown({ markdown }: { markdown: string }) {
     }, [markdown]);
 
     return (
-        // eslint-disable-next-line react/no-danger
         <div
             className="markdown-body"
+            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: html }}
         />
     );

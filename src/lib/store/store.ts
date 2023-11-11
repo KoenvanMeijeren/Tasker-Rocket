@@ -3,9 +3,6 @@ import {
     configureStore,
     createListenerMiddleware,
     TypedStartListening,
-    TypedAddListener,
-    ListenerEffectAPI,
-    addListener,
 } from '@reduxjs/toolkit';
 import { gitHubTreeItemsStateSlice } from '@/lib/store/githubItemState/slice';
 

@@ -22,7 +22,7 @@ export function ProjectView({
     parent,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
-    parent: GitHubTreeParentItem | null;
+    parent: GitHubTreeParentItem | undefined | null;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 

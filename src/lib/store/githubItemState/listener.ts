@@ -4,14 +4,14 @@ import { Unsubscribe } from '@reduxjs/toolkit';
 import { AppStartListening } from '@/lib/store/store';
 
 export function setupGitHubItemStateListeners(
-	startListening: AppStartListening,
+    startListening: AppStartListening
 ): Unsubscribe {
-	const listeners = [
-		startListening({
-			actionCreator: gitHubTreeItemsActions.toggleCompleted,
-			effect: () => {},
-		}),
-	];
+    const listeners = [
+        startListening({
+            actionCreator: gitHubTreeItemsActions.toggleCompleted,
+            effect: () => {},
+        }),
+    ];
 
-	return () => listeners.forEach((unsubscribe) => unsubscribe());
+    return () => listeners.forEach((unsubscribe) => unsubscribe());
 }

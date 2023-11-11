@@ -10,19 +10,19 @@ import { setupGitHubItemStateListeners } from '@/lib/store/githubItemState/liste
 import { Provider } from 'react-redux';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-	useEffect(() => {
-		const subscriptions: Unsubscribe[] = [
-			setupGitHubItemStateListeners(startAppListening),
-		];
+    useEffect(() => {
+        const subscriptions: Unsubscribe[] = [
+            setupGitHubItemStateListeners(startAppListening),
+        ];
 
-		return () => subscriptions.forEach((unsubscribe) => unsubscribe());
-	}, []);
+        return () => subscriptions.forEach((unsubscribe) => unsubscribe());
+    }, []);
 
-	return (
-		<CacheProvider>
-			<ChakraProvider theme={theme}>
-				<Provider store={store}>{children}</Provider>
-			</ChakraProvider>
-		</CacheProvider>
-	);
+    return (
+        <CacheProvider>
+            <ChakraProvider theme={theme}>
+                <Provider store={store}>{children}</Provider>
+            </ChakraProvider>
+        </CacheProvider>
+    );
 }

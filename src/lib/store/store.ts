@@ -1,44 +1,44 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import {
-	configureStore,
-	createListenerMiddleware,
-	TypedStartListening,
-	TypedAddListener,
-	ListenerEffectAPI,
-	addListener,
+    configureStore,
+    createListenerMiddleware,
+    TypedStartListening,
+    TypedAddListener,
+    ListenerEffectAPI,
+    addListener,
 } from '@reduxjs/toolkit';
 import { gitHubTreeItemsStateSlice } from '@/lib/store/githubItemState/slice';
 
 const listenerMiddlewareInstance = createListenerMiddleware({
-	// eslint-disable-next-line no-console
-	onError: () => console.error,
+    // eslint-disable-next-line no-console
+    onError: () => console.error,
 });
 
 // convert object to string and store in localStorage
 function saveToLocalStorage(state: unknown) {
-	const serialisedState = JSON.stringify(state);
-	localStorage.setItem('persistentState', serialisedState);
+    const serialisedState = JSON.stringify(state);
+    localStorage.setItem('persistentState', serialisedState);
 }
 
 // load string from localStorage and convert back in to an Object
 // invalid output must be undefined
 function loadFromLocalStorage() {
-	try {
-		const serialisedState = localStorage.getItem('persistentState');
-		if (serialisedState === null) return undefined;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return JSON.parse(serialisedState);
-	} catch (e) {
-		return undefined;
-	}
+    try {
+        const serialisedState = localStorage.getItem('persistentState');
+        if (serialisedState === null) return undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return JSON.parse(serialisedState);
+    } catch (e) {
+        return undefined;
+    }
 }
 
 const store = configureStore({
-	reducer: {
-		[gitHubTreeItemsStateSlice.name]: gitHubTreeItemsStateSlice.reducer,
-	},
-	preloadedState: loadFromLocalStorage(),
-	middleware: (gDM) => gDM().prepend(listenerMiddlewareInstance.middleware),
+    reducer: {
+        [gitHubTreeItemsStateSlice.name]: gitHubTreeItemsStateSlice.reducer,
+    },
+    preloadedState: loadFromLocalStorage(),
+    middleware: (gDM) => gDM().prepend(listenerMiddlewareInstance.middleware),
 });
 
 // listen for store changes and use saveToLocalStorage to
@@ -56,7 +56,7 @@ export type AppDispatch = typeof store.dispatch;
 export type AppStartListening = TypedStartListening<RootState, AppDispatch>;
 
 export const startAppListening =
-	listenerMiddlewareInstance.startListening as AppStartListening;
+    listenerMiddlewareInstance.startListening as AppStartListening;
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return

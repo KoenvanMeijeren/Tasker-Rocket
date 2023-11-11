@@ -1,33 +1,33 @@
 .btn {
-  @apply font-bold py-1 px-3 rounded;
+    @apply font-bold py-1 px-3 rounded;
 }
 
 .btn-green {
-  @apply text-white;
-  background-color: #239964;
+    @apply text-white;
+    background-color: #239964;
 }
 
 .btn-green:hover {
-  @apply bg-green-500;
+    @apply bg-green-500;
 }
 
 .btn-danger {
-  @apply text-white;
-  background-color: #ef4444;
+    @apply text-white;
+    background-color: #ef4444;
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
+    background-color: #dc2626;
 }
 
 .copy-btn {
-  @apply text-white;
-  background-color: #239964;
-  position: absolute;
-  top: 15px;
-  z-index: 2;
+    @apply text-white;
+    background-color: #239964;
+    position: absolute;
+    top: 15px;
+    z-index: 2;
 }
 
 .pos-r {
-  position: relative;
+    position: relative;
 }

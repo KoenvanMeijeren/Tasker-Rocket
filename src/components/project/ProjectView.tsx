@@ -7,6 +7,8 @@ import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
+import { useAppDispatch } from '@/lib/redux/hooks';
+import { gitHubTreeItemsActions } from '@/lib/redux/slices/githubTreeItemsSlice';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')
@@ -24,13 +26,18 @@ export function ProjectView({
     data: GitHubTreeItem[] | GitHubTreeItem;
     parent: GitHubTreeParentItem | undefined | null;
 }) {
+    const storeDispatcher = useAppDispatch();
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {
         if (!data) return;
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-    }, [data]);
+
+        if (parent) {
+            storeDispatcher(gitHubTreeItemsActions.initTree(parent));
+        }
+    }, [data, parent, storeDispatcher]);
 
     if (!content) {
         return null;
@@ -41,7 +48,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={parent?.parentKey ?? repositoryName ?? 'Projecten'}
+                    label={parent?.unique_key ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -60,7 +67,7 @@ export function ProjectView({
                                 key={item.unique_key ?? item.url}
                                 lastItem={index == content.files.length - 1}
                                 name={item.name}
-                                parentKey={parent?.parentKey ?? 'default'}
+                                parentKey={parent?.unique_key ?? 'default'}
                                 uniqueKey={item.unique_key ?? item.url}
                             />
                         </div>

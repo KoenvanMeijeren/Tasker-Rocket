@@ -1,15 +1,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-export type GitHubTreeItemToggleCompletedAction = {
-    parentKey: string;
-    itemKey: string;
-};
+import { GitHubTreeParentItem } from '@/types/gitHubData';
 
 export interface GitHubTreeItemsState {
     [parentKey: string]: {
-        [itemKey: string]: boolean;
+        children: number;
+        completedChildren: {
+            [taskKey: string]: boolean;
+        };
     };
 }
 
@@ -22,7 +21,7 @@ export const isGitHubTreeItemCompleted = (
         return false;
     }
 
-    return state[parentKey][itemKey];
+    return state[parentKey].completedChildren[itemKey];
 };
 
 export const isGitHubTreeFolderCompleted = (
@@ -30,33 +29,57 @@ export const isGitHubTreeFolderCompleted = (
     parentKey: string
 ): boolean => {
     const parent = state[parentKey];
+    if (!parent) {
+        return false;
+    }
 
-    return parent
-        ? Object.values(parent).every((completed) => completed)
-        : false;
+    const completedItems = Object.values(parent.completedChildren).filter(
+        (child) => child
+    );
+
+    return completedItems.length === parent.children;
 };
 
 export const gitHubTreeItemsSlice = createSlice({
     name: 'gitHubItems',
     initialState: {} as GitHubTreeItemsState,
     reducers: {
+        initTree(
+            state: GitHubTreeItemsState,
+            action: PayloadAction<GitHubTreeParentItem>
+        ) {
+            const { unique_key: parentKey, children } = action.payload;
+            if (!parentKey) return;
+
+            // Ensure the parentKey exists in the state
+            if (!state[parentKey]) {
+                state[parentKey] = {
+                    children: children,
+                    completedChildren: {},
+                };
+                return;
+            }
+
+            state[parentKey].children = children;
+        },
+
         toggleCompleted(
             state: GitHubTreeItemsState,
-            action: PayloadAction<GitHubTreeItemToggleCompletedAction>
+            action: PayloadAction<{
+                parentKey: string;
+                itemKey: string;
+            }>
         ) {
             const { parentKey, itemKey } = action.payload;
 
             // Ensure the parentKey exists in the state
             if (!state[parentKey]) {
-                state[parentKey] = {};
+                state[parentKey].completedChildren = {};
             }
 
             // Update the completed state for the specific itemKey under the parentKey
-            state[parentKey][itemKey] = !isGitHubTreeItemCompleted(
-                state,
-                parentKey,
-                itemKey
-            );
+            state[parentKey].completedChildren[itemKey] =
+                !isGitHubTreeItemCompleted(state, parentKey, itemKey);
         },
     },
 });

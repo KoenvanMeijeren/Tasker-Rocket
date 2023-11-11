@@ -24,7 +24,7 @@ export default function ProjectContent() {
     const parentResult = useGitHubContentTree(parentPath);
 
     useEffect(() => {
-        if (!parentResult.data) return;
+        if (!parentResult.data || !data) return;
 
         const parentData = parentResult.data;
         if (!Array.isArray(parentData)) return;
@@ -41,10 +41,9 @@ export default function ProjectContent() {
         if (searchResult) {
             hashItem(searchResult);
             const newItem: GitHubTreeParentItem = {
-                parentKey: searchResult.unique_key,
+                unique_key: searchResult.unique_key,
                 name: searchResult.name,
-                subTreeChildren: Array.isArray(data) ? data.length : 0,
-                children: parentData.length,
+                children: Array.isArray(data) ? data.length : 0,
             };
 
             if (!isEqual(newItem, parentItem)) {

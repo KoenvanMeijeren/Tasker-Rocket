@@ -13,6 +13,21 @@ export const gitHubConfig = {
     is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
 
+/**
+ * Fetches the data of GitHub repository tree.
+ *
+ * The content of the tree items is partially downloaded, only if the file is,
+ * smaller than 2 MB.
+ *
+ * Example tree:
+ * - Folder 1
+ * - - File 1.md
+ * - - File 2.md
+ * - - Folder 1.1
+ * - - - File 1.1.1.md
+ * - - - File 1.1.2.md
+ * - Folder 2
+ */
 export function useGitHubContentTree(path: string) {
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeItem[] | GitHubTreeItem
@@ -25,11 +40,10 @@ export function useGitHubContentTree(path: string) {
     return { data, isLoading, error };
 }
 
-export function useGitHubContentRootTree() {
-    return useGitHubContentTree('');
-}
-
-export function useGitHubBlobContent(url: string) {
+/**
+ * Fetches the data of a file of a GitHub repository.
+ */
+export function useGitHubFileContent(url: string) {
     return useImmutableDataFetcher(fetchBlobData, {
         url,
         isPrivateData: gitHubConfig.is_private,

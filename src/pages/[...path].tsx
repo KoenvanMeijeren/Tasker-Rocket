@@ -7,21 +7,23 @@ import { useRouter } from 'next/router';
 import ErrorCard from '@/components/error/ErrorCard';
 
 export default function ProjectContent() {
-	const router = useRouter();
-	const path = decodeURIComponent(router.asPath);
-	const parent = path.split('/').pop();
+    const router = useRouter();
+    const path = decodeURIComponent(router.asPath);
+    const parent = path.split('/').pop();
 
-	const { data, error, isLoading } = useGitHubContentTree(
-		decodeURIComponent(path),
-	);
+    const { data, error, isLoading } = useGitHubContentTree(
+        decodeURIComponent(path)
+    );
 
 	if (error) {
 		return ErrorCard(error.message);
 	}
 
-	if (isLoading || !data) {
-		return <LoadingIndicator />;
-	}
+    if (isLoading || !data) {
+        return <LoadingIndicator />;
+    }
 
-	return <ProjectView data={data as GitHubTreeItem[]} parent={parent || ''} />;
+    return (
+        <ProjectView data={data as GitHubTreeItem[]} parent={parent || ''} />
+    );
 }

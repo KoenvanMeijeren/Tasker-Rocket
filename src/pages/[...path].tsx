@@ -4,6 +4,7 @@ import { ProjectView } from '@/components/ProjectView';
 import { GitHubTreeItem } from '@/types/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
+import ErrorCard from '@/components/error/ErrorCard';
 
 export default function ProjectContent() {
 	const router = useRouter();
@@ -15,7 +16,7 @@ export default function ProjectContent() {
 	);
 
 	if (error) {
-		return <div>laden mislukt...</div>;
+		return ErrorCard(error.message);
 	}
 
 	if (isLoading || !data) {

@@ -1,5 +1,14 @@
 import React from 'react';
 import './errorCard.css';
+import {
+	Alert,
+	AlertIcon,
+	AlertTitle,
+	AlertDescription,
+	Button,
+	Box,
+	CloseButton,
+} from '@chakra-ui/react';
 
 function onDismiss() {
 	window.location.reload();
@@ -17,18 +26,26 @@ function dismiss() {
 
 function ErrorCard(error: string): JSX.Element {
 	return (
-		<div className="error-card">
-			<div className="error-content">
-				<h1>Something went wrong</h1>
-				<p className="font-semibold">{error}</p>
-				<p>
-					The page will be reloaded automatically when you dismiss this message.
-				</p>
-				<button onClick={dismiss} type="button">
-					I understand
-				</button>
-			</div>
-		</div>
+		<Alert
+			alignItems="center"
+			justifyContent="center"
+			status="error"
+			textAlign="center"
+		>
+			<Box>
+				<AlertTitle>An error occured!</AlertTitle>
+				<AlertDescription>{error}</AlertDescription>
+				<Button colorScheme="blue">Button</Button>
+				<AlertIcon />
+			</Box>
+			<CloseButton
+				alignSelf="flex-start"
+				onClick={dismiss}
+				position="relative"
+				right={-1}
+				top={-1}
+			/>
+		</Alert>
 	);
 }
 

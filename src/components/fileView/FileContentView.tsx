@@ -17,6 +17,7 @@ import PdfFileView from '@/components/fileView/PdfFileView';
 import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
+import ErrorCard from '../error/ErrorCard';
 
 export default function FileContentView({
 	name,
@@ -79,7 +80,7 @@ export default function FileContentView({
 	}, [file]);
 
 	if (error) {
-		return <div>laden mislukt...</div>;
+		return ErrorCard(error.message);
 	}
 
 	if (isLoading || !file) {

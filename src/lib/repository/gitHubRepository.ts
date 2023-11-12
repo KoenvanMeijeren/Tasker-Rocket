@@ -1,4 +1,4 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeItem, GitHubUser } from '@/types/gitHubData';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import {
     fetchBlobData,
@@ -12,6 +12,17 @@ export const gitHubConfig = {
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
     is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
+
+export function useGithubUserData() {
+    const { data, isLoading, error } =
+        useImmutableDataFetcher<GitHubUser | null>(fetchJsonData, {
+            url: `${gitHubConfig.base_url}/user`,
+            bearerToken: gitHubConfig.token,
+            isPrivateData: false,
+        });
+
+    return { data, isLoading, error };
+}
 
 /**
  * Fetches the data of GitHub repository tree.

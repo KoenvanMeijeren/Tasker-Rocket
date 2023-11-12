@@ -90,11 +90,16 @@ export const SideBar = () => {
 			<Stack
 				alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
 				as="nav"
+				gap={4}
 			>
-				{/* Write an implementation where the tree is rendered recursively in collapsibles, so each githubtreeitem is a collpasible with their children in them, the children can be collapsibles or just a normal navitem if leaf node. */}
 				<>
 					{tree.map((item) => (
-						<NavItem key={item.path} navSize={navSize} treeItem={item} />
+						<NavItem
+							key={item.path}
+							navSize={navSize}
+							tabs={0}
+							treeItem={item}
+						/>
 					))}
 				</>
 			</Stack>

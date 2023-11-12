@@ -25,6 +25,20 @@ export function ProjectView({
     parent: string | undefined;
 }) {
     const [content, setContent] = useState<Data | null>(null);
+    const [fullScreen, setFullScreen] = useState(false);
+    const [fullscreenName, setFullscreenName] = useState<string>('');
+    const [fullscreenContentUrl, setFullscreenContentUrl] =
+        useState<string>('');
+
+    const updateVariableInChild = (name: string, contentUrl: string) => {
+        setFullScreen(!fullScreen);
+        if (!fullScreen) {
+            setFullscreenName(name);
+            setFullscreenContentUrl(contentUrl);
+        } else {
+            setFullscreenName('');
+        }
+    };
 
     useEffect(() => {
         if (data) {
@@ -44,30 +58,40 @@ export function ProjectView({
                     label={parent ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
-            <Stack
-                alignItems="flex-start"
-                display="block"
-                flexDirection="column"
-                mb={3}
-                px="60px"
-                py="36px"
-            >
-                {content.files.map((item: GitHubTreeItem, index) => {
-                    return (
+
+            {!fullScreen ? (
+                <Stack
+                    alignItems="flex-start"
+                    display="block"
+                    flexDirection="column"
+                    mb={3}
+                    px="60px"
+                    py="36px"
+                >
+                    {content.files.map((item: GitHubTreeItem, index) => (
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
                                 key={item.url}
                                 name={item.name}
+                                toggleFullScreen={updateVariableInChild}
                             />
-
-                            {index != content.files.length - 1 ? (
+                            {index !== content.files.length - 1 ? (
                                 <VerticalDivider />
                             ) : null}
                         </Box>
-                    );
-                })}
-            </Stack>
+                    ))}
+                </Stack>
+            ) : (
+                <Box key={fullscreenName}>
+                    <FileContentView
+                        contentUrl={fullscreenContentUrl ?? ''}
+                        key={fullscreenContentUrl}
+                        name={fullscreenName}
+                        toggleFullScreen={updateVariableInChild}
+                    />
+                </Box>
+            )}
         </Box>
     );
 }

@@ -10,6 +10,7 @@ import {
     ChevronDownIcon,
     DownloadIcon,
 } from '@chakra-ui/icons';
+import { AiOutlineFullscreen } from 'react-icons/ai';
 import {
     Box,
     Button,
@@ -33,14 +34,19 @@ import ExcelView from './ExcelView';
 export default function FileContentView({
     name,
     contentUrl,
+    toggleFullScreen,
 }: {
     name: string;
     contentUrl: string;
+    toggleFullScreen: (name: string, contentUrl: string) => void;
 }) {
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
 
+    const handleFullScreen = () => {
+        toggleFullScreen(name, contentUrl);
+    };
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
 
@@ -150,7 +156,11 @@ export default function FileContentView({
                         {file.name}
                     </Text>
                 </Box>
-                <Box>
+                <Box alignItems="center" display="flex">
+                    <AiOutlineFullscreen
+                        onClick={handleFullScreen}
+                        size="20px"
+                    />
                     <ChevronDownIcon
                         boxSize={10}
                         color={fontColor}

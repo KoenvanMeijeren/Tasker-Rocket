@@ -1,7 +1,7 @@
 'use client';
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ProjectView } from '@/components/ProjectView';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
 import { useSearchParams } from 'next/navigation';
@@ -17,13 +17,13 @@ export default function ProjectContent() {
 
 	const { data, error, isLoading } = useGitHubContentTree(path);
 
-	if (error) {
-		return <div>laden mislukt...</div>;
-	}
+    if (error) {
+        return <div>laden mislukt...</div>;
+    }
 
-	if (isLoading || !data) {
-		return <LoadingIndicator />;
-	}
+    if (isLoading || !data) {
+        return <LoadingIndicator />;
+    }
 
 	return (
 		<ProjectView

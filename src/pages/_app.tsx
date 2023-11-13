@@ -7,12 +7,12 @@ import type { AppProps } from 'next/app';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default function App({ Component, pageProps }: AppProps) {
-	return (
-		<Providers>
-			<Flex minHeight="100vh" minWidth="100%">
-				<SideBar />
-				<Content Component={Component} pageProps={pageProps} />
-			</Flex>
-		</Providers>
-	);
+    return (
+        <Providers>
+            <Flex minHeight="100vh" minWidth="100%">
+                <SideBar />
+                <Content Component={Component} pageProps={pageProps} />
+            </Flex>
+        </Providers>
+    );
 }

@@ -1,28 +1,54 @@
-import { GithubTree } from '@/components/navigation/sideBar/SideBar';
-import { useAuthenticatedDataFetcher } from '@/lib/api/dataFetcher';
-import { GitHubTreeItem } from '@/lib/repository/gitHubData';
+import {
+    fetchBlobData,
+    fetchJsonData,
+    useImmutableDataFetcher,
+} from '@/lib/api/dataFetcher';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
+import { GitHubTreeItem } from '@/types/gitHubData';
 
 export const gitHubConfig = {
-	base_url: 'https://api.github.com',
-	token: getEnvValue(EnvOptions.GitHubToken),
-	content_repository: getEnvValue(EnvOptions.GithubContentRepository),
+    base_url: 'https://api.github.com',
+    token: getEnvValue(EnvOptions.GitHubToken),
+    content_repository: getEnvValue(EnvOptions.GithubContentRepository),
+    is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
 
-export function useGitHubContentRootTree(recursive = false) {
-	const path = recursive ? '/git/trees/main?recursive=1' : '/contents';
-	return useAuthenticatedDataFetcher<GitHubTreeItem[] | GithubTree>(
-		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
-		gitHubConfig.token,
-	);
-}
-export function useGitHubContentTree(path: string) {
-	const { data, isLoading, error } = useAuthenticatedDataFetcher<
-		GitHubTreeItem[] | GitHubTreeItem
-	>(
-		`${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
-		gitHubConfig.token,
-	);
+/**
+ * Fetches the data of GitHub repository tree.
+ *
+ * The content of the tree items is partially downloaded, only if the file is,
+ * smaller than 2 MB.
+ *
+ * Example tree:
+ * - Folder 1
+ * - - File 1.md
+ * - - File 2.md
+ * - - Folder 1.1
+ * - - - File 1.1.1.md
+ * - - - File 1.1.2.md
+ * - Folder 2
+ */
 
-	return { data, isLoading, error };
+export function useGitHubContentTree(path: string, recursive = false) {
+    path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
+
+    const { data, isLoading, error } = useImmutableDataFetcher<
+        GitHubTreeItem[] | GitHubTreeItem
+    >(fetchJsonData, {
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
+        bearerToken: gitHubConfig.token,
+        isPrivateData: gitHubConfig.is_private,
+    });
+
+    return { data, isLoading, error };
+}
+
+/**
+ * Fetches the data of a file of a GitHub repository.
+ */
+export function useGitHubFileContent(url: string) {
+    return useImmutableDataFetcher(fetchBlobData, {
+        url,
+        isPrivateData: gitHubConfig.is_private,
+    });
 }

@@ -1,0 +1,39 @@
+.btn {
+    @apply font-bold py-1 px-3 rounded;
+}
+
+.btn-green {
+    @apply text-white;
+    background-color: #239964;
+}
+
+.btn-green:hover {
+    @apply bg-green-500;
+}
+
+.copy-btn {
+    @apply text-white;
+    background-color: #239964;
+    position: absolute;
+    top: 15px;
+    z-index: 2;
+}
+
+.pos-r {
+    position: relative;
+}
+
+.pagination-btn {
+    @apply font-bold py-1 px-3 rounded;
+    @apply text-white;
+    background-color: #239964;
+}
+
+.pagination-btn:hover {
+    @apply bg-green-500;
+}
+
+.pagination-text {
+    @apply font-bold;
+    margin: 0 10px;
+}

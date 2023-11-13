@@ -14,64 +14,69 @@ const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
 
 function pathToBreadcrumbs(path: string): {
-	name: string;
-	path: string;
+    name: string;
+    path: string;
 }[] {
 	const url = removeQueryParamsFromURl(decodeURIComponent(path));
 	if (url === '/') {
 		return [];
 	}
 
-	const breadcrumbs = url.split('/');
-	return breadcrumbs
-		.map((breadcrumb: string, index: number) => {
-			if (excludedBreadcrumbs.includes(breadcrumb)) {
-				return {
-					name: 'empty',
-					path: '',
-				};
-			}
+    const breadcrumbs = url.split('/');
+    return breadcrumbs
+        .map((breadcrumb: string, index: number) => {
+            if (excludedBreadcrumbs.includes(breadcrumb)) {
+                return {
+                    name: 'empty',
+                    path: '',
+                };
+            }
 
-			const breadcrumbPath = breadcrumbs.slice(0, index + 1).join('/');
-			if (breadcrumbPath.length < 1) {
-				return {
-					name: '',
-					path: '/',
-				};
-			}
+            const breadcrumbPath = breadcrumbs.slice(0, index + 1).join('/');
+            if (breadcrumbPath.length < 1) {
+                return {
+                    name: '',
+                    path: '/',
+                };
+            }
 
-			return {
-				name: urlToReadableString(
-					replaceAll(breadcrumb, removedBreadcrumbCharacters, ''),
-				),
-				path: breadcrumbs.slice(0, index + 1).join('/'),
-			};
-		})
-		.filter((item) => item.name !== 'empty');
+            return {
+                name: urlToReadableString(
+                    replaceAll(breadcrumb, removedBreadcrumbCharacters, '')
+                ),
+                path: breadcrumbs.slice(0, index + 1).join('/'),
+            };
+        })
+        .filter((item) => item.name !== 'empty');
 }
 
 export function Breadcrumbs() {
-	const router = useRouter();
-	const breadcrumbs = pathToBreadcrumbs(router.asPath);
-	if (breadcrumbs.length < 1) {
-		return null;
-	}
+    const router = useRouter();
+    const breadcrumbs = pathToBreadcrumbs(router.asPath);
+    if (breadcrumbs.length < 1) {
+        return null;
+    }
 
-	return (
-		<Breadcrumb
-			separator={<BiSolidChevronRight color="gray.500" />}
-			spacing="8px"
-		>
-			{breadcrumbs.map((item, index: number) => {
-				return (
-					<BreadcrumbItem key={`breadcrumb-item-${index}-${item.path}`}>
-						{/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-						<BreadcrumbLink href="#" onClick={() => router.push(item.path)}>
-							{index === 0 ? <HiHome /> : null} {item.name}
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-				);
-			})}
-		</Breadcrumb>
-	);
+    return (
+        <Breadcrumb
+            separator={<BiSolidChevronRight color="gray.500" />}
+            spacing="8px"
+        >
+            {breadcrumbs.map((item, index: number) => {
+                return (
+                    <BreadcrumbItem
+                        key={`breadcrumb-item-${index}-${item.path}`}
+                    >
+                        <BreadcrumbLink
+                            href="#"
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                            onClick={() => router.push(item.path)}
+                        >
+                            {index === 0 ? <HiHome /> : null} {item.name}
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                );
+            })}
+        </Breadcrumb>
+    );
 }

@@ -21,7 +21,7 @@ export default function NavItem({
 }: NavItemProps) {
 	const { isOpen, onToggle } = useDisclosure();
 	const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-	const bg = '#29ecac';
+	const bg = 'rgba(41, 236, 172, 0.3)';
 	const marginLeft = tabs * 10;
 	if (treeItem.tree.length > 0) {
 		return (
@@ -29,40 +29,37 @@ export default function NavItem({
 				alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
 				flexDir="column"
 				marginLeft={marginLeft}
+				p={1.5}
 				w="100%"
 			>
 				<Flex
-					_hover={{ textDecor: 'none', backgroundColor: bg, opacity: '50%' }}
+					_hover={{
+						backgroundColor: bg,
+					}}
 					alignItems="center"
 					backgroundColor={active ? bg : undefined}
 					borderRadius={8}
 					cursor="pointer"
 					onClick={onToggle}
 					opacity="80%"
-					p={3}
 					w={navSize == NavSize.Large ? '100%' : undefined}
 				>
-					{/* LOGO */}
-					<Heading color={active ? '#fff' : 'gray.500'}>TR</Heading>
-
-					{/* TITLE */}
-					{navSize === NavSize.Large ? (
-						<Heading
-							color={active ? '#fff' : 'gray.300'}
-							display="flex"
-							ml={5}
-							noOfLines={1}
-						>
-							{treeItem.name}
-						</Heading>
-					) : null}
-
 					<ChevronDownIcon
 						boxSize={10}
 						color="white"
 						transform={rotate}
 						transition="all 0.2s linear"
 					/>
+
+					{/* LOGO */}
+					<Heading>TR</Heading>
+
+					{/* TITLE */}
+					{navSize === NavSize.Large ? (
+						<Heading display="flex" ml={5} noOfLines={1}>
+							{treeItem.name}
+						</Heading>
+					) : null}
 				</Flex>
 
 				<Collapse in={isOpen}>
@@ -84,7 +81,9 @@ export default function NavItem({
 		return (
 			<Link href={`${url}?file=${treeItem.name}`}>
 				<Flex
-					_hover={{ textDecor: 'none', backgroundColor: bg, opacity: '50%' }}
+					_hover={{
+						backgroundColor: bg,
+					}}
 					alignItems="center"
 					backgroundColor={active ? bg : undefined}
 					borderRadius={8}
@@ -96,16 +95,11 @@ export default function NavItem({
 					w={navSize == NavSize.Large ? '100%' : undefined}
 				>
 					{/* LOGO */}
-					<Heading color={active ? '#fff' : 'gray.500'}>TR</Heading>
+					<Heading>TR</Heading>
 
 					{/* TITLE */}
 					{navSize === NavSize.Large ? (
-						<Heading
-							color={active ? '#fff' : 'gray.300'}
-							display="flex"
-							ml={5}
-							noOfLines={1}
-						>
+						<Heading display="flex" ml={5} noOfLines={1}>
 							{treeItem.name}
 						</Heading>
 					) : null}

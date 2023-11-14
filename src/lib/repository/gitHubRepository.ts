@@ -14,14 +14,11 @@ export const gitHubConfig = {
 };
 
 export function useGithubUserData() {
-    const { data, isLoading, error } =
-        useImmutableDataFetcher<GitHubUser | null>(fetchJsonData, {
-            url: `${gitHubConfig.base_url}/user`,
-            bearerToken: gitHubConfig.token,
-            isPrivateData: false,
-        });
-
-    return { data, isLoading, error };
+    return useImmutableDataFetcher<GitHubUser | null>(fetchJsonData, {
+        url: `${gitHubConfig.base_url}/user`,
+        bearerToken: gitHubConfig.token,
+        isPrivateData: false,
+    });
 }
 
 /**

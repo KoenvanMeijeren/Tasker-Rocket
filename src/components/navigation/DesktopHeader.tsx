@@ -1,7 +1,14 @@
-import { Box, Button, Show, Spacer, useColorMode } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Flex,
+    Show,
+    Spacer,
+    useColorMode,
+} from '@chakra-ui/react';
 import { Breadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import UserData from '../userData/UserDataView';
+import UserProfileCard from '@/components/userProfileCard/UserProfileCard';
 
 export function DesktopHeader() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -12,13 +19,13 @@ export function DesktopHeader() {
                 <Breadcrumbs />
             </Box>
             <Spacer />
-            <Box alignItems="center" display="flex" flexDirection="row">
-                {UserData()}
-                <div className="m-2" />
+            <Flex alignItems="center" flexDirection="row">
+                <UserProfileCard />
+                <Box className="m-2" />
                 <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? <MdDarkMode /> : <MdLightMode />}
                 </Button>
-            </Box>
+            </Flex>
         </Show>
     );
 }

@@ -11,8 +11,13 @@ export const gitHubConfig = {
     base_url: 'https://api.github.com',
     token: getEnvValue(EnvOptions.GitHubToken),
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
-    is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
+    is_private_repository:
+        getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
+
+export function getGitHubFileContentUrl(path: string) {
+    return `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents/${path}`;
+}
 
 /**
  * Fetches the data of GitHub repository tree.
@@ -36,9 +41,9 @@ export function useGitHubContentTree(path: string) {
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeItem[] | GitHubTreeItem
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
+        url: getGitHubFileContentUrl(path),
         bearerToken: gitHubConfig.token,
-        isPrivateData: gitHubConfig.is_private,
+        isPrivateData: gitHubConfig.is_private_repository,
     });
 
     return { data, isLoading, error };
@@ -66,9 +71,7 @@ export function useGitHubParentTree(path: string) {
     // content endpoint.
     while (parentPathParts.length > 0) {
         parentPathsResult.push(
-            `${gitHubConfig.base_url}/repos/${
-                gitHubConfig.content_repository
-            }/contents${parentPathParts.join('/')}`
+            getGitHubFileContentUrl(parentPathParts.join('/'))
         );
         parentPathParts.pop();
     }
@@ -107,6 +110,6 @@ export function useGitHubParentTree(path: string) {
 export function useGitHubFileContent(url: string) {
     return useImmutableDataFetcher(fetchBlobData, {
         url,
-        isPrivateData: gitHubConfig.is_private,
+        isPrivateData: gitHubConfig.is_private_repository,
     });
 }

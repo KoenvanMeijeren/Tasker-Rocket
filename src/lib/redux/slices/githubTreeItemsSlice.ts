@@ -33,11 +33,9 @@ export const isGitHubTreeFolderCompleted = (
         return false;
     }
 
-    const completedItems = Object.values(parent.completedChildren).filter(
-        (child) => child
-    );
+    const completedChildren = Object.values(parent.completedChildren);
 
-    return completedItems.length === parent.children;
+    return completedChildren.length === parent.children;
 };
 
 export const gitHubTreeItemsSlice = createSlice({

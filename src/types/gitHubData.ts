@@ -14,7 +14,7 @@ export interface GitHubTreeItem {
 }
 
 export type GitHubTreeParentItem = {
-    unique_key: string | null;
+    unique_key: string;
     name: string;
     children: number;
 };

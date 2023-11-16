@@ -1,7 +1,7 @@
 'use client';
 
 import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
-import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
+import { parentRootKey, splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
@@ -22,9 +22,11 @@ type Data = {
 export function ProjectView({
     data,
     parent,
+    parentTree,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     parent: GitHubTreeParentItem | undefined | null;
+    parentTree: GitHubTreeParentItem[];
 }) {
     const storeDispatcher = useAppDispatch();
     const [content, setContent] = useState<Data | null>(null);
@@ -34,10 +36,10 @@ export function ProjectView({
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
 
-        if (parent) {
-            storeDispatcher(gitHubTreeItemsActions.initTree(parent));
-        }
-    }, [data, parent, storeDispatcher]);
+        parentTree.forEach((parentTreeItem) => {
+            storeDispatcher(gitHubTreeItemsActions.initTree(parentTreeItem));
+        });
+    }, [data, parentTree, storeDispatcher]);
 
     if (!content) {
         return null;
@@ -66,7 +68,8 @@ export function ProjectView({
                             key={item.unique_key ?? item.url}
                             lastItem={index == content.files.length - 1}
                             name={item.name}
-                            parentKey={parent?.unique_key ?? 'default'}
+                            parentKey={parent?.unique_key ?? parentRootKey}
+                            parentTree={parentTree}
                             uniqueKey={item.unique_key ?? item.url}
                         />
                     );

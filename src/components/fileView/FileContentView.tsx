@@ -37,6 +37,7 @@ import {
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { GitHubTreeParentItem } from '@/types/gitHubData';
 
 export default function FileContentView({
     parentKey,
@@ -44,12 +45,14 @@ export default function FileContentView({
     name,
     contentUrl,
     lastItem,
+    parentTree,
 }: {
     parentKey: string;
     uniqueKey: string;
     name: string;
     contentUrl: string;
     lastItem: boolean;
+    parentTree: GitHubTreeParentItem[];
 }) {
     const storeDispatcher = useAppDispatch();
     const { isOpen, onToggle } = useDisclosure();
@@ -70,7 +73,8 @@ export default function FileContentView({
 
     const toggleTaskCompleted = () => {
         storeDispatcher(
-            gitHubTreeItemsActions.toggleCompleted({
+            gitHubTreeItemsActions.toggleCompletedInTree({
+                parentTree: parentTree,
                 parentKey: parentKey,
                 itemKey: uniqueKey,
             })

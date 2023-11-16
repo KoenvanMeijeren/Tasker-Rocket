@@ -1,5 +1,5 @@
-import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GithubContent, GitHubTreeItemType } from '@/types/githubTreeItemType';
+import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
 import objectHash from 'object-hash';
 
 export function hasKeyInMap(map: object, key: string): boolean {
@@ -35,6 +35,77 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
     });
 
     return { dirs, files } as GithubContent;
+};
+
+export const parentRootKey = 'root';
+export const buildParentTreeForCurrentPath = (
+    searchPath: string,
+    inputData: GitHubTreeItem[][]
+) => {
+    const result: GitHubTreeParentItem[] = [];
+    const dataIndexedByPath: {
+        [key: string]: {
+            data: {
+                name: string;
+                unique_key: string;
+            };
+            children: number;
+        };
+    } = {};
+    const searchPathParts = searchPath.split('/').filter(Boolean);
+
+    let previousChildren = 0;
+    inputData.forEach((item) => {
+        item.forEach((subItem) => {
+            hashItem(subItem);
+
+            dataIndexedByPath[subItem.path] = {
+                data: {
+                    name: subItem.name,
+                    unique_key: subItem.unique_key ?? '',
+                },
+                children: previousChildren,
+            };
+        });
+
+        previousChildren = item.length;
+    });
+
+    // Add the last/root item manually, as it is not included in the data.
+    dataIndexedByPath.root = {
+        data: {
+            name: 'Root',
+            unique_key: parentRootKey,
+        },
+        children: inputData[inputData.length - 1].length,
+    };
+
+    // Build the result array by traversing the search path parts
+    while (searchPathParts.length > 0) {
+        const currentPath = searchPathParts.join('/');
+        const item = dataIndexedByPath[currentPath];
+        searchPathParts.pop();
+        if (!item) {
+            return;
+        }
+
+        const { data, children } = item;
+
+        result.push({
+            unique_key: data.unique_key,
+            name: data.name,
+            children: children,
+        });
+    }
+
+    // Add the root item to the result array
+    result.push({
+        unique_key: parentRootKey,
+        name: 'Root',
+        children: inputData[inputData.length - 1].length,
+    });
+
+    return result;
 };
 
 export function blobToString(blob: Blob) {

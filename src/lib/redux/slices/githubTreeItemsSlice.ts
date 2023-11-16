@@ -33,9 +33,46 @@ export const isGitHubTreeFolderCompleted = (
         return false;
     }
 
-    const completedChildren = Object.values(parent.completedChildren);
+    const completedChildren = Object.values(parent.completedChildren).filter(
+        (isCompleted) => isCompleted
+    );
 
     return completedChildren.length === parent.children;
+};
+
+const toggleCompletedInternal = (
+    state: GitHubTreeItemsState,
+    parentKey: string,
+    itemKey: string
+) => {
+    // Ensure the parentKey exists in the state
+    if (!state[parentKey]) {
+        state[parentKey].completedChildren = {};
+    }
+
+    // Toggle the completed state for the specific itemKey under the parentKey
+    state[parentKey].completedChildren[itemKey] = !isGitHubTreeItemCompleted(
+        state,
+        parentKey,
+        itemKey
+    );
+};
+
+const setFolderCompletedInternal = (
+    state: GitHubTreeItemsState,
+    parentKey: string,
+    itemKey: string
+) => {
+    // Ensure the parentKey exists in the state
+    if (!state[parentKey]) {
+        state[parentKey].completedChildren = {};
+    }
+
+    // Sets the completed state for the specific itemKey under the parentKey
+    state[parentKey].completedChildren[itemKey] = isGitHubTreeFolderCompleted(
+        state,
+        itemKey
+    );
 };
 
 export const gitHubTreeItemsSlice = createSlice({
@@ -61,6 +98,34 @@ export const gitHubTreeItemsSlice = createSlice({
             state[parentKey].children = children;
         },
 
+        toggleCompletedInTree(
+            state: GitHubTreeItemsState,
+            action: PayloadAction<{
+                parentTree: GitHubTreeParentItem[];
+                parentKey: string;
+                itemKey: string;
+            }>
+        ) {
+            const { parentTree, parentKey, itemKey } = action.payload;
+
+            toggleCompletedInternal(state, parentKey, itemKey);
+
+            let nextParentTreeItem: GitHubTreeParentItem | null = null;
+            let nextParentTreeItemIndex = 1;
+            parentTree.forEach((parentTreeItem) => {
+                nextParentTreeItem =
+                    parentTree[nextParentTreeItemIndex] ?? null;
+                nextParentTreeItemIndex++;
+                if (!nextParentTreeItem) return;
+
+                setFolderCompletedInternal(
+                    state,
+                    nextParentTreeItem.unique_key,
+                    parentTreeItem.unique_key
+                );
+            });
+        },
+
         toggleCompleted(
             state: GitHubTreeItemsState,
             action: PayloadAction<{
@@ -69,15 +134,7 @@ export const gitHubTreeItemsSlice = createSlice({
             }>
         ) {
             const { parentKey, itemKey } = action.payload;
-
-            // Ensure the parentKey exists in the state
-            if (!state[parentKey]) {
-                state[parentKey].completedChildren = {};
-            }
-
-            // Update the completed state for the specific itemKey under the parentKey
-            state[parentKey].completedChildren[itemKey] =
-                !isGitHubTreeItemCompleted(state, parentKey, itemKey);
+            toggleCompletedInternal(state, parentKey, itemKey);
         },
     },
 });

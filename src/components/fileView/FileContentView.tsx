@@ -224,7 +224,7 @@ export default function FileContentView({
                             <button
                                 className={
                                     isItemCompleted
-                                        ? 'btn btn-danger'
+                                        ? 'btn btn-primary'
                                         : 'btn btn-green'
                                 }
                                 onClick={toggleTaskCompleted}
@@ -244,7 +244,7 @@ export default function FileContentView({
                                     {/* eslint-disable-next-line react/jsx-max-depth */}
                                     <Text fontWeight="medium">
                                         {isItemCompleted
-                                            ? 'Actief maken'
+                                            ? 'In progress'
                                             : 'Done'}
                                     </Text>
                                 </Box>

@@ -11,13 +11,13 @@
     @apply bg-green-500;
 }
 
-.btn-danger {
+.btn-primary {
     @apply text-white;
-    background-color: #ef4444;
+    background-color: #3b82f6;
 }
 
-.btn-danger:hover {
-    background-color: #dc2626;
+.btn-primary:hover {
+    background-color: #3b82f6;
 }
 
 .copy-btn {

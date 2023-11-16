@@ -13,9 +13,8 @@ import { buildParentTreeForCurrentPath } from '@/lib/utility/dataStructure';
 
 export default function ProjectContent() {
     const router = useRouter();
-    const [parentItem, setParentItem] = useState<GitHubTreeParentItem | null>(
-        null
-    );
+    const [currentParentItem, setCurrentParentItem] =
+        useState<GitHubTreeParentItem | null>(null);
     const [parentTree, setParentTree] = useState<GitHubTreeParentItem[]>([]);
 
     const path = decodeURIComponent(router.asPath).replaceAll('#', '');
@@ -34,7 +33,7 @@ export default function ProjectContent() {
 
         setParentTree(buildParentTree);
         if (buildParentTree) {
-            setParentItem(buildParentTree[0]);
+            setCurrentParentItem(buildParentTree[0]);
         }
     }, [path, parentData]);
 
@@ -48,8 +47,8 @@ export default function ProjectContent() {
 
     return (
         <ProjectView
+            currentParent={currentParentItem}
             data={data as GitHubTreeItem[]}
-            parent={parentItem}
             parentTree={parentTree}
         />
     );

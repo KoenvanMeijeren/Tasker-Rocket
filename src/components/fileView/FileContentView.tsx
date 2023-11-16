@@ -38,16 +38,17 @@ import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { GitHubTreeParentItem } from '@/types/gitHubData';
+import { parentRootKey } from '@/lib/utility/dataStructure';
 
 export default function FileContentView({
-    parentKey,
+    currentParent,
     uniqueKey,
     name,
     contentUrl,
     lastItem,
     parentTree,
 }: {
-    parentKey: string;
+    currentParent: GitHubTreeParentItem | undefined | null;
     uniqueKey: string;
     name: string;
     contentUrl: string;
@@ -67,7 +68,7 @@ export default function FileContentView({
     const itemsState = useAppSelector((state) => state.gitHubItems);
     const isItemCompleted = isGitHubTreeItemCompleted(
         itemsState,
-        parentKey,
+        currentParent?.unique_key ?? parentRootKey,
         uniqueKey
     );
 
@@ -75,7 +76,7 @@ export default function FileContentView({
         storeDispatcher(
             gitHubTreeItemsActions.toggleCompletedInTree({
                 parentTree: parentTree,
-                parentKey: parentKey,
+                parentKey: currentParent?.unique_key ?? parentRootKey,
                 itemKey: uniqueKey,
             })
         );

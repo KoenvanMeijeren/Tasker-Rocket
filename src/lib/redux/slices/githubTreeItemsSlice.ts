@@ -40,6 +40,9 @@ export const isGitHubTreeFolderCompleted = (
     return completedChildren.length === parent.children;
 };
 
+/**
+ * Toggles the completed state for the itemKey under the parentKey.
+ */
 const toggleCompletedInternal = (
     state: GitHubTreeItemsState,
     parentKey: string,
@@ -47,7 +50,10 @@ const toggleCompletedInternal = (
 ) => {
     // Ensure the parentKey exists in the state
     if (!state[parentKey]) {
-        state[parentKey].completedChildren = {};
+        state[parentKey] = {
+            children: 0,
+            completedChildren: {},
+        };
     }
 
     // Toggle the completed state for the specific itemKey under the parentKey
@@ -58,6 +64,9 @@ const toggleCompletedInternal = (
     );
 };
 
+/**
+ * Sets the completed state of the folder for the itemKey under the parentKey.
+ */
 const setFolderCompletedInternal = (
     state: GitHubTreeItemsState,
     parentKey: string,
@@ -65,7 +74,10 @@ const setFolderCompletedInternal = (
 ) => {
     // Ensure the parentKey exists in the state
     if (!state[parentKey]) {
-        state[parentKey].completedChildren = {};
+        state[parentKey] = {
+            children: 0,
+            completedChildren: {},
+        };
     }
 
     // Sets the completed state for the specific itemKey under the parentKey
@@ -75,16 +87,41 @@ const setFolderCompletedInternal = (
     );
 };
 
+/**
+ * This slice is used to keep track of the completed state of the GitHub tree.
+ */
 export const gitHubTreeItemsSlice = createSlice({
     name: 'gitHubItems',
     initialState: {} as GitHubTreeItemsState,
     reducers: {
+        /**
+         * Initializes the tree with the given parentKey and children.
+         *
+         * It is important to call this method ASAP while traversing the tree.
+         * This method will ensure that the parentKey exists in the state and
+         * initialize it with the given children. This method should be called
+         * before calling toggleCompletedInTree.
+         *
+         * Example result:
+         * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
+         *   "children": 2,
+         *   "completedChildren": {}
+         * },
+         * "root": {
+         *   "children": 1,
+         *   "completedChildren": {}
+         * }
+         */
         initTree(
             state: GitHubTreeItemsState,
             action: PayloadAction<GitHubTreeParentItem>
         ) {
             const { unique_key: parentKey, children } = action.payload;
-            if (!parentKey) return;
+            if (!parentKey) {
+                throw new Error(
+                    'initTree reducer called without a valid parentKey.'
+                );
+            }
 
             // Ensure the parentKey exists in the state
             if (!state[parentKey]) {
@@ -98,6 +135,52 @@ export const gitHubTreeItemsSlice = createSlice({
             state[parentKey].children = children;
         },
 
+        /**
+         * Toggles the completed state for the itemKey under the parentKey and
+         * all parentKeys up to the root.
+         *
+         * Example state before calling toggleCompleted:
+         * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
+         *   "children": 2,
+         *   "completedChildren": {
+         *     "651f9948adfec902ae496f8edd570edd41bab904": true,
+         *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": false
+         *   }
+         * },
+         * "0dc9b4dfc65102978682bd1a4dfa6870633f2741": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false
+         *   }
+         * },
+         * "root": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "0dc9b4dfc65102978682bd1a4dfa6870633f2741": false,
+         *   }
+         * }
+         *
+         * Example result:
+         * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
+         *   "children": 2,
+         *   "completedChildren": {
+         *     "651f9948adfec902ae496f8edd570edd41bab904": true,
+         *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": true
+         *   }
+         * },
+         * "0dc9b4dfc65102978682bd1a4dfa6870633f2741": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": true
+         *   }
+         * },
+         * "root": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "0dc9b4dfc65102978682bd1a4dfa6870633f2741": true,
+         *   }
+         * }
+         */
         toggleCompletedInTree(
             state: GitHubTreeItemsState,
             action: PayloadAction<{
@@ -126,6 +209,39 @@ export const gitHubTreeItemsSlice = createSlice({
             });
         },
 
+        /**
+         * Toggles the completed state for the itemKey under the parentKey.
+         *
+         * Example state before calling toggleCompleted:
+         * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
+         *   "children": 2,
+         *   "completedChildren": {
+         *     "651f9948adfec902ae496f8edd570edd41bab904": true,
+         *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": false
+         *   }
+         * },
+         * "root": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false,
+         *   }
+         * }
+         *
+         * Example result:
+         * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
+         *   "children": 2,
+         *   "completedChildren": {
+         *     "651f9948adfec902ae496f8edd570edd41bab904": true,
+         *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": true
+         *   }
+         * },
+         * "root": {
+         *   "children": 1,
+         *   "completedChildren": {
+         *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false,
+         *   }
+         * }
+         */
         toggleCompleted(
             state: GitHubTreeItemsState,
             action: PayloadAction<{

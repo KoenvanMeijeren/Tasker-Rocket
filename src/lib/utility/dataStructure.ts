@@ -12,7 +12,7 @@ export const isFile = (file: GitHubTreeItem) =>
 export const isDir = (file: GitHubTreeItem) =>
     file.type === (GitHubTreeItemType.Dir as string);
 
-export const hashItem = (item: GitHubTreeItem) => {
+export const hashGitHubItem = (item: GitHubTreeItem) => {
     item.unique_key = objectHash({
         name: item.name,
         path: item.path,
@@ -25,7 +25,7 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
     const dirs: GitHubTreeItem[] = [];
     const files: GitHubTreeItem[] = [];
     data.forEach((item) => {
-        hashItem(item);
+        hashGitHubItem(item);
 
         if (isDir(item)) {
             dirs.push(item);
@@ -37,29 +37,27 @@ export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
     return { dirs, files } as GithubContent;
 };
 
-export const parentRootKey = 'root';
-export const buildParentTreeForCurrentPath = (
-    searchPath: string,
-    inputData: GitHubTreeItem[][]
-) => {
-    const result: GitHubTreeParentItem[] = [];
-    const dataIndexedByPath: {
-        [key: string]: {
-            data: {
-                name: string;
-                unique_key: string;
-            };
-            children: number;
+interface GitHubIndexedData {
+    [key: string]: {
+        data: {
+            name: string;
+            unique_key: string;
         };
-    } = {};
-    const searchPathParts = searchPath.split('/').filter(Boolean);
+        children: number;
+    };
+}
 
+export const parentRootKey = 'root';
+export const convertParentTreeDataToIndexedDataByPath = (
+    parentTreeData: GitHubTreeItem[][]
+): GitHubIndexedData => {
+    const indexedDataByPath: GitHubIndexedData = {};
     let previousChildren = 0;
-    inputData.forEach((item) => {
-        item.forEach((subItem) => {
-            hashItem(subItem);
 
-            dataIndexedByPath[subItem.path] = {
+    parentTreeData.forEach((treeItems) => {
+        treeItems.forEach((subItem) => {
+            hashGitHubItem(subItem);
+            indexedDataByPath[subItem.path] = {
                 data: {
                     name: subItem.name,
                     unique_key: subItem.unique_key ?? '',
@@ -68,25 +66,37 @@ export const buildParentTreeForCurrentPath = (
             };
         });
 
-        previousChildren = item.length;
+        previousChildren = treeItems.length;
     });
 
     // Add the last/root item manually, as it is not included in the data.
-    dataIndexedByPath.root = {
+    indexedDataByPath.root = {
         data: {
             name: 'Root',
             unique_key: parentRootKey,
         },
-        children: inputData[inputData.length - 1].length,
+        children: parentTreeData[parentTreeData.length - 1].length,
     };
 
+    return indexedDataByPath;
+};
+
+export const buildParentTreeForCurrentPath = (
+    searchPath: string,
+    parentTreeData: GitHubTreeItem[][]
+): GitHubTreeParentItem[] => {
+    const result: GitHubTreeParentItem[] = [];
+    const indexedDataByPath =
+        convertParentTreeDataToIndexedDataByPath(parentTreeData);
+
     // Build the result array by traversing the search path parts
+    const searchPathParts = searchPath.split('/').filter(Boolean);
     while (searchPathParts.length > 0) {
         const currentPath = searchPathParts.join('/');
-        const item = dataIndexedByPath[currentPath];
+        const item = indexedDataByPath[currentPath];
         searchPathParts.pop();
         if (!item) {
-            return;
+            return [];
         }
 
         const { data, children } = item;
@@ -102,7 +112,7 @@ export const buildParentTreeForCurrentPath = (
     result.push({
         unique_key: parentRootKey,
         name: 'Root',
-        children: inputData[inputData.length - 1].length,
+        children: parentTreeData[parentTreeData.length - 1].length,
     });
 
     return result;

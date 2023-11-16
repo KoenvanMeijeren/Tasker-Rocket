@@ -1,7 +1,7 @@
 'use client';
 
 import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
-import { parentRootKey, splitFilesAndDirs } from '@/lib/utility/dataStructure';
+import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
@@ -21,11 +21,11 @@ type Data = {
 
 export function ProjectView({
     data,
-    parent,
+    currentParent,
     parentTree,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
-    parent: GitHubTreeParentItem | undefined | null;
+    currentParent: GitHubTreeParentItem | undefined | null;
     parentTree: GitHubTreeParentItem[];
 }) {
     const storeDispatcher = useAppDispatch();
@@ -36,6 +36,7 @@ export function ProjectView({
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
 
+        // Init the parent tree, so we can complete the tree items later.
         parentTree.forEach((parentTreeItem) => {
             storeDispatcher(gitHubTreeItemsActions.initTree(parentTreeItem));
         });
@@ -50,7 +51,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={parent?.name ?? repositoryName ?? 'Projecten'}
+                    label={currentParent?.name ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -65,10 +66,10 @@ export function ProjectView({
                     return (
                         <FileContentView
                             contentUrl={item.download_url ?? ''}
+                            currentParent={currentParent}
                             key={item.unique_key ?? item.url}
                             lastItem={index == content.files.length - 1}
                             name={item.name}
-                            parentKey={parent?.unique_key ?? parentRootKey}
                             parentTree={parentTree}
                             uniqueKey={item.unique_key ?? item.url}
                         />

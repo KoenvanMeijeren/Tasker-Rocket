@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { GitHubTreeParentItem } from '@/types/gitHubData';
+import { makePersistable } from 'mobx-persist-store';
+import * as localforage from 'localforage';
 
 export interface GitHubTreeItemsState {
     [parentKey: string]: {
@@ -18,6 +20,12 @@ export class GitHubTreeItemsStateStore {
 
     constructor() {
         makeAutoObservable(this);
+        void makePersistable(this, {
+            name: 'gitHubTreeItemsState',
+            properties: ['state'],
+            removeOnExpiration: false,
+            storage: localforage,
+        });
     }
 
     /**

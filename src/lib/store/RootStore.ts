@@ -6,8 +6,4 @@ export class RootStore {
     constructor() {
         this.gitHubItems = new GitHubTreeItemsStateStore();
     }
-
-    public hydrate(data: unknown) {
-        // TODO: hydrate store.
-    }
 }

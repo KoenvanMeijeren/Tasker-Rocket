@@ -1,7 +1,11 @@
 export function urlToReadableString(url: string): string {
     const result = url.charAt(0).toUpperCase() + url.slice(1);
 
-    return decodeURIComponent(encodeURIComponent(result));
+    try {
+        return decodeURIComponent(result);
+    } catch (error) {
+        return result;
+    }
 }
 
 export function urlToFileExtension(url: string): string {

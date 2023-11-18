@@ -14,7 +14,13 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = decodeURIComponent(encodeURIComponent(path));
+    let url: string = '/';
+    try {
+        url = decodeURIComponent(path);
+    } catch (error) {
+        return [];
+    }
+
     if (url === '/') {
         return [];
     }

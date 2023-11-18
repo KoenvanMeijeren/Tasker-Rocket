@@ -53,7 +53,7 @@ const FileContentView = observer((props: Props) => {
     const store = useStore();
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
-    const [fileViewable, setFileViewable] = useState(true);
+    const [isFileViewable, setIsFileViewable] = useState(true);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -127,7 +127,7 @@ const FileContentView = observer((props: Props) => {
             case FileType.Excel:
                 return <ExcelView file={file} />;
             case FileType.Unsupported:
-                setFileViewable(false);
+                setIsFileViewable(false);
                 return (
                     <>
                         De weergave van dit bestandstype wordt niet ondersteund.
@@ -203,7 +203,7 @@ const FileContentView = observer((props: Props) => {
                             justifyContent="flex-end"
                             mb={6}
                         >
-                            {fileViewable ? (
+                            {isFileViewable ? (
                                 <Button
                                     className="btn btn-gray"
                                     onClick={handleDownload}

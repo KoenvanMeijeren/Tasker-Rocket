@@ -41,8 +41,12 @@ export default function ProjectContent() {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || parentIsLoading || !data || !parentData) {
+    if (isLoading || parentIsLoading) {
         return <LoadingIndicator />;
+    }
+
+    if (!data) {
+        return <div>geen data gevonden</div>;
     }
 
     return (

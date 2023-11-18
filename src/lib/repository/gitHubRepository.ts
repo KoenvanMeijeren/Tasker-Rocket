@@ -38,15 +38,14 @@ export function getGitHubFileContentUrl(path: string) {
  * not expired. That's why we've disabled caching for private files.
  */
 export function useGitHubContentTree(path: string) {
-    const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
-    >(fetchJsonData, {
-        url: getGitHubFileContentUrl(path),
-        bearerToken: gitHubConfig.token,
-        isPrivateData: gitHubConfig.is_private_repository,
-    });
-
-    return { data, isLoading, error };
+    return useImmutableDataFetcher<GitHubTreeItem[] | GitHubTreeItem>(
+        fetchJsonData,
+        {
+            url: getGitHubFileContentUrl(path),
+            bearerToken: gitHubConfig.token,
+            isPrivateData: gitHubConfig.is_private_repository,
+        }
+    );
 }
 
 /**

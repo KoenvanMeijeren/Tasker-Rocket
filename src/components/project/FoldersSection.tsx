@@ -6,10 +6,10 @@ import { Box, Collapse, Icon, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import Heading from '../textStyles/Heading';
 import Text from '../textStyles/Text';
-import { isGitHubTreeFolderCompleted } from '@/lib/redux/slices/githubTreeItemsSlice';
 import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
-import { useAppSelector } from '@/lib/redux/hooks';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/lib/store';
 
 type GitHubTreeFolder = {
     name: string;
@@ -19,14 +19,13 @@ type GitHubTreeFolder = {
     completed: boolean;
 };
 
-export const FoldersSection = ({
-    data,
-    label,
-}: {
+type Props = {
     data: GitHubTreeItem[];
     label: string;
-}) => {
-    const itemsState = useAppSelector((state) => state.gitHubItems);
+};
+
+const FoldersSection = observer(({ data, label }: Props) => {
+    const store = useStore();
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, fontColor } =
@@ -42,14 +41,13 @@ export const FoldersSection = ({
                     url: item.url,
                     unique_key: item.unique_key,
                     path: item.path,
-                    completed: isGitHubTreeFolderCompleted(
-                        itemsState,
+                    completed: store.gitHubItems.isFolderCompleted(
                         item.unique_key ?? ''
                     ),
                 } as GitHubTreeFolder;
             })
         );
-    }, [data, itemsState]);
+    }, [data, store.gitHubItems]);
 
     return (
         <Box
@@ -115,4 +113,7 @@ export const FoldersSection = ({
             </Collapse>
         </Box>
     );
-};
+});
+
+FoldersSection.displayName = 'FoldersSection';
+export default FoldersSection;

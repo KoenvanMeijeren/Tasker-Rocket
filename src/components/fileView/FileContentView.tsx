@@ -30,32 +30,27 @@ import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 import ExcelView from './ExcelView';
-import {
-    gitHubTreeItemsActions,
-    isGitHubTreeItemCompleted,
-} from '@/lib/redux/slices/githubTreeItemsSlice';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
-import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { GitHubTreeParentItem } from '@/types/gitHubData';
 import { parentRootKey } from '@/lib/utility/dataStructure';
+import { useStore } from '@/lib/store';
+import { observer } from 'mobx-react-lite';
 
-export default function FileContentView({
-    currentParent,
-    uniqueKey,
-    name,
-    contentUrl,
-    lastItem,
-    parentTree,
-}: {
+type Props = {
     currentParent: GitHubTreeParentItem | undefined | null;
     uniqueKey: string;
     name: string;
     contentUrl: string;
     lastItem: boolean;
     parentTree: GitHubTreeParentItem[];
-}) {
-    const storeDispatcher = useAppDispatch();
+};
+
+const FileContentView = observer((props: Props) => {
+    const { currentParent, uniqueKey, name, contentUrl, lastItem, parentTree } =
+        props;
+
+    const store = useStore();
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
@@ -65,21 +60,17 @@ export default function FileContentView({
 
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
-    const itemsState = useAppSelector((state) => state.gitHubItems);
-    const isItemCompleted = isGitHubTreeItemCompleted(
-        itemsState,
+    const isItemCompleted = store.gitHubItems.isCompleted(
         currentParent?.unique_key ?? parentRootKey,
         uniqueKey
     );
 
     const toggleTaskCompleted = () => {
-        storeDispatcher(
-            gitHubTreeItemsActions.toggleCompletedInTree({
-                parentTree: parentTree,
-                parentKey: currentParent?.unique_key ?? parentRootKey,
-                itemKey: uniqueKey,
-            })
-        );
+        store.gitHubItems.toggleCompletedInTree({
+            parentTree: parentTree,
+            parentKey: currentParent?.unique_key ?? parentRootKey,
+            itemKey: uniqueKey,
+        });
     };
 
     useEffect(() => {
@@ -258,4 +249,7 @@ export default function FileContentView({
             {!lastItem ? <VerticalDivider /> : null}
         </>
     );
-}
+});
+
+FileContentView.displayName = 'FileContentView';
+export default FileContentView;

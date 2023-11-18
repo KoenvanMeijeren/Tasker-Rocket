@@ -2,7 +2,7 @@ import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { getFileNameFromUrl, getParentFromUrl } from '@/lib/utility/formatters';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
-import { Flex, Stack } from '@chakra-ui/layout';
+import { Box, Stack } from '@chakra-ui/layout';
 import { IconButton, useColorModeValue } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { themeConfig } from '../../../../theme.config';
@@ -70,11 +70,12 @@ export const SideBar = () => {
     );
 
     return (
-        <Flex
+        <Box
             bg={themeConfig.menuBgColor}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             flexDir="column"
+            gap={2}
             justifyContent="space-between"
             maxHeight="100vh"
             maxWidth="100vw"
@@ -97,7 +98,6 @@ export const SideBar = () => {
                         <NavItem
                             key={item.path}
                             navSize={navSize}
-                            tabs={0}
                             treeItem={item}
                         />
                     ))}
@@ -117,6 +117,6 @@ export const SideBar = () => {
                 transform={rotate}
                 transition="all 0.2s linear"
             />
-        </Flex>
+        </Box>
     );
 };

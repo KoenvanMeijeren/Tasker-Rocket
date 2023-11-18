@@ -52,9 +52,14 @@ export const convertParentTreeDataToIndexedDataByPath = (
     parentTreeData: GitHubTreeItem[][]
 ): GitHubIndexedData => {
     const indexedDataByPath: GitHubIndexedData = {};
-    let previousChildren = 0;
+    if (!parentTreeData || parentTreeData.length === 0) {
+        return indexedDataByPath;
+    }
 
+    let previousChildren = 0;
     parentTreeData.forEach((treeItems) => {
+        if (!treeItems || treeItems.length === 0) return;
+
         treeItems.forEach((subItem) => {
             hashGitHubItem(subItem);
             indexedDataByPath[subItem.path] = {

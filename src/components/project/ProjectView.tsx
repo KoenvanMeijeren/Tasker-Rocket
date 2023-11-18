@@ -5,10 +5,9 @@ import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
-import { FoldersSection } from './FoldersSection';
+import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
-import { useAppDispatch } from '@/lib/redux/hooks';
-import { gitHubTreeItemsActions } from '@/lib/redux/slices/githubTreeItemsSlice';
+import { useStore } from '@/lib/store';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')
@@ -28,7 +27,7 @@ export function ProjectView({
     currentParent: GitHubTreeParentItem | undefined | null;
     parentTree: GitHubTreeParentItem[];
 }) {
-    const storeDispatcher = useAppDispatch();
+    const store = useStore();
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {
@@ -38,9 +37,9 @@ export function ProjectView({
 
         // Init the parent tree, so we can complete the tree items later.
         parentTree.forEach((parentTreeItem) => {
-            storeDispatcher(gitHubTreeItemsActions.initTree(parentTreeItem));
+            store.gitHubItems.initTree(parentTreeItem);
         });
-    }, [data, parentTree, storeDispatcher]);
+    }, [data, parentTree, store]);
 
     if (!content) {
         return null;

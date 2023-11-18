@@ -39,7 +39,7 @@ export function ProjectView({
         parentTree.forEach((parentTreeItem) => {
             store.gitHubItems.initTree(parentTreeItem);
         });
-    }, [data, parentTree, store]);
+    }, [data, parentTree, store.gitHubItems]);
 
     if (!content) {
         return null;

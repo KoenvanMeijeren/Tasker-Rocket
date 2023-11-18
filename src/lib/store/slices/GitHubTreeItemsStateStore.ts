@@ -67,9 +67,7 @@ export class GitHubTreeItemsStateStore {
     public initTree(payload: GitHubTreeParentItem) {
         const { unique_key: parentKey, children } = payload;
         if (!parentKey) {
-            throw new Error(
-                'initTree reducer called without a valid parentKey.'
-            );
+            throw new Error('initTree called without a valid parentKey.');
         }
 
         // Ensure the parentKey exists in the state
@@ -137,73 +135,27 @@ export class GitHubTreeItemsStateStore {
     }) {
         const { parentTree, parentKey, itemKey } = payload;
 
-        this.toggleCompletedInternal(parentKey, itemKey);
+        this.toggleCompleted(parentKey, itemKey);
 
         let nextParentTreeItem: GitHubTreeParentItem | null = null;
-        let nextParentTreeItemIndex = 1;
-        parentTree.forEach((parentTreeItem) => {
-            nextParentTreeItem = parentTree[nextParentTreeItemIndex] ?? null;
-            nextParentTreeItemIndex++;
+        parentTree.forEach((parentTreeItem, index) => {
+            nextParentTreeItem = parentTree[index + 1] || null;
             if (!nextParentTreeItem) return;
 
-            this.setFolderCompletedInternal(
+            this.setFolderCompleted(
                 nextParentTreeItem.unique_key,
                 parentTreeItem.unique_key
             );
         });
     }
 
-    /**
-     * Toggles the completed state for the itemKey under the parentKey.
-     *
-     * Example state before calling toggleCompleted:
-     * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
-     *   "children": 2,
-     *   "completedChildren": {
-     *     "651f9948adfec902ae496f8edd570edd41bab904": true,
-     *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": false
-     *   }
-     * },
-     * "root": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false,
-     *   }
-     * }
-     *
-     * Example result:
-     * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
-     *   "children": 2,
-     *   "completedChildren": {
-     *     "651f9948adfec902ae496f8edd570edd41bab904": true,
-     *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": true
-     *   }
-     * },
-     * "root": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false,
-     *   }
-     * }
-     */
-    public toggleCompleted(payload: { parentKey: string; itemKey: string }) {
-        const { parentKey, itemKey } = payload;
-        this.toggleCompletedInternal(parentKey, itemKey);
-    }
-
     public isCompleted = (parentKey: string, itemKey: string): boolean => {
-        if (!this.state[parentKey]) {
-            return false;
-        }
-
-        return this.state[parentKey].completedChildren[itemKey];
+        return this.state[parentKey]?.completedChildren[itemKey];
     };
 
     public isFolderCompleted = (parentKey: string): boolean => {
         const parent = this.state[parentKey];
-        if (!parent) {
-            return false;
-        }
+        if (!parent) return false;
 
         const completedChildren = Object.values(
             parent.completedChildren
@@ -215,7 +167,7 @@ export class GitHubTreeItemsStateStore {
     /**
      * Toggles the completed state for the itemKey under the parentKey.
      */
-    private toggleCompletedInternal = (parentKey: string, itemKey: string) => {
+    private toggleCompleted = (parentKey: string, itemKey: string) => {
         // Ensure the parentKey exists in the state
         if (!this.state[parentKey]) {
             this.state[parentKey] = {
@@ -232,12 +184,9 @@ export class GitHubTreeItemsStateStore {
     };
 
     /**
-     * Sets the completed state of the folder for the itemKey under the parentKey.
+     * Sets the completed state of the folder for the item under the parent.
      */
-    private setFolderCompletedInternal = (
-        parentKey: string,
-        itemKey: string
-    ) => {
+    private setFolderCompleted = (parentKey: string, itemKey: string) => {
         // Ensure the parentKey exists in the state
         if (!this.state[parentKey]) {
             this.state[parentKey] = {

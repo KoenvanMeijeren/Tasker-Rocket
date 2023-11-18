@@ -6,7 +6,7 @@ import { RootStore } from '@/lib/store/RootStore';
 export const MobxContext = createContext<RootStore>(new RootStore());
 
 export function RootStoreProvider({ children }: { children: React.ReactNode }) {
-    const mobxStore = useStore([]);
+    const mobxStore = useStore();
 
     return (
         <MobxContext.Provider value={mobxStore}>

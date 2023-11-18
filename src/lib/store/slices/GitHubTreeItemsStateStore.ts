@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { GitHubTreeParentItem } from '@/types/gitHubData';
 import { makePersistable } from 'mobx-persist-store';
-import * as localforage from 'localforage';
+import localforage from 'localforage';
 
 export interface GitHubTreeItemsState {
     [parentKey: string]: {

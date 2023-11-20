@@ -29,14 +29,21 @@ export function ProjectView({
     const [fullscreenName, setFullscreenName] = useState<string>('');
     const [fullscreenContentUrl, setFullscreenContentUrl] =
         useState<string>('');
+    const [fullscreenFileContentOpen, setFullscreenFileContentOpen] =
+        useState(false);
 
-    const updateVariableInChild = (name: string, contentUrl: string) => {
+    const updateVariableInChild = (
+        name: string,
+        contentUrl: string,
+        fileContentOpen: boolean
+    ) => {
         setFullScreen(!fullScreen);
         if (!fullScreen) {
             setFullscreenName(name);
             setFullscreenContentUrl(contentUrl);
+            setFullscreenFileContentOpen(fileContentOpen);
         } else {
-            setFullscreenName('');
+            setFullscreenFileContentOpen(fileContentOpen);
         }
     };
 
@@ -72,6 +79,7 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
+                                fullscreenOpen={fullscreenFileContentOpen}
                                 key={item.url}
                                 name={item.name}
                                 toggleFullScreen={updateVariableInChild}
@@ -86,6 +94,7 @@ export function ProjectView({
                 <Box key={fullscreenName}>
                     <FileContentView
                         contentUrl={fullscreenContentUrl ?? ''}
+                        fullscreenOpen={fullscreenFileContentOpen}
                         key={fullscreenContentUrl}
                         name={fullscreenName}
                         toggleFullScreen={updateVariableInChild}

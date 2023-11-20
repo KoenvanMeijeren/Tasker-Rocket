@@ -35,17 +35,24 @@ export default function FileContentView({
     name,
     contentUrl,
     toggleFullScreen,
+    fullscreenOpen,
 }: {
     name: string;
     contentUrl: string;
-    toggleFullScreen: (name: string, contentUrl: string) => void;
+    toggleFullScreen: (
+        name: string,
+        contentUrl: string,
+        isFileContentOpen: boolean
+    ) => void;
+    fullscreenOpen: boolean;
 }) {
+    const [fileContentOpen, setFileContentOpen] = useState(fullscreenOpen);
     const { isOpen, onToggle } = useDisclosure();
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
 
     const handleFullScreen = () => {
-        toggleFullScreen(name, contentUrl);
+        toggleFullScreen(name, contentUrl, isOpen);
     };
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -80,6 +87,13 @@ export default function FileContentView({
         link.download = fileName + '.' + file.extension;
         link.click();
     }, [file]);
+
+    useEffect(() => {
+        if (fileContentOpen) {
+            onToggle();
+        }
+        setFileContentOpen(false);
+    }, [fileContentOpen, onToggle]);
 
     const content = useMemo(() => {
         if (!file) return;
@@ -171,7 +185,7 @@ export default function FileContentView({
             </Box>
 
             {/* Content */}
-            <Collapse in={isOpen}>
+            <Collapse in={isOpen ? file.name === name : false}>
                 <Divider borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
                     <Box

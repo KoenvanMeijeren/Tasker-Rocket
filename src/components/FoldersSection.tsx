@@ -6,6 +6,8 @@ import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import Heading from './textStyles/Heading';
 import Text from './textStyles/Text';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 export const FoldersSection = ({
     data,
@@ -56,7 +58,12 @@ export const FoldersSection = ({
                             >
                                 <Card backgroundColor={backgroundColorPrimary}>
                                     <CardBody py={3}>
-                                        <Text>{item.name}</Text>
+                                        <Text>
+                                            <FontAwesomeIcon
+                                                icon={faFolderOpen}
+                                            />{' '}
+                                            {item.name}
+                                        </Text>
                                     </CardBody>
                                 </Card>
                             </Link>

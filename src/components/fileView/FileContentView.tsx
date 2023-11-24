@@ -29,6 +29,19 @@ import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 import ExcelView from './ExcelView';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
+import {
+    faFileImage,
+    faFileCode,
+    faFilePdf,
+    faFileAudio,
+    faFileVideo,
+    faFileWord,
+    faFilePowerpoint,
+    faFileExcel,
+    faFile,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function FileContentView({
     name,
@@ -117,6 +130,33 @@ export default function FileContentView({
         }
     }, [file, handleDownload]);
 
+    const icon = useMemo(() => {
+        if (!file) return;
+
+        switch (file.fileType) {
+            case FileType.Markdown:
+                return <FontAwesomeIcon icon={faMarkdown} />;
+            case FileType.Image:
+                return <FontAwesomeIcon icon={faFileImage} />;
+            case FileType.Code:
+                return <FontAwesomeIcon icon={faFileCode} />;
+            case FileType.Pdf:
+                return <FontAwesomeIcon icon={faFilePdf} />;
+            case FileType.Audio:
+                return <FontAwesomeIcon icon={faFileAudio} />;
+            case FileType.Video:
+                return <FontAwesomeIcon icon={faFileVideo} />;
+            case FileType.Docx:
+                return <FontAwesomeIcon icon={faFileWord} />;
+            case FileType.PowerPoint:
+                return <FontAwesomeIcon icon={faFilePowerpoint} />;
+            case FileType.Excel:
+                return <FontAwesomeIcon icon={faFileExcel} />;
+            case FileType.Unsupported:
+                return <FontAwesomeIcon icon={faFile} />;
+        }
+    }, [file]);
+
     if (error) {
         return <div>laden mislukt...</div>;
     }
@@ -147,7 +187,7 @@ export default function FileContentView({
                 <Box alignItems="center" display="flex" gap="10px">
                     <CheckCircleIcon boxSize="20px" color={colorConfig.green} />
                     <Text className="noselect" fontSize="18px">
-                        {file.name}
+                        {icon} {file.name}
                     </Text>
                 </Box>
                 <Box>

@@ -2,8 +2,8 @@ import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { getFileNameFromUrl, getParentFromUrl } from '@/lib/utility/formatters';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
-import { Box, Stack } from '@chakra-ui/layout';
-import { IconButton, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Stack } from '@chakra-ui/layout';
+import { Button, useColorModeValue } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { themeConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
@@ -70,53 +70,64 @@ export const SideBar = () => {
     );
 
     return (
-        <Box
+        <Stack
             bg={themeConfig.menuBgColor}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-            flexDir="column"
-            gap={2}
+            height="100vh"
             justifyContent="space-between"
-            maxHeight="100vh"
-            maxWidth="100vw"
-            minHeight="100vh"
+            minWidth={navSize === NavSize.Small ? '5vw' : '25vw'}
             p={2}
             pos="sticky"
-            transition="0.5s ease"
-            w={navSize === NavSize.Small ? '75px' : ''}
+            transition="width" // Transition for max-width property
+            transitionDuration="0.3s"
+            transitionTimingFunction="ease-in-out"
+            w={navSize === NavSize.Small ? '5vw' : '25vw'} // Adjusted maxWidth based on navSize
         >
-            <SideBarLogo navSize={navSize} />
-
-            {/* navitems */}
             <Stack
-                alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
-                as="nav"
-                gap={4}
+                overflow={navSize === NavSize.Large ? 'scroll' : 'hidden'}
+                spacing={10}
             >
-                <>
-                    {tree.map((item) => (
-                        <NavItem
-                            key={item.path}
-                            navSize={navSize}
-                            treeItem={item}
-                        />
-                    ))}
-                </>
+                <SideBarLogo navSize={navSize} />
+
+                {/* navitems */}
+                <Stack
+                    alignItems={
+                        navSize === NavSize.Small ? 'center' : 'flex-start'
+                    }
+                    as="nav"
+                    gap={2}
+                >
+                    <>
+                        {tree.map((item) => (
+                            <NavItem
+                                key={item.path}
+                                navSize={navSize}
+                                treeItem={item}
+                            />
+                        ))}
+                    </>
+                </Stack>
             </Stack>
 
             {/* collapse/expand button */}
-            <IconButton
-                _hover={{ background: 'none' }}
-                aria-label=""
-                background="none"
-                icon={<ChevronLeftIcon boxSize={8} />}
-                onClick={() => {
-                    if (navSize === NavSize.Small) changeNavSize(NavSize.Large);
-                    else changeNavSize(NavSize.Small);
-                }}
-                transform={rotate}
-                transition="all 0.2s linear"
-            />
-        </Box>
+            <Flex alignItems="center" justifyContent="center" width="100%">
+                <Button
+                    aria-label=""
+                    backgroundColor="red"
+                    onClick={() => {
+                        if (navSize === NavSize.Small)
+                            changeNavSize(NavSize.Large);
+                        else changeNavSize(NavSize.Small);
+                    }}
+                >
+                    <ChevronLeftIcon
+                        boxSize={8}
+                        transform={rotate}
+                        transition="all 0.2s linear"
+                    />
+                </Button>
+            </Flex>
+        </Stack>
     );
 };

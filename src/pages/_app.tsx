@@ -9,7 +9,7 @@ import type { AppProps } from 'next/app';
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <Providers>
-            <Flex minHeight="100vh" minWidth="100%">
+            <Flex height="100vh">
                 <SideBar />
                 <Content Component={Component} pageProps={pageProps} />
             </Flex>

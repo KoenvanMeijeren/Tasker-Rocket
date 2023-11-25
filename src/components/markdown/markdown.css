@@ -3,18 +3,17 @@
 
 .markdown-body {
     box-sizing: border-box;
-    min-width: 200px;
     margin: 0 auto;
     background: #fff;
     font-family: Satoshi;
     color: #474c55;
 }
 
-.markdown-body > ul {
+.markdown-body>ul {
     list-style: square;
 }
 
-.markdown-body > ol {
+.markdown-body>ol {
     list-style: decimal;
 }
 

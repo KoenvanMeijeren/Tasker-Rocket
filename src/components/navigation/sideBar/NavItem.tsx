@@ -1,8 +1,19 @@
 import { Center, Divider } from '@chakra-ui/layout';
 import { Box, Collapse, Flex, Link, useDisclosure } from '@chakra-ui/react';
 
+import CodeIcon from '@/components/icons/CodeIcon';
+import FileIcon from '@/components/icons/FileIcon';
+import FolderIcon from '@/components/icons/FolderIcon';
+import ImageIcon from '@/components/icons/ImageIcon';
+import MarkdownIcon from '@/components/icons/MarkdownIcon';
+import VideoIcon from '@/components/icons/VideoIcon';
 import { useModeColors } from '@/hooks/useColors';
-import { getParentFromUrl } from '@/lib/utility/formatters';
+import {
+    getParentFromUrl,
+    nameToLogo,
+    urlToFileExtension,
+} from '@/lib/utility/formatters';
+import { FileType, findFileInfo } from '@/types/extensions';
 import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Heading from '../../textStyles/Heading';
@@ -14,15 +25,15 @@ interface NavItemProps {
     navSize: NavSize;
 }
 
-const marginLeft = 10;
-const chevronBoxSize = 8;
+const tabSize = 8;
+const horizontalPadding = 2;
 
 export const VertDivider = () => {
     const { border } = useModeColors();
 
     return (
-        <Flex height="100%" justifyContent="flex-start">
-            <Center boxSize={chevronBoxSize} zIndex={1}>
+        <Flex justifyContent="flex-start">
+            <Center boxSize={tabSize} zIndex={1}>
                 <Divider
                     borderColor={border}
                     borderWidth={1}
@@ -34,6 +45,28 @@ export const VertDivider = () => {
         </Flex>
     );
 };
+
+const Logo = ({ name }: { name: string }) => (
+    <Flex height={tabSize}>
+        <Heading opacity={0.8}>{nameToLogo(name).toUpperCase()}</Heading>
+    </Flex>
+);
+
+const getFileIcon = (fileType: FileType) => {
+    switch (fileType) {
+        case FileType.Code:
+            return <CodeIcon />;
+        case FileType.Image:
+            return <ImageIcon />;
+        case FileType.Markdown:
+            return <MarkdownIcon />;
+        case FileType.Video:
+            return <VideoIcon />;
+        default:
+            return <FileIcon />;
+    }
+};
+
 export default function NavItem({
     treeItem,
     active = false,
@@ -43,59 +76,53 @@ export default function NavItem({
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const bg = 'rgba(41, 236, 172, 0.3)';
 
+    if (navSize === NavSize.Small) {
+        return <Logo name={treeItem.name} />;
+    }
+    const extension = urlToFileExtension(treeItem.name);
+    const fileInfo = findFileInfo(extension);
+
     if (treeItem.tree.length > 0) {
         return (
-            <Box
-                alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
-                flexDir="column"
-                justifyContent="center"
-                marginLeft={chevronBoxSize}
-                order={1}
-            >
-                <Flex>
-                    <VertDivider />
-                    <Flex
-                        _hover={{
-                            backgroundColor: bg,
-                        }}
-                        alignItems="center"
-                        backgroundColor={active ? bg : undefined}
-                        borderRadius={8}
-                        cursor="pointer"
-                        onClick={onToggle}
-                        opacity="80%"
-                        paddingRight={3}
-                        w={navSize == NavSize.Large ? '100%' : undefined}
-                    >
-                        <ChevronDownIcon
-                            boxSize={chevronBoxSize}
-                            color="white"
-                            transform={rotate}
-                            transition="all 0.2s linear"
-                        />
+            <Box alignItems="flex-start" marginLeft={tabSize}>
+                <Flex
+                    _hover={{
+                        backgroundColor: bg,
+                        opacity: 1,
+                    }}
+                    alignItems="center"
+                    backgroundColor={active ? bg : undefined}
+                    borderRadius={8}
+                    cursor="pointer"
+                    gap={horizontalPadding}
+                    onClick={onToggle}
+                    opacity={0.8}
+                    paddingRight={horizontalPadding}
+                >
+                    <ChevronDownIcon
+                        boxSize={tabSize}
+                        color="white"
+                        transform={rotate}
+                        transition="all 0.2s linear"
+                    />
 
-                        {/* LOGO */}
-                        <Heading>TR</Heading>
+                    <FolderIcon />
 
-                        {/* TITLE */}
-                        {navSize === NavSize.Large ? (
-                            <Heading display="flex" ml={2} noOfLines={1}>
-                                {treeItem.name}
-                            </Heading>
-                        ) : null}
-                    </Flex>
+                    {/* TITLE */}
+                    {navSize === NavSize.Large ? (
+                        <Heading display="flex" noOfLines={1}>
+                            {treeItem.name}
+                        </Heading>
+                    ) : null}
                 </Flex>
 
                 <Collapse in={isOpen}>
                     {treeItem.tree.map((item) => (
-                        <Flex key={item.path}>
-                            <VertDivider key={item.path} />
-                            <NavItem
-                                key={item.path}
-                                navSize={navSize}
-                                treeItem={item}
-                            />
-                        </Flex>
+                        <NavItem
+                            key={item.path}
+                            navSize={navSize}
+                            treeItem={item}
+                        />
                     ))}
                 </Collapse>
             </Box>
@@ -109,23 +136,28 @@ export default function NavItem({
                 <Flex
                     _hover={{
                         backgroundColor: bg,
+                        opacity: 1,
                     }}
                     alignItems="center"
                     backgroundColor={active ? bg : undefined}
                     borderRadius={8}
                     cursor="pointer"
-                    marginLeft={marginLeft}
+                    height={tabSize}
+                    marginLeft={tabSize}
                     onClick={onToggle}
-                    opacity="80%"
-                    p={3}
+                    opacity={0.8}
+                    px={horizontalPadding}
                     w={navSize == NavSize.Large ? '100%' : undefined}
                 >
-                    {/* LOGO */}
-                    <Heading>TR</Heading>
+                    <>{getFileIcon(fileInfo.type)}</>
 
                     {/* TITLE */}
                     {navSize === NavSize.Large ? (
-                        <Heading display="flex" ml={5} noOfLines={1}>
+                        <Heading
+                            display="flex"
+                            ml={horizontalPadding}
+                            noOfLines={1}
+                        >
                             {treeItem.name}
                         </Heading>
                     ) : null}

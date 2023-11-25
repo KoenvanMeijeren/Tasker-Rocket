@@ -5,13 +5,17 @@ import { Header } from './Header';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Content = ({ Component, pageProps }: AppProps) => {
-	const { backgroundColorPrimary } = useModeColors();
-	return (
-		<Flex backgroundColor={backgroundColorPrimary} flex={1} flexDir="column">
-			<Header />
+    const { backgroundColorPrimary } = useModeColors();
+    return (
+        <Flex
+            backgroundColor={backgroundColorPrimary}
+            flex={1}
+            flexDir="column"
+        >
+            <Header />
 
-			{/* content */}
-			<Component {...pageProps} />
-		</Flex>
-	);
+            {/* content */}
+            <Component {...pageProps} />
+        </Flex>
+    );
 };

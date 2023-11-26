@@ -4,7 +4,6 @@ import FolderIcon from '@/components/icons/FolderIcon';
 import ImageIcon from '@/components/icons/ImageIcon';
 import MarkdownIcon from '@/components/icons/MarkdownIcon';
 import VideoIcon from '@/components/icons/VideoIcon';
-import { useModeColors } from '@/hooks/useColors';
 import {
     getParentFromUrl,
     nameToLogo,
@@ -13,42 +12,49 @@ import {
 import { FileType, findFileInfo } from '@/types/extensions';
 import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Center, Divider } from '@chakra-ui/layout';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
+import { colorConfig } from '../../../../theme.config';
 import Heading from '../../textStyles/Heading';
 import { GithubTreeMenuItem } from './SideBar';
+
+const chevronBoxSize = 20;
+const chevronBoxSizePx = `${chevronBoxSize}px`;
+
+const horizontalPadding = 6;
+const horizontalPaddingPx = `${horizontalPadding}px`;
+const tabSize = `${chevronBoxSize + horizontalPadding}px`;
+const fontSize = 13;
 
 interface NavItemProps {
     treeItem: GithubTreeMenuItem;
     active?: boolean;
     navSize: NavSize;
+    root?: boolean;
 }
-
-const tabSize = 8;
-const horizontalPadding = 2;
-
-export const VertDivider = () => {
-    const { border } = useModeColors();
-
-    return (
-        <Flex justifyContent="flex-start">
-            <Center boxSize={tabSize} zIndex={1}>
-                <Divider
-                    borderColor={border}
-                    borderWidth={1}
-                    opacity={0.8}
-                    orientation="vertical"
-                    zIndex={0}
-                />
-            </Center>
-        </Flex>
-    );
-};
+const Title = ({ name }: { name: string }) => (
+    <Heading
+        color={colorConfig.dark.font}
+        display="flex"
+        fontSize={fontSize}
+        noOfLines={1}
+    >
+        {name}
+    </Heading>
+);
 
 const Logo = ({ name }: { name: string }) => (
-    <Flex height={tabSize}>
-        <Heading opacity={0.8}>{nameToLogo(name).toUpperCase()}</Heading>
+    <Flex
+        alignItems="center"
+        aspectRatio={1}
+        backgroundColor={colorConfig.dark.backgroundSecondary}
+        borderRadius={4}
+        height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
+        justifyContent="center"
+        my="2px"
+        opacity={0.8}
+    >
+        <Title name={nameToLogo(name).toUpperCase()} />
     </Flex>
 );
 
@@ -71,10 +77,11 @@ export default function NavItem({
     treeItem,
     active = false,
     navSize,
+    root = false,
 }: NavItemProps) {
     const { isOpen, onToggle } = useDisclosure();
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const bg = 'rgba(41, 236, 172, 0.3)';
+    const hoverBackground = 'rgba(41, 236, 172, 0.3)';
 
     if (navSize === NavSize.Small) {
         return <Logo name={treeItem.name} />;
@@ -82,38 +89,37 @@ export default function NavItem({
     const extension = urlToFileExtension(treeItem.name);
     const fileInfo = findFileInfo(extension);
 
+    const renderTitle = () =>
+        navSize === NavSize.Large ? <Title name={treeItem.name} /> : null;
+
     if (treeItem.tree.length > 0) {
         return (
-            <Box alignItems="flex-start" marginLeft={tabSize}>
+            <Box
+                alignItems="flex-start"
+                marginLeft={root ? 0 : tabSize}
+                width="100%"
+            >
                 <Flex
                     _hover={{
-                        backgroundColor: bg,
+                        backgroundColor: hoverBackground,
                         opacity: 1,
                     }}
                     alignItems="center"
-                    backgroundColor={active ? bg : undefined}
-                    borderRadius={8}
+                    borderRadius={4}
                     cursor="pointer"
-                    gap={horizontalPadding}
+                    gap={horizontalPaddingPx}
                     onClick={onToggle}
                     opacity={0.8}
-                    paddingRight={horizontalPadding}
+                    p={horizontalPaddingPx}
                 >
                     <ChevronDownIcon
-                        boxSize={tabSize}
+                        boxSize={chevronBoxSizePx}
                         color="white"
                         transform={rotate}
                         transition="all 0.2s linear"
                     />
-
                     <FolderIcon />
-
-                    {/* TITLE */}
-                    {navSize === NavSize.Large ? (
-                        <Heading display="flex" noOfLines={1}>
-                            {treeItem.name}
-                        </Heading>
-                    ) : null}
+                    {renderTitle()}
                 </Flex>
 
                 <Collapse in={isOpen}>
@@ -135,32 +141,23 @@ export default function NavItem({
             <Link href={`${url}?file=${treeItem.name}`}>
                 <Flex
                     _hover={{
-                        backgroundColor: bg,
+                        backgroundColor: hoverBackground,
                         opacity: 1,
                     }}
                     alignItems="center"
-                    backgroundColor={active ? bg : undefined}
-                    borderRadius={8}
+                    backgroundColor={active ? hoverBackground : undefined}
+                    borderRadius={4}
                     cursor="pointer"
-                    height={tabSize}
-                    marginLeft={tabSize}
+                    gap={horizontalPaddingPx}
+                    marginLeft={root ? 0 : tabSize}
                     onClick={onToggle}
                     opacity={0.8}
-                    px={horizontalPadding}
-                    w={navSize == NavSize.Large ? '100%' : undefined}
+                    p={horizontalPaddingPx}
+                    w="100%"
                 >
                     <>{getFileIcon(fileInfo.type)}</>
 
-                    {/* TITLE */}
-                    {navSize === NavSize.Large ? (
-                        <Heading
-                            display="flex"
-                            ml={horizontalPadding}
-                            noOfLines={1}
-                        >
-                            {treeItem.name}
-                        </Heading>
-                    ) : null}
+                    {renderTitle()}
                 </Flex>
             </Link>
         );

@@ -1,9 +1,13 @@
+import { GlobalValues } from '@/styles/globalValues';
 import { SVGProps } from 'react';
+const size = GlobalValues.sidebar.icons.size;
+
 const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     <svg
-        height={20}
+        height={size}
+        style={{ minWidth: size, minHeight: size }}
         viewBox="0 0 512 512"
-        width={20}
+        width={size}
         xmlSpace="preserve"
         xmlns="http://www.w3.org/2000/svg"
         {...props}

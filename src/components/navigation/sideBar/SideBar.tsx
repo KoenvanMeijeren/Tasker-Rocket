@@ -1,3 +1,4 @@
+import { useModeColors } from '@/hooks/useColors';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { getFileNameFromUrl, getParentFromUrl } from '@/lib/utility/formatters';
 import { NavSize } from '@/types/navSize';
@@ -56,6 +57,10 @@ export const SideBar = () => {
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
     const [navSize, changeNavSize] = useState(NavSize.Large);
 
+    const { fontColor } = useModeColors();
+
+    const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
+
     useEffect(() => {
         if (data) {
             data = data as GithubTree;
@@ -72,49 +77,53 @@ export const SideBar = () => {
     return (
         <Stack
             bg={themeConfig.menuBgColor}
-            borderRight="1px"
-            borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             height="100vh"
             justifyContent="space-between"
-            minWidth={navSize === NavSize.Small ? '5vw' : '25vw'}
-            p={2}
+            minWidth={sidebarWidth}
             pos="sticky"
-            transition="width"
-            transitionDuration="0.3s"
-            transitionTimingFunction="ease-in-out"
-            w={navSize === NavSize.Small ? '5vw' : '25vw'}
+            spacing={0}
+            transition="width 0.3s ease-in-out"
+            w={sidebarWidth}
         >
-            <Stack
-                overflow={navSize === NavSize.Large ? 'auto' : 'hidden'}
-                spacing={10}
-            >
-                <SideBarLogo navSize={navSize} />
+            <SideBarLogo navSize={navSize} />
 
-                {/* navitems */}
-                <Stack
-                    alignItems={
-                        navSize === NavSize.Small ? 'center' : 'flex-start'
-                    }
-                    as="nav"
-                    gap={2}
-                >
-                    <>
-                        {tree.map((item) => (
-                            <NavItem
-                                key={item.path}
-                                navSize={navSize}
-                                treeItem={item}
-                            />
-                        ))}
-                    </>
-                </Stack>
+            {/* navitems */}
+            <Stack
+                alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
+                borderRight="1px"
+                borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+                flex={1}
+                overflow="auto"
+                p={3}
+                spacing={0}
+                width="100%"
+            >
+                <>
+                    {tree.map((item) => (
+                        <NavItem
+                            key={item.path}
+                            navSize={navSize}
+                            root={true}
+                            treeItem={item}
+                        />
+                    ))}
+                </>
             </Stack>
 
             {/* collapse/expand button */}
-            <Flex alignItems="center" justifyContent="center" width="100%">
+            <Flex
+                alignItems="center"
+                borderRight="1px"
+                borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+                justifyContent="center"
+                paddingBottom={4}
+                paddingTop={2}
+                px={2}
+                width="100%"
+            >
                 <Button
                     aria-label=""
-                    backgroundColor="red"
+                    aspectRatio={1}
                     onClick={() => {
                         if (navSize === NavSize.Small)
                             changeNavSize(NavSize.Large);
@@ -123,6 +132,7 @@ export const SideBar = () => {
                 >
                     <ChevronLeftIcon
                         boxSize={8}
+                        color="white"
                         transform={rotate}
                         transition="all 0.2s linear"
                     />

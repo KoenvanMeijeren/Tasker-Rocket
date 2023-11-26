@@ -1,9 +1,9 @@
 import { Box, Flex, Spacer } from '@chakra-ui/layout';
 import {
-	Button,
-	Show,
-	useColorMode,
-	useColorModeValue,
+    Button,
+    Show,
+    useColorMode,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { themeConfig } from '../../../theme.config';
@@ -17,7 +17,7 @@ export const Header = () => {
             bg={useColorModeValue('white', themeConfig.darkModeBgColor)}
             borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
             borderBottomWidth="1px"
-            height="20"
+            height="70px"
             justifyContent="flex-end"
             px={4}
         >

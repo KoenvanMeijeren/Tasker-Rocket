@@ -7,7 +7,12 @@ import { Header } from './Header';
 export const Content = ({ Component, pageProps }: AppProps) => {
     const { backgroundColorPrimary } = useModeColors();
     return (
-        <Box backgroundColor={backgroundColorPrimary} width="100%">
+        <Box
+            backgroundColor={backgroundColorPrimary}
+            height="100%"
+            overflow="auto"
+            width="100%"
+        >
             <Header />
 
             {/* content */}

@@ -39,7 +39,7 @@ export function ProjectView({
     }
 
     return (
-        <Box height="100%">
+        <Box>
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
@@ -50,9 +50,7 @@ export function ProjectView({
                 alignItems="flex-start"
                 display="block"
                 flexDirection="column"
-                height="100%"
                 mb={3}
-                overflow="auto"
                 px="60px"
                 py="36px"
             >

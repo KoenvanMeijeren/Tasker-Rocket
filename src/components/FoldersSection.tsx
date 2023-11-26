@@ -26,7 +26,9 @@ export const FoldersSection = ({
             pos="sticky"
             px={6}
             py={1}
+            top={0}
             transition="background-color 0.5s ease"
+            zIndex={1}
         >
             {/* header -> collapsible */}
             <Box

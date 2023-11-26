@@ -79,13 +79,13 @@ export const SideBar = () => {
             minWidth={navSize === NavSize.Small ? '5vw' : '25vw'}
             p={2}
             pos="sticky"
-            transition="width" // Transition for max-width property
+            transition="width"
             transitionDuration="0.3s"
             transitionTimingFunction="ease-in-out"
-            w={navSize === NavSize.Small ? '5vw' : '25vw'} // Adjusted maxWidth based on navSize
+            w={navSize === NavSize.Small ? '5vw' : '25vw'}
         >
             <Stack
-                overflow={navSize === NavSize.Large ? 'scroll' : 'hidden'}
+                overflow={navSize === NavSize.Large ? 'auto' : 'hidden'}
                 spacing={10}
             >
                 <SideBarLogo navSize={navSize} />

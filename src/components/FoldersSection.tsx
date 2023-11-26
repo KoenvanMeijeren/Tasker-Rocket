@@ -23,6 +23,7 @@ export const FoldersSection = ({
         <Box
             backgroundColor={backgroundColorSecondary}
             boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+            pos="sticky"
             px={6}
             py={1}
             transition="background-color 0.5s ease"

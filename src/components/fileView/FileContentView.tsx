@@ -136,12 +136,15 @@ export default function FileContentView({
 
     return (
         <Box
+            alignItems="center"
             backgroundColor={backgroundColorSecondary}
             borderRadius={8}
             boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+            justifyContent="center"
             outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
             p={2}
             transition="outline-width 200ms ease"
+            w="90%"
             zIndex={2}
         >
             {/* Task header (collapsible) */}
@@ -149,6 +152,7 @@ export default function FileContentView({
                 alignItems="center"
                 cursor="pointer"
                 display="flex"
+                flex={1}
                 justifyContent="space-between"
                 onClick={onToggle}
                 px={4}
@@ -159,14 +163,12 @@ export default function FileContentView({
                         {file.name}
                     </Text>
                 </Box>
-                <Box>
-                    <ChevronDownIcon
-                        boxSize={10}
-                        color={fontColor}
-                        transform={rotate}
-                        transition="all 0.2s linear"
-                    />
-                </Box>
+                <ChevronDownIcon
+                    boxSize={10}
+                    color={fontColor}
+                    transform={rotate}
+                    transition="all 0.2s linear"
+                />
             </Box>
 
             {/* Content */}

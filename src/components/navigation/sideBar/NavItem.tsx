@@ -1,6 +1,3 @@
-import { Center, Divider } from '@chakra-ui/layout';
-import { Box, Collapse, Flex, Link, useDisclosure } from '@chakra-ui/react';
-
 import CodeIcon from '@/components/icons/CodeIcon';
 import FileIcon from '@/components/icons/FileIcon';
 import FolderIcon from '@/components/icons/FolderIcon';
@@ -16,6 +13,9 @@ import {
 import { FileType, findFileInfo } from '@/types/extensions';
 import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { Center, Divider } from '@chakra-ui/layout';
+import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
+import Link from 'next/link';
 import Heading from '../../textStyles/Heading';
 import { GithubTreeMenuItem } from './SideBar';
 

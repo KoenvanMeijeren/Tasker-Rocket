@@ -1,5 +1,5 @@
 import { useModeColors } from '@/hooks/useColors';
-import { Flex } from '@chakra-ui/layout';
+import { Box } from '@chakra-ui/layout';
 import type { AppProps } from 'next/app';
 import { Header } from './Header';
 
@@ -7,15 +7,11 @@ import { Header } from './Header';
 export const Content = ({ Component, pageProps }: AppProps) => {
     const { backgroundColorPrimary } = useModeColors();
     return (
-        <Flex
-            backgroundColor={backgroundColorPrimary}
-            flex={1}
-            flexDir="column"
-        >
+        <Box backgroundColor={backgroundColorPrimary} width="100%">
             <Header />
 
             {/* content */}
             <Component {...pageProps} />
-        </Flex>
+        </Box>
     );
 };

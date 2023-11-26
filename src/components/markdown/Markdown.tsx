@@ -1,14 +1,15 @@
+import { Box } from '@chakra-ui/layout';
+import { useEffect, useState } from 'react';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeSlug from 'rehype-slug';
+import rehypeStringify from 'rehype-stringify';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
-import rehypeStringify from 'rehype-stringify';
-import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeSlug from 'rehype-slug';
-import rehypeHighlight from 'rehype-highlight';
-import { useEffect, useState } from 'react';
 import './markdown.css';
 
 async function markdownToHtml(markdown: string): Promise<string> {
@@ -51,7 +52,7 @@ export function Markdown({ markdown }: { markdown: string }) {
     }, [markdown]);
 
     return (
-        <div
+        <Box
             className="markdown-body"
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: html }}

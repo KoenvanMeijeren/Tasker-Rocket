@@ -3,7 +3,7 @@ import { Box, Text } from '@chakra-ui/react';
 const NoContentRepo = () => {
   return (
     <Box
-      height="100vh"
+      height="80vh"
       display="flex"
       justifyContent="center"
       alignItems="center"

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Box, Button, Input, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, useDisclosure } from '@chakra-ui/react';
 
 const ChangeContentRepository = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [inputValue, setInputValue] = useState('');
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setInputValue(event.target.value);
   };
 
@@ -14,15 +14,18 @@ const ChangeContentRepository = () => {
   };
 
   const handleModalButtonClick = () => {
-    // Trim 'github' from the URL input value
-    const trimmedValue = inputValue.trim().replace(/^https?:\/\/github\.com\//, '');
+    // Find the content repo URL -> Anything after github.com/
+    const trimmedValue = inputValue.match(/github\.com\/(.*)/);
+    const result = trimmedValue ? trimmedValue[1] : inputValue;
 
     // Set item in local storage
-    localStorage.setItem('repositoryName', trimmedValue);
+    localStorage.setItem('repositoryName', result);
 
     // Close modal and reload the page
     onClose();
-    window.location.reload();
+
+    // Redirect to home page
+    window.location.href = window.location.origin;
   };
 
   return (

@@ -30,11 +30,15 @@ const ChangeContentRepository = () => {
 
   return (
     <Box>
-      <Button onClick={handleButtonClick}
+      <Button
+        onClick={handleButtonClick}
         colorScheme="green"
         variant="solid"
         borderRadius="md"
-        borderWidth="1px">Change content repository</Button>
+        borderWidth="1px"
+        size="md">
+        Change content repository
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -42,7 +46,7 @@ const ChangeContentRepository = () => {
           <ModalHeader>Enter the new content repository</ModalHeader>
           <ModalBody>
             <Input
-              placeholder="Enter URL without 'github' in front"
+              placeholder="The URL of your github repository"
               value={inputValue}
               onChange={handleInputChange}
             />

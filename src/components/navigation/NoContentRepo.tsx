@@ -15,7 +15,7 @@ const NoContentRepo = () => {
           doesn't exist.
         </Text>
         <Text fontSize="md" mb={4}>
-          Click on "Change content repository" in the top-left corner to change this.
+          Click on "Change content repository" in the top-left corner to change the current repo.
         </Text>
       </Box>
     </Box>

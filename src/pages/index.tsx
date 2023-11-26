@@ -2,6 +2,7 @@
 
 import { LoadingIndicator } from "@/components/LoadingIndicator";
 import { ProjectView } from "@/components/ProjectView";
+import NoContentRepo from "@/components/navigation/NoContentRepo";
 import { useGitHubContentTree } from "@/lib/repository/gitHubRepository";
 
 export default function Home() {
@@ -17,8 +18,12 @@ export default function Home() {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || !data) {
+    if (isLoading) {
         return <LoadingIndicator />;
+    }
+
+    if (!data) {
+        return <NoContentRepo />;
     }
 
     return <ProjectView data={data} parent={undefined} />;

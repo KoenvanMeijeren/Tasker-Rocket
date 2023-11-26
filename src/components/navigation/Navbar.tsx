@@ -21,6 +21,7 @@ import { AiOutlineProject } from 'react-icons/ai';
 import { TaskerLogo } from '@/components/icons/TaskerLogo';
 import { DesktopHeader } from '@/components/navigation/DesktopHeader';
 import { useRouter } from 'next/router';
+import ChangeContentRepository from './ChangeContentRepository';
 
 interface LinkItemProps {
     name: string;
@@ -158,14 +159,7 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             <Flex align="center" mt={5}>
                 <Spacer />
 
-                <Box mr={2} backgroundColor={'white'}>
-                    <Button
-                        onClick={() => {
-                            localStorage.setItem('repositoryName', prompt('Enter the new content repository') ?? "");
-                            window.location.reload();
-                        }}
-                    >Change content repository</Button>
-                </Box>
+
 
                 <Box mr={2}>
                     <TaskerLogo />
@@ -187,7 +181,14 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                 </Hide>
 
                 <Spacer />
+
+
             </Flex>
+
+            <Flex align="center" direction="column" mt={5}>
+                <ChangeContentRepository />
+            </Flex>
+
 
             {LinkItems.map((link) => (
                 <NavItem

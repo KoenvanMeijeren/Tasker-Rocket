@@ -23,8 +23,8 @@ export function getEnvValue(key: EnvOptions): string {
     }
 
     if (typeof envValue !== 'string') {
-        throw new Error(`Couldn't find environment variable: ${envKey}`);
+        envValue = undefined;
     }
 
-    return envValue;
+    return envValue || '';
 }

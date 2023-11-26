@@ -7,10 +7,7 @@ import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
 import VerticalDivider from './VerticalDivider';
 import FileContentView from './fileView/FileContentView';
-
-const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
-    .split('/')
-    .pop();
+import { gitHubConfig } from '@/lib/repository/gitHubRepository';
 
 type Data = {
     dirs: GitHubTreeItem[];
@@ -25,6 +22,12 @@ export function ProjectView({
     parent: string | undefined;
 }) {
     const [content, setContent] = useState<Data | null>(null);
+
+    // Retrieve repositoryName from local storage
+    const repositoryNameFromStorage = localStorage.getItem('repositoryName');
+
+    // Use the repositoryName from local storage or fallback to gitHubConfig
+    const repositoryName = repositoryNameFromStorage ?? (gitHubConfig.content_repository.split('/').pop() ?? '');
 
     useEffect(() => {
         if (data) {
@@ -61,7 +64,7 @@ export function ProjectView({
                                 name={item.name}
                             />
 
-                            {index != content.files.length - 1 ? (
+                            {index !== content.files.length - 1 ? (
                                 <VerticalDivider />
                             ) : null}
                         </Box>

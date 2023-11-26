@@ -10,8 +10,15 @@ export default function ProjectContent() {
     const path = decodeURIComponent(router.asPath);
     const parent = path.split('/').pop();
 
+    // Check if window is defined (client side code)
+    const repositoryName =
+        typeof window !== 'undefined'
+            ? localStorage.getItem('repositoryName') ?? undefined
+            : undefined;
+
     const { data, error, isLoading } = useGitHubContentTree(
-        decodeURIComponent(path)
+        decodeURIComponent(path),
+        repositoryName
     );
 
     if (error) {

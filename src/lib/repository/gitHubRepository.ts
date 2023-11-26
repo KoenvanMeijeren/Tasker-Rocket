@@ -6,7 +6,7 @@ import {
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
 
-export const gitHubConfig = {
+export let gitHubConfig = {
     base_url: 'https://api.github.com',
     token: getEnvValue(EnvOptions.GitHubToken),
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
@@ -28,11 +28,11 @@ export const gitHubConfig = {
  * - - - File 1.1.2.md
  * - Folder 2
  */
-export function useGitHubContentTree(path: string) {
+export function useGitHubContentTree(path: string, contentRepository?: string) {
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeItem[] | GitHubTreeItem
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
+        url: `${gitHubConfig.base_url}/repos/${contentRepository ?? gitHubConfig.content_repository}/contents${path}`,
         bearerToken: gitHubConfig.token,
         isPrivateData: gitHubConfig.is_private,
     });

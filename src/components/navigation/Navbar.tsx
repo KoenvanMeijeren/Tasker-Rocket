@@ -1,6 +1,7 @@
 import {
     Box,
     BoxProps,
+    Button,
     CloseButton,
     Flex,
     FlexProps,
@@ -156,6 +157,15 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         >
             <Flex align="center" mt={5}>
                 <Spacer />
+
+                <Box mr={2} backgroundColor={'white'}>
+                    <Button
+                        onClick={() => {
+                            localStorage.setItem('repositoryName', prompt('Enter the new content repository') ?? "");
+                            window.location.reload();
+                        }}
+                    >Change content repository</Button>
+                </Box>
 
                 <Box mr={2}>
                     <TaskerLogo />

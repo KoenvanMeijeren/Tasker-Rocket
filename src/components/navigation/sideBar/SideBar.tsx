@@ -1,6 +1,5 @@
-import { useModeColors } from '@/hooks/useColors';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { getFileNameFromUrl, getParentFromUrl } from '@/lib/utility/formatters';
+import { reconstructGithubTree } from '@/lib/utility/dataStructure';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
@@ -23,54 +22,28 @@ export type GithubTree = {
     url: string;
 };
 
-function reconstructGithubTree(array: GithubTreeMenuItem[]) {
-    const map = new Map<string, GithubTreeMenuItem>();
-    array.forEach((item) => {
-        map.set(item.path, {
-            path: item.path,
-            name: getFileNameFromUrl(item.path),
-            type: item.type,
-            url: item.url,
-            tree: [],
-        });
-    });
-
-    array.forEach((item) => {
-        //if root node, return
-        if (!item.path.includes('/')) {
-            return;
-        }
-        const parentPath = getParentFromUrl(item.path);
-
-        const parent = map.get(parentPath);
-        const curr = map.get(item.path);
-        if (!parent || !curr) throw new Error('parent or curr is undefined');
-        parent.tree.push(curr);
-    });
-
-    const rootItems = array.filter((item) => !item.path.includes('/'));
-    return rootItems.map((item) => map.get(item.path));
-}
-
 export const SideBar = () => {
-    let { data } = useGitHubContentTree('', true);
+    const { data } = useGitHubContentTree('', true);
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
     const [navSize, changeNavSize] = useState(NavSize.Large);
 
-    const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
-
-    useEffect(() => {
-        if (data) {
-            data = data as GithubTree;
-            const reconstructedTree = reconstructGithubTree(data.tree);
-            setTree(reconstructedTree);
-        }
-    }, [data]);
-
+    const sidebarWidth = useMemo(
+        () => (navSize === NavSize.Small ? '4vw' : '20vw'),
+        [navSize]
+    );
     const rotate = useMemo(
         () => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
         [navSize]
     );
+
+    useEffect(() => {
+        if (data) {
+            const reconstructedTree = reconstructGithubTree(
+                (data as GithubTree).tree
+            );
+            setTree(reconstructedTree);
+        }
+    }, [data]);
 
     return (
         <Stack
@@ -91,7 +64,7 @@ export const SideBar = () => {
                 borderRight="1px"
                 borderRightColor={useColorModeValue('gray.200', 'gray.700')}
                 flex={1}
-                overflow="auto"
+                overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
                 p={3}
                 spacing={0}
                 width="100%"

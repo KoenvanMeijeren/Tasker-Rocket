@@ -144,7 +144,6 @@ export default function FileContentView({
             outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
             p={2}
             transition="outline-width 200ms ease"
-            w="90%"
             zIndex={2}
         >
             {/* Task header (collapsible) */}

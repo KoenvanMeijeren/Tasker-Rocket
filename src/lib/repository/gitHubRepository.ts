@@ -1,3 +1,4 @@
+import { GithubTree } from '@/components/navigation/sideBar/SideBar';
 import {
     fetchBlobData,
     fetchJsonData,
@@ -33,7 +34,7 @@ export function useGitHubContentTree(path: string, recursive = false) {
     path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
 
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
+        GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
         url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
         bearerToken: gitHubConfig.token,

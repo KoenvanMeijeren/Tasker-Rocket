@@ -14,6 +14,7 @@ import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
+import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import Heading from '../../textStyles/Heading';
 import { GithubTreeMenuItem } from './SideBar';
@@ -28,10 +29,10 @@ const fontSize = 13;
 
 interface NavItemProps {
     treeItem: GithubTreeMenuItem;
-    active?: boolean;
     navSize: NavSize;
     root?: boolean;
 }
+
 const Title = ({ name }: { name: string }) => (
     <Heading
         color={colorConfig.dark.font}
@@ -75,22 +76,52 @@ const getFileIcon = (fileType: FileType) => {
 
 export default function NavItem({
     treeItem,
-    active = false,
     navSize,
     root = false,
 }: NavItemProps) {
     const { isOpen, onToggle } = useDisclosure();
-    const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const hoverBackground = 'rgba(41, 236, 172, 0.3)';
+    const rotate = useMemo(
+        () => (isOpen ? 'rotate(-180deg)' : 'rotate(0)'),
+        [isOpen]
+    );
+
+    const containerStyle: CSSProperties = {
+        alignItems: 'center',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        gap: horizontalPaddingPx,
+        opacity: 0.8,
+        padding: horizontalPaddingPx,
+    };
+
+    const hover = {
+        backgroundColor: 'rgba(41, 236, 172, 0.3)',
+        opacity: 1,
+    };
+
+    const fileInfo = useMemo(() => {
+        if (!treeItem) return null;
+        const getFileInfo = () => {
+            const extension = urlToFileExtension(treeItem.name);
+            return findFileInfo(extension);
+        };
+        return getFileInfo();
+    }, [treeItem]);
+
+    const renderTitle = useMemo(() => {
+        // eslint-disable-next-line react/display-name
+        return () => {
+            return navSize === NavSize.Large ? (
+                <Title name={treeItem.name} />
+            ) : null;
+        };
+    }, [navSize, treeItem]);
+
+    if (!treeItem || !fileInfo) return null;
 
     if (navSize === NavSize.Small) {
         return <Logo name={treeItem.name} />;
     }
-    const extension = urlToFileExtension(treeItem.name);
-    const fileInfo = findFileInfo(extension);
-
-    const renderTitle = () =>
-        navSize === NavSize.Large ? <Title name={treeItem.name} /> : null;
 
     if (treeItem.tree.length > 0) {
         return (
@@ -99,19 +130,7 @@ export default function NavItem({
                 marginLeft={root ? 0 : tabSize}
                 width="100%"
             >
-                <Flex
-                    _hover={{
-                        backgroundColor: hoverBackground,
-                        opacity: 1,
-                    }}
-                    alignItems="center"
-                    borderRadius={4}
-                    cursor="pointer"
-                    gap={horizontalPaddingPx}
-                    onClick={onToggle}
-                    opacity={0.8}
-                    p={horizontalPaddingPx}
-                >
+                <Flex _hover={hover} onClick={onToggle} style={containerStyle}>
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
                         color="white"
@@ -138,25 +157,17 @@ export default function NavItem({
         const url = `/${encodeURIComponent(parent)}`;
 
         return (
-            <Link href={`${url}?file=${treeItem.name}`}>
+            <Link
+                href={`${url}?file=${treeItem.name}`}
+                style={{ width: '100%' }}
+            >
                 <Flex
-                    _hover={{
-                        backgroundColor: hoverBackground,
-                        opacity: 1,
-                    }}
-                    alignItems="center"
-                    backgroundColor={active ? hoverBackground : undefined}
-                    borderRadius={4}
-                    cursor="pointer"
-                    gap={horizontalPaddingPx}
+                    _hover={hover}
                     marginLeft={root ? 0 : tabSize}
                     onClick={onToggle}
-                    opacity={0.8}
-                    p={horizontalPaddingPx}
-                    w="100%"
+                    style={containerStyle}
                 >
-                    <>{getFileIcon(fileInfo.type)}</>
-
+                    {getFileIcon(fileInfo.type)}
                     {renderTitle()}
                 </Flex>
             </Link>

@@ -31,6 +31,7 @@ export const SideBar = () => {
         () => (navSize === NavSize.Small ? '4vw' : '20vw'),
         [navSize]
     );
+
     const rotate = useMemo(
         () => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
         [navSize]
@@ -53,7 +54,7 @@ export const SideBar = () => {
             minWidth={sidebarWidth}
             pos="sticky"
             spacing={0}
-            transition="width 0.3s ease-in-out"
+            transition="all 0.5s ease"
             w={sidebarWidth}
         >
             <SideBarLogo navSize={navSize} />
@@ -93,7 +94,6 @@ export const SideBar = () => {
                 width="100%"
             >
                 <Button
-                    aria-label=""
                     aspectRatio={1}
                     onClick={() => {
                         if (navSize === NavSize.Small)

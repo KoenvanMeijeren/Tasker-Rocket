@@ -173,7 +173,7 @@ export default function FileContentView({
 
             {/* Content */}
             <Collapse in={isOpen}>
-                <Divider borderWidth={1.5} my={4} />
+                <Divider borderColor={border} borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
                     <Box
                         className="btn-group"

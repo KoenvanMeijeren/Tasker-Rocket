@@ -1,9 +1,9 @@
 'use client';
 
 import {
-	removeQueryParamsFromURl,
-	replaceAll,
-	urlToReadableString,
+    removeQueryParamsFromURl,
+    replaceAll,
+    urlToReadableString,
 } from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -17,10 +17,10 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-	const url = removeQueryParamsFromURl(decodeURIComponent(path));
-	if (url === '/') {
-		return [];
-	}
+    const url = removeQueryParamsFromURl(decodeURIComponent(path));
+    if (url === '/') {
+        return [];
+    }
 
     const breadcrumbs = url.split('/');
     return breadcrumbs
@@ -65,6 +65,7 @@ export function Breadcrumbs() {
             {breadcrumbs.map((item, index: number) => {
                 return (
                     <BreadcrumbItem
+                        color="white"
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
                         <BreadcrumbLink

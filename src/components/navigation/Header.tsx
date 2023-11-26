@@ -14,7 +14,7 @@ export const Header = () => {
     return (
         <Flex
             alignItems="center"
-            bg={useColorModeValue('white', themeConfig.darkModeBgColor)}
+            bg={themeConfig.menuBgColor}
             borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
             borderBottomWidth="1px"
             height="70px"
@@ -27,7 +27,11 @@ export const Header = () => {
                 </Box>
                 <Spacer />
                 <Button onClick={toggleColorMode}>
-                    {colorMode === 'light' ? <MdDarkMode /> : <MdLightMode />}
+                    {colorMode === 'light' ? (
+                        <MdDarkMode color="white" />
+                    ) : (
+                        <MdLightMode />
+                    )}
                 </Button>
             </Show>
         </Flex>

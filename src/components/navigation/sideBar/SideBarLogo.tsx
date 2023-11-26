@@ -1,5 +1,5 @@
 import { NavSize } from '@/types/navSize';
-import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { themeConfig } from '../../../../theme.config';
 import { TaskerLogo } from '../../icons/TaskerLogo';
 
@@ -11,7 +11,7 @@ export const SideBarLogo = ({ navSize }: { navSize: NavSize }) => {
             borderBottomColor="gray.700"
             // a little hacky, but necessery to align with the bottom part of the sidebar
             borderRight="1px"
-            borderRightColor={useColorModeValue('white', 'transparent')}
+            borderRightColor="transparent"
             gap={3}
             justifyContent="center"
             minHeight="70px"

@@ -53,6 +53,8 @@ export function Markdown({ markdown }: { markdown: string }) {
 
     return (
         <Box
+            borderRadius={8}
+            p={4}
             className="markdown-body"
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: html }}

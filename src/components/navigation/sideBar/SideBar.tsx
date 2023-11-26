@@ -57,8 +57,6 @@ export const SideBar = () => {
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
     const [navSize, changeNavSize] = useState(NavSize.Large);
 
-    const { fontColor } = useModeColors();
-
     const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
 
     useEffect(() => {

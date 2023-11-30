@@ -35,6 +35,8 @@
         "@codemirror/language-data": "github:codemirror/language-data",
         "@fontsource/open-sans": "^5.0.12",
         "@fontsource/roboto": "^5.0.8",
+        "@supabase/gotrue-js": "^2.46.1",
+        "@supabase/supabase-js": "^2.39.0",
         "@types/node": "^20.4.8",
         "@types/react": "^18.2.20",
         "@types/react-dom": "18.2.7",

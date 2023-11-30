@@ -1,5 +1,6 @@
 import supabase from '@/lib/supabase/db';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+
 export default function useLogin() {
     const router = useRouter();
 
@@ -21,7 +22,7 @@ export default function useLogin() {
      */
     async function signOut() {
         await supabase.auth.signOut();
-        router.reload();
+        router.refresh();
     }
 
     return {

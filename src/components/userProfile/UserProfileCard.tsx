@@ -19,6 +19,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 export default function UserProfileCard() {
     const { signOut } = useLogin();
     const { session } = useContext(SessionContext);
+    console.log(session);
 
     if (!session) {
         return null;

@@ -1,9 +1,9 @@
-import useLogin from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { Container, Heading, Stack, Button, Flex } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 
 export default function Login() {
-    const { signIn } = useLogin();
+    const { signIn } = useAuth();
 
     return (
         <Container

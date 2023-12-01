@@ -18,14 +18,14 @@ export default function Login() {
                             spacing={{ base: '2', md: '3' }}
                             textAlign="center"
                         >
-                            <Heading size={{ base: 'xs', md: 'md' }}>
-                                Log in to your github account
+                            <Heading size={{ base: 'xl'}} marginBottom={2}>
+                                Log using your github account
                             </Heading>
                         </Stack>
                     </Stack>
                 </Stack>
-                <Button onClick={signIn}>
-                    <FaGithub />
+                <Button onClick={signIn} size={{base: '2xl'}}>
+                    <FaGithub size={70}/>
                 </Button>
             </Flex>
         </Container>

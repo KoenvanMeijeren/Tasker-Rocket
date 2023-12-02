@@ -46,10 +46,6 @@ export default function ProjectContent() {
         return <LoadingIndicator />;
     }
 
-    if (!data) {
-        return <div>geen data gevonden</div>;
-    }
-
     return (
         <ProjectView
             currentParent={currentParentItem}

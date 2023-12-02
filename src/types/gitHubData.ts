@@ -18,3 +18,20 @@ export type GitHubTreeParentItem = {
     name: string;
     children: number;
 };
+
+export interface GitHubRecursiveTree {
+    sha: string;
+    tree: GitHubRecursiveTreeItem[];
+    truncated: boolean;
+    url: string;
+}
+
+export interface GitHubRecursiveTreeItem {
+    unique_key: string;
+    path: string;
+    mode: string;
+    type: string;
+    sha: string;
+    size: number;
+    url: string;
+}

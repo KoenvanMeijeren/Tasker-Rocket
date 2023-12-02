@@ -1,11 +1,10 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubRecursiveTree, GitHubTreeItem } from '@/types/gitHubData';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import {
     fetchBlobData,
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
-import useSWRImmutable from 'swr/immutable';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -49,55 +48,28 @@ export function useGitHubContentTree(path: string) {
 }
 
 /**
- * Fetches the directories of a repository tree based on the provided path.
+ * Fetches recursively all items of a repository.
  *
  * The function constructs a parent tree for the given path by iteratively
  * appending parent paths to the GitHub repository's content endpoint.
  *
  * Example tree:
  * - Folder 1
- * - - Folder 1.1
- * - - - Folder 1.1.1
  * - - File 1.md
- * - File 2.md
+ * - - File 2.md
+ * - - Folder 1.1
+ * - - - File 1.1.1.md
+ * - - - File 1.1.2.md
  * - Folder 2
+ *
+ * Note: These items don't contain the content of the files.
  */
-export function useGitHubParentTree(path: string) {
-    const parentPathParts = path.split('/');
-    const parentPathsResult: string[] = [];
-
-    // Build parent paths iteratively by adding them to the GitHub repository's
-    // content endpoint.
-    while (parentPathParts.length > 0) {
-        parentPathsResult.push(
-            getGitHubFileContentUrl(parentPathParts.join('/'))
-        );
-        parentPathParts.pop();
-    }
-
-    // Function to fetch data for multiple URLs concurrently
-    const multipleDataFetcher = (urls: string[]) =>
-        Promise.all(
-            urls.map(async (url): Promise<GitHubTreeItem[]> => {
-                return (await fetchJsonData({
-                    input: url,
-                    init: {
-                        headers: {
-                            'Content-type': 'application/json',
-                            Authorization: `Bearer ${gitHubConfig.token}`,
-                        },
-                    },
-                })) as GitHubTreeItem[];
-            })
-        );
-
-    return useSWRImmutable<GitHubTreeItem[][]>(
-        parentPathsResult,
-        multipleDataFetcher,
-        {
-            shouldRetryOnError: false,
-        }
-    );
+export function useGitHubRecursiveTree() {
+    return useImmutableDataFetcher<GitHubRecursiveTree>(fetchJsonData, {
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/git/trees/main?recursive=1`,
+        bearerToken: gitHubConfig.token,
+        isPrivateData: gitHubConfig.is_private_repository,
+    });
 }
 
 /**

@@ -48,10 +48,10 @@ export function useGitHubContentTree(path: string) {
 }
 
 /**
- * Fetches the data of GitHub repository tree.
+ * Fetches recursively all items of a repository.
  *
- * The content of the tree items is partially downloaded, only if the file is,
- * smaller than 2 MB.
+ * The function constructs a parent tree for the given path by iteratively
+ * appending parent paths to the GitHub repository's content endpoint.
  *
  * Example tree:
  * - Folder 1
@@ -62,8 +62,7 @@ export function useGitHubContentTree(path: string) {
  * - - - File 1.1.2.md
  * - Folder 2
  *
- * Note: Private files are only downloadable if the download token of GitHub is
- * not expired. That's why we've disabled caching for private files.
+ * Note: These items don't contain the content of the files.
  */
 export function useGitHubRecursiveTree() {
     return useImmutableDataFetcher<GitHubRecursiveTree>(fetchJsonData, {

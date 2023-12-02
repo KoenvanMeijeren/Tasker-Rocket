@@ -11,19 +11,19 @@ export function hasKeyInMap(map: object, key: string): boolean {
     return Object.keys(map).includes(key);
 }
 
-export const isFile = (file: GitHubTreeItem) =>
-    file.type === (GitHubTreeItemType.File as string);
+export const isDir = (file: GitHubTreeItem | GitHubRecursiveTreeItem) =>
+    file.type === (GitHubTreeItemType.Dir as string) || file.type === 'tree';
 
-export const isDir = (file: GitHubTreeItem) =>
-    file.type === (GitHubTreeItemType.Dir as string);
+export const isFile = (file: GitHubTreeItem | GitHubRecursiveTreeItem) =>
+    file.type === (GitHubTreeItemType.File as string) || !isDir(file);
 
 export const hashGitHubItem = (
     item: GitHubTreeItem | GitHubRecursiveTreeItem
 ) => {
     item.unique_key = objectHash({
         path: item.path,
-        url: item.url,
-        type: item.type === 'tree' ? GitHubTreeItemType.Dir : item.type,
+        sha: item.sha,
+        type: isDir(item) ? GitHubTreeItemType.Dir : GitHubTreeItemType.File,
     });
 };
 

@@ -5,11 +5,11 @@ import { ProjectView } from '@/components/project/ProjectView';
 import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
 import {
     useGitHubContentTree,
-    useGitHubParentTree,
+    useGitHubRecursiveTree,
 } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { buildParentTreeForCurrentPath } from '@/lib/utility/dataStructure';
+import { recursiveTreeToParentTree } from '@/lib/utility/dataStructure';
 
 export default function ProjectContent() {
     const router = useRouter();
@@ -23,13 +23,14 @@ export default function ProjectContent() {
         data: parentData,
         isLoading: parentIsLoading,
         error: parentError,
-    } = useGitHubParentTree(path);
+    } = useGitHubRecursiveTree();
 
     useEffect(() => {
         if (!parentData) return;
 
-        const buildParentTree = buildParentTreeForCurrentPath(path, parentData);
-        if (!buildParentTree) return;
+        const buildParentTree: GitHubTreeParentItem[] =
+            recursiveTreeToParentTree(path, parentData);
+        if (!buildParentTree || buildParentTree.length < 1) return;
 
         setParentTree(buildParentTree);
         if (buildParentTree) {

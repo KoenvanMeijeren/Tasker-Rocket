@@ -1,3 +1,8 @@
+import AudioView from '@/components/fileView/AudioView';
+import CodeView from '@/components/fileView/CodeView';
+import MarkdownView from '@/components/fileView/MarkdownView';
+import PdfFileView from '@/components/fileView/PdfFileView';
+import VideoView from '@/components/fileView/VideoView';
 import { useModeColors } from '@/hooks/useColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
@@ -5,6 +10,7 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
+import { File } from '@/types/file';
 import {
     CheckCircleIcon,
     ChevronDownIcon,
@@ -19,29 +25,22 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+    FaFile,
+    FaFileAudio,
+    FaFileCode,
+    FaFileExcel,
+    FaFileImage,
+    FaFilePdf,
+    FaFilePowerpoint,
+    FaFileVideo,
+    FaFileWord,
+    FaMarkdown,
+} from 'react-icons/fa6';
 import { colorConfig } from '../../../theme.config';
+import ExcelView from './ExcelView';
 import ImageView from './ImageView';
 import './fileContentView.css';
-import { File } from '@/types/file';
-import CodeView from '@/components/fileView/CodeView';
-import PdfFileView from '@/components/fileView/PdfFileView';
-import MarkdownView from '@/components/fileView/MarkdownView';
-import AudioView from '@/components/fileView/AudioView';
-import VideoView from '@/components/fileView/VideoView';
-import ExcelView from './ExcelView';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
-import {
-    faFileImage,
-    faFileCode,
-    faFilePdf,
-    faFileAudio,
-    faFileVideo,
-    faFileWord,
-    faFilePowerpoint,
-    faFileExcel,
-    faFile,
-} from '@fortawesome/free-solid-svg-icons';
 
 export default function FileContentView({
     name,
@@ -135,25 +134,25 @@ export default function FileContentView({
 
         switch (file.fileType) {
             case FileType.Markdown:
-                return <FontAwesomeIcon icon={faMarkdown} />;
+                return <FaMarkdown />;
             case FileType.Image:
-                return <FontAwesomeIcon icon={faFileImage} />;
+                return <FaFileImage />;
             case FileType.Code:
-                return <FontAwesomeIcon icon={faFileCode} />;
+                return <FaFileCode />;
             case FileType.Pdf:
-                return <FontAwesomeIcon icon={faFilePdf} />;
+                return <FaFilePdf />;
             case FileType.Audio:
-                return <FontAwesomeIcon icon={faFileAudio} />;
+                return <FaFileAudio />;
             case FileType.Video:
-                return <FontAwesomeIcon icon={faFileVideo} />;
+                return <FaFileVideo />;
             case FileType.Docx:
-                return <FontAwesomeIcon icon={faFileWord} />;
+                return <FaFileWord />;
             case FileType.PowerPoint:
-                return <FontAwesomeIcon icon={faFilePowerpoint} />;
+                return <FaFilePowerpoint />;
             case FileType.Excel:
-                return <FontAwesomeIcon icon={faFileExcel} />;
+                return <FaFileExcel />;
             case FileType.Unsupported:
-                return <FontAwesomeIcon icon={faFile} />;
+                return <FaFile />;
         }
     }, [file]);
 
@@ -187,7 +186,17 @@ export default function FileContentView({
                 <Box alignItems="center" display="flex" gap="10px">
                     <CheckCircleIcon boxSize="20px" color={colorConfig.green} />
                     <Text className="noselect" fontSize="18px">
-                        {icon} {file.name}
+                        <Box
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            {icon}
+                            <Box ml={1} style={{ display: 'inline' }}>
+                                {file.name}
+                            </Box>
+                        </Box>
                     </Text>
                 </Box>
                 <Box>

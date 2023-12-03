@@ -4,10 +4,9 @@ import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
+import { FaFolderOpen } from 'react-icons/fa6';
 import Heading from './textStyles/Heading';
 import Text from './textStyles/Text';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 export const FoldersSection = ({
     data,
@@ -59,10 +58,22 @@ export const FoldersSection = ({
                                 <Card backgroundColor={backgroundColorPrimary}>
                                     <CardBody py={3}>
                                         <Text>
-                                            <FontAwesomeIcon
-                                                icon={faFolderOpen}
-                                            />{' '}
-                                            {item.name}
+                                            <Box
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                <FaFolderOpen />
+                                                <Box
+                                                    ml={1}
+                                                    style={{
+                                                        display: 'inline',
+                                                    }}
+                                                >
+                                                    {item.name}
+                                                </Box>
+                                            </Box>
                                         </Text>
                                     </CardBody>
                                 </Card>

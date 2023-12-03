@@ -95,7 +95,7 @@ export default function NavItem({
     };
 
     const hover = {
-        backgroundColor: 'rgba(41, 236, 172, 0.3)',
+        backgroundColor: '#1a2636',
         opacity: 1,
     };
 

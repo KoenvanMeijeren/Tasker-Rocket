@@ -64,6 +64,16 @@ export const SideBar = () => {
                 alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
                 borderRight="1px"
                 borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        width: '6px',
+                    },
+
+                    '&::-webkit-scrollbar-thumb': {
+                        background: '#616d79',
+                        borderRadius: '24px',
+                    },
+                }}
                 flex={1}
                 overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
                 p={3}

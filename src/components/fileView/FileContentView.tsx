@@ -21,6 +21,7 @@ import {
     Button,
     Collapse,
     Divider,
+    Flex,
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
@@ -186,17 +187,10 @@ export default function FileContentView({
                 <Box alignItems="center" display="flex" gap="10px">
                     <CheckCircleIcon boxSize="20px" color={colorConfig.green} />
                     <Text className="noselect" fontSize="18px">
-                        <Box
-                            style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <Flex align="center">
                             {icon}
-                            <Box ml={1} style={{ display: 'inline' }}>
-                                {file.name}
-                            </Box>
-                        </Box>
+                            <Text ml={1}>{file.name}</Text>
+                        </Flex>
                     </Text>
                 </Box>
                 <Box>

@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app';
 import { Header } from './Header';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const Content = ({ Component, pageProps }: AppProps) => {
+export const Content = ({ Component, ...pageProps }: AppProps) => {
     const { backgroundColorPrimary } = useModeColors();
     return (
         <Box

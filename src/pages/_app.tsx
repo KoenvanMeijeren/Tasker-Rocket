@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Providers>
             <Flex height="100vh" overflow="hidden">
                 <SideBar />
-                <Content Component={Component} pageProps={pageProps} />
+                <Content Component={Component} {...pageProps} />
             </Flex>
         </Providers>
     );

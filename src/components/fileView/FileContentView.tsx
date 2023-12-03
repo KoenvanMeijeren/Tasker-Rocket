@@ -39,13 +39,13 @@ export default function FileContentView({
     contentUrl: string;
     defaultIsOpen: boolean;
 }) {
-    const { isOpen, onToggle } = useDisclosure({ defaultIsOpen });
+    const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
+        defaultIsOpen,
+    });
     // Update the 'isOpen' state when 'defaultIsOpen' changes
     useEffect(() => {
-        if (defaultIsOpen !== isOpen) {
-            onToggle();
-        }
-    }, [defaultIsOpen]);
+        return defaultIsOpen ? onOpen() : onClose();
+    }, [defaultIsOpen, onClose, onOpen]);
 
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);

@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/icons';
 import { AiOutlineFullscreen } from 'react-icons/ai';
 import { Box, Button, Collapse, Divider, Text } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -47,7 +47,6 @@ export default function FileContentView({
     ) => void;
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const isUserActionRef = useRef(false);
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
     const { fullScreen } = fileContentOpen[name] || {
@@ -83,7 +82,6 @@ export default function FileContentView({
     }, [isOpen]);
 
     useEffect(() => {
-        // When fileContentOpen changes, update isOpen based on the specific file's state
         if (fileContentOpen[name] && fileContentOpen[name].isOpen !== isOpen) {
             setIsOpen(fileContentOpen[name].isOpen);
         }

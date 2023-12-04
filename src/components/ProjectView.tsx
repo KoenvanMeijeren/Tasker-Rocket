@@ -26,25 +26,29 @@ export function ProjectView({
 }) {
     const [fileContentOpenStates, setFileContentOpenStates] = useState<{
         [key: string]: {
-            isOpen: boolean;
+            fullScreen: boolean;
             contentUrl: string;
+            isOpen: boolean;
         };
     }>({});
+
     const [content, setContent] = useState<Data | null>(null);
+
     const hasTrueValue = Object.values(fileContentOpenStates).some(
-        (item) => item.isOpen
+        (item) => item.fullScreen
     );
 
     const updateFileContentToggle = (
         name: string,
         contentUrl: string,
+        fullScreen: boolean,
         isOpen: boolean
     ) => {
-        setFileContentOpenStates((prevStates) => ({
-            ...prevStates,
+        setFileContentOpenStates(() => ({
             [name]: {
-                isOpen,
                 contentUrl,
+                fullScreen,
+                isOpen,
             },
         }));
     };
@@ -54,6 +58,44 @@ export function ProjectView({
             setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
         }
     }, [data]);
+
+    useEffect(() => {
+        if (content?.files) {
+            const allContentStates: {
+                [key: string]: {
+                    fullScreen: boolean;
+                    contentUrl: string;
+                    isOpen: boolean;
+                };
+            } = {};
+
+            content.files.forEach((item) => {
+                allContentStates[item.name] = {
+                    fullScreen: false,
+                    contentUrl: item.download_url ?? '',
+                    isOpen: false,
+                };
+            });
+
+            setFileContentOpenStates(allContentStates);
+        }
+    }, [content]);
+
+    const filteredFileContentOpenStates = Object.entries(fileContentOpenStates)
+        .filter(([, value]) => value.fullScreen)
+        .reduce(
+            (acc, [key, value]) => {
+                acc[key] = value;
+                return acc;
+            },
+            {} as {
+                [key: string]: {
+                    fullScreen: boolean;
+                    contentUrl: string;
+                    isOpen: boolean;
+                };
+            }
+        );
 
     if (!content) {
         return null;
@@ -70,34 +112,30 @@ export function ProjectView({
 
             {hasTrueValue ? (
                 <Stack>
-                    {content.files.map((item: GitHubTreeItem) => {
-                        const isContentViewOpen =
-                            fileContentOpenStates[item.name]?.isOpen || false;
+                    {Object.keys(filteredFileContentOpenStates).map((key) => {
+                        const item = fileContentOpenStates[key];
                         return (
-                            isContentViewOpen && (
-                                <Box key={item.url}>
-                                    <FileContentView
-                                        contentUrl={
-                                            fileContentOpenStates[item.name]
-                                                ?.contentUrl || ''
-                                        }
-                                        fileContentOpen={isContentViewOpen}
-                                        key={item.url}
-                                        name={item.name}
-                                        setFileContentOpen={(
-                                            name: string,
-                                            contentUrl: string,
-                                            isOpen: boolean
-                                        ) =>
-                                            updateFileContentToggle(
-                                                name,
-                                                contentUrl,
-                                                isOpen
-                                            )
-                                        }
-                                    />
-                                </Box>
-                            )
+                            <Box key={key}>
+                                <FileContentView
+                                    contentUrl={item.contentUrl}
+                                    fileContentOpen={fileContentOpenStates}
+                                    key={key}
+                                    name={key}
+                                    setFileContentOpen={(
+                                        name,
+                                        contentUrl,
+                                        fullScreen,
+                                        isOpen
+                                    ) =>
+                                        updateFileContentToggle(
+                                            name,
+                                            contentUrl,
+                                            fullScreen,
+                                            isOpen
+                                        )
+                                    }
+                                />
+                            </Box>
                         );
                     })}
                 </Stack>
@@ -114,20 +152,19 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
-                                fileContentOpen={
-                                    fileContentOpenStates[item.name]?.isOpen ||
-                                    false
-                                }
+                                fileContentOpen={fileContentOpenStates}
                                 key={item.url}
                                 name={item.name}
                                 setFileContentOpen={(
                                     name: string,
                                     contentUrl: string,
+                                    fullScreen: boolean,
                                     isOpen: boolean
                                 ) =>
                                     updateFileContentToggle(
                                         name,
                                         contentUrl,
+                                        fullScreen,
                                         isOpen
                                     )
                                 }

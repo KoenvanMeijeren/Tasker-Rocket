@@ -11,15 +11,8 @@ import {
     DownloadIcon,
 } from '@chakra-ui/icons';
 import { AiOutlineFullscreen } from 'react-icons/ai';
-import {
-    Box,
-    Button,
-    Collapse,
-    Divider,
-    Text,
-    useDisclosure,
-} from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, Button, Collapse, Divider, Text } from '@chakra-ui/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -39,16 +32,27 @@ export default function FileContentView({
 }: {
     name: string;
     contentUrl: string;
-    fileContentOpen: boolean;
+    fileContentOpen: {
+        [key: string]: {
+            fullScreen: boolean;
+            contentUrl: string;
+            isOpen: boolean;
+        };
+    };
     setFileContentOpen: (
         name: string,
         contentUrl: string,
+        fullScreen: boolean,
         isOpen: boolean
     ) => void;
 }) {
-    const { isOpen, onToggle } = useDisclosure();
+    const [isOpen, setIsOpen] = useState(false);
+    const isUserActionRef = useRef(false);
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
+    const { fullScreen } = fileContentOpen[name] || {
+        fullScreen: false,
+    };
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -74,6 +78,17 @@ export default function FileContentView({
         });
     }, [data, name]);
 
+    useEffect(() => {
+        setFileContentOpen(name, contentUrl, fullScreen, isOpen);
+    }, [isOpen]);
+
+    useEffect(() => {
+        // When fileContentOpen changes, update isOpen based on the specific file's state
+        if (fileContentOpen[name] && !isUserActionRef.current) {
+            setIsOpen(fileContentOpen[name].isOpen);
+        }
+    }, []);
+
     const handleDownload = useCallback(() => {
         if (!file) return;
         const link = document.createElement('a');
@@ -84,10 +99,16 @@ export default function FileContentView({
         link.click();
     }, [file]);
 
+    // change fullscreen state
     const handleToggle = () => {
-        const newState = !fileContentOpen;
-        setFileContentOpen(name, contentUrl, newState);
-        onToggle();
+        isUserActionRef.current = true;
+        setFileContentOpen(
+            name,
+            contentUrl,
+            !fileContentOpen[name]?.fullScreen,
+            isOpen
+        );
+        setIsOpen(!isOpen);
     };
 
     const content = useMemo(() => {
@@ -156,7 +177,9 @@ export default function FileContentView({
                 cursor="pointer"
                 display="flex"
                 justifyContent="space-between"
-                onClick={onToggle}
+                onClick={() => {
+                    setIsOpen(!isOpen); // Toggle isOpen state independently
+                }}
                 px={4}
             >
                 <Box alignItems="center" display="flex" gap="10px">

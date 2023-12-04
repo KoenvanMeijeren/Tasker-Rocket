@@ -53,16 +53,6 @@ export class GitHubTreeItemsStateStore {
      * This method will ensure that the parentKey exists in the state and
      * initialize it with the given children. This method should be called
      * before calling toggleCompletedInTree.
-     *
-     * Example result:
-     * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
-     *   "children": 2,
-     *   "completedChildren": {}
-     * },
-     * "root": {
-     *   "children": 1,
-     *   "completedChildren": {}
-     * }
      */
     public initTree(payload: GitHubTreeParentItem) {
         const { unique_key: parentKey, children } = payload;
@@ -85,48 +75,6 @@ export class GitHubTreeItemsStateStore {
     /**
      * Toggles the completed state for the itemKey under the parentKey and
      * all parentKeys up to the root.
-     *
-     * Example state before calling toggleCompleted:
-     * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
-     *   "children": 2,
-     *   "completedChildren": {
-     *     "651f9948adfec902ae496f8edd570edd41bab904": true,
-     *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": false
-     *   }
-     * },
-     * "0dc9b4dfc65102978682bd1a4dfa6870633f2741": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": false
-     *   }
-     * },
-     * "root": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "0dc9b4dfc65102978682bd1a4dfa6870633f2741": false,
-     *   }
-     * }
-     *
-     * Example result:
-     * "57b7e7f2733dc4c415cc118b3fdb836102466cd4": {
-     *   "children": 2,
-     *   "completedChildren": {
-     *     "651f9948adfec902ae496f8edd570edd41bab904": true,
-     *     "cf5ea7d6ef89cfdcf95457cf92c65ad162986db3": true
-     *   }
-     * },
-     * "0dc9b4dfc65102978682bd1a4dfa6870633f2741": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "57b7e7f2733dc4c415cc118b3fdb836102466cd4": true
-     *   }
-     * },
-     * "root": {
-     *   "children": 1,
-     *   "completedChildren": {
-     *     "0dc9b4dfc65102978682bd1a4dfa6870633f2741": true,
-     *   }
-     * }
      */
     public toggleCompletedInTree(payload: {
         parentTree: GitHubTreeParentItem[];

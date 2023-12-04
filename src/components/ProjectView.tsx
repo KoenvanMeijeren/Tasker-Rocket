@@ -44,7 +44,8 @@ export function ProjectView({
         fullScreen: boolean,
         isOpen: boolean
     ) => {
-        setFileContentOpenStates(() => ({
+        setFileContentOpenStates((prevState) => ({
+            ...prevState,
             [name]: {
                 contentUrl,
                 fullScreen,

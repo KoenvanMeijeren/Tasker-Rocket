@@ -84,7 +84,7 @@ export default function FileContentView({
 
     useEffect(() => {
         // When fileContentOpen changes, update isOpen based on the specific file's state
-        if (fileContentOpen[name] && !isUserActionRef.current) {
+        if (fileContentOpen[name] && fileContentOpen[name].isOpen !== isOpen) {
             setIsOpen(fileContentOpen[name].isOpen);
         }
     }, []);
@@ -101,7 +101,6 @@ export default function FileContentView({
 
     // change fullscreen state
     const handleToggle = () => {
-        isUserActionRef.current = true;
         setFileContentOpen(
             name,
             contentUrl,

@@ -34,6 +34,7 @@
         "@codemirror/lang-sql": "^6.5.4",
         "@codemirror/language": "^6.9.0",
         "@codemirror/language-data": "github:codemirror/language-data",
+        "@cyntler/react-doc-viewer": "1.14.0",
         "@fontsource/open-sans": "^5.0.12",
         "@fontsource/roboto": "^5.0.8",
         "@types/node": "^20.4.8",

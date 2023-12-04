@@ -2,9 +2,10 @@ import { useModeColors } from '@/hooks/useModeColors';
 import { GitHubTreeItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
+import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import { colorConfig } from '../../theme.config';
+import { FaFolderOpen } from 'react-icons/fa6';
 import Heading from './textStyles/Heading';
 import Text from './textStyles/Text';
 
@@ -76,7 +77,12 @@ export const FoldersSection = ({
                             >
                                 <Card backgroundColor={backgroundColorPrimary}>
                                     <CardBody py={3}>
-                                        <Text>{item.name}</Text>
+                                        <Text>
+                                            <Flex align="center">
+                                                <FaFolderOpen />
+                                                <Text ml={1}>{item.name}</Text>
+                                            </Flex>
+                                        </Text>
                                     </CardBody>
                                 </Card>
                             </Link>

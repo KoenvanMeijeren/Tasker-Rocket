@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { GitHubTreeParentItem } from '@/types/gitHubData';
-import { makePersistable } from 'mobx-persist-store';
-import localforage from 'localforage';
+import { makeSlicePersistable } from '@/lib/store/hooks';
 
 export interface GitHubTreeItemsState {
     [parentKey: string]: {
@@ -20,30 +19,7 @@ export class GitHubTreeItemsStateStore {
 
     constructor() {
         makeAutoObservable(this);
-
-        // Make the state persistable.
-        localforage
-            .setDriver(localforage.INDEXEDDB)
-            .then(() => {
-                makePersistable(this, {
-                    name: 'gitHubTreeItemsState',
-                    properties: ['state'],
-                    removeOnExpiration: false,
-                    storage: localforage,
-                })
-                    .then(() => {
-                        // Manually process the promise to silence errors on
-                        // server side.
-                    })
-                    .catch(() => {
-                        // Silence errors on server side, because localforage is
-                        // not available there.
-                    });
-            })
-            .catch(() => {
-                // Silence errors on server side, because localforage is not
-                // available there.
-            });
+        makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
     /**

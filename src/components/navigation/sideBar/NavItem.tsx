@@ -92,7 +92,7 @@ export default function NavItem({
         [isOpen]
     );
 
-    const { hoverBackground, fontColor } = useModeColors();
+    const { hoverBackground } = useModeColors();
 
     const containerStyle: CSSProperties = {
         alignItems: 'center',

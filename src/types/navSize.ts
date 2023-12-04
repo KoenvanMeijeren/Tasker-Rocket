@@ -1,4 +1,4 @@
 export enum NavSize {
-	Small,
-	Large,
+    Small,
+    Large,
 }

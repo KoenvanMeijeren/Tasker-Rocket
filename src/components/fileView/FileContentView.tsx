@@ -228,10 +228,9 @@ const FileContentView = observer((props: Props) => {
                                 >
                                     {!isItemCompleted ? (
                                         <CheckCircleIcon color="white" />
-                                    ) : null}
-                                    {isItemCompleted ? (
+                                    ) : (
                                         <Icon as={RiTodoFill} color="white" />
-                                    ) : null}
+                                    )}
                                     {/* eslint-disable-next-line react/jsx-max-depth */}
                                     <Text fontWeight="medium">
                                         {isItemCompleted

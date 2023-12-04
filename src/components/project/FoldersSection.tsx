@@ -93,13 +93,12 @@ const FoldersSection = observer(({ data, label }: Props) => {
                                         >
                                             {item.completed ? (
                                                 <CheckCircleIcon color="green" />
-                                            ) : null}
-                                            {!item.completed ? (
+                                            ) : (
                                                 <Icon
                                                     as={RiTodoFill}
                                                     color="blue"
                                                 />
-                                            ) : null}
+                                            )}
                                             <Text fontWeight="medium">
                                                 {item.name}
                                             </Text>

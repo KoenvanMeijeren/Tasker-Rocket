@@ -6,7 +6,7 @@ import localforage from 'localforage';
 export interface GitHubTreeItemsState {
     [parentKey: string]: {
         children: number;
-        completedChildren: {
+        childrenStatus: {
             [taskKey: string]: boolean;
         };
     };
@@ -74,7 +74,7 @@ export class GitHubTreeItemsStateStore {
         if (!this.state[parentKey]) {
             this.state[parentKey] = {
                 children: children,
-                completedChildren: {},
+                childrenStatus: {},
             };
             return;
         }
@@ -150,16 +150,16 @@ export class GitHubTreeItemsStateStore {
     }
 
     public isCompleted = (parentKey: string, itemKey: string): boolean => {
-        return this.state[parentKey]?.completedChildren[itemKey];
+        return this.state[parentKey]?.childrenStatus[itemKey];
     };
 
     public isFolderCompleted = (parentKey: string): boolean => {
         const parent = this.state[parentKey];
         if (!parent) return false;
 
-        const completedChildren = Object.values(
-            parent.completedChildren
-        ).filter((isCompleted) => isCompleted);
+        const completedChildren = Object.values(parent.childrenStatus).filter(
+            (isCompleted) => isCompleted
+        );
 
         return completedChildren.length === parent.children;
     };
@@ -172,12 +172,12 @@ export class GitHubTreeItemsStateStore {
         if (!this.state[parentKey]) {
             this.state[parentKey] = {
                 children: 0,
-                completedChildren: {},
+                childrenStatus: {},
             };
         }
 
         // Toggle the completed state for the specific itemKey under the parentKey
-        this.state[parentKey].completedChildren[itemKey] = !this.isCompleted(
+        this.state[parentKey].childrenStatus[itemKey] = !this.isCompleted(
             parentKey,
             itemKey
         );
@@ -191,12 +191,12 @@ export class GitHubTreeItemsStateStore {
         if (!this.state[parentKey]) {
             this.state[parentKey] = {
                 children: 0,
-                completedChildren: {},
+                childrenStatus: {},
             };
         }
 
         // Sets the completed state for the specific itemKey under the parentKey
-        this.state[parentKey].completedChildren[itemKey] =
+        this.state[parentKey].childrenStatus[itemKey] =
             this.isFolderCompleted(itemKey);
     };
 }

@@ -58,14 +58,14 @@ export default function FileContentView({
                 : name;
 
         setFile({
-          name: itemName,
-          extension,
-          content: data,
-          fileType: fileInfo.type,
-          mimeType: fileInfo.mimeType,
-          downloadUrl: contentUrl,
-		});
-	}, [data, name, contentUrl]);
+            name: itemName,
+            extension,
+            content: data,
+            fileType: fileInfo.type,
+            mimeType: fileInfo.mimeType,
+            downloadUrl: contentUrl,
+        });
+    }, [data, name, contentUrl]);
 
     const handleDownload = useCallback(() => {
         if (!file) return;

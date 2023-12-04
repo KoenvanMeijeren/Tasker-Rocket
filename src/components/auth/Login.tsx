@@ -19,7 +19,7 @@ export default function Login() {
                             textAlign="center"
                         >
                             <Heading size={{ base: 'xl'}} marginBottom={2}>
-                                Log using your github account
+                                Log in using your github account
                             </Heading>
                         </Stack>
                     </Stack>

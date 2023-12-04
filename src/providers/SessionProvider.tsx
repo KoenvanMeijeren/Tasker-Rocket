@@ -17,14 +17,9 @@ export default function SessionProvider({
 }) {
     const [session, setSession] = useState<Session | null>(null);
 
-    async function getSession() {
-        const { data, error } = await supabase.auth.getSession();
-
-        if (error) {
-            // error handling method?
-            console.error('Error fetching session:', error);
-            return;
-        }
+    async function getSession(): Promise<void> {
+        const { data } = await supabase.auth.getSession();
+        //TODO: Error handling?
 
         setSession(data.session);
     }

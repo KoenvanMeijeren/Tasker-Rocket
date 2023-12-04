@@ -15,12 +15,10 @@ import { FaAngleDown, FaRegUser } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 import useAuth from '@/hooks/useAuth';
 import { SessionContext } from '@/providers/SessionProvider';
-import { useRouter } from 'next/navigation';
 
 export default function UserProfileCard() {
     const { signOut } = useAuth();
     const { session } = useContext(SessionContext);
-    const router = useRouter();
 
     if (!session) {
         return null;

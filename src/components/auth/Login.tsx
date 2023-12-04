@@ -26,7 +26,7 @@ export default function Login() {
                             spacing={{ base: '2', md: '3' }}
                             textAlign="center"
                         >
-                            <Heading size={{ base: 'xl' }} marginBottom={2}>
+                            <Heading marginBottom={2} size={{ base: 'xl' }}>
                                 Welcome to Tasker Rocket
                             </Heading>
                         </Stack>

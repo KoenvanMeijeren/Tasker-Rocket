@@ -8,18 +8,14 @@ export default function useAuth() {
      * SignIn user session with supabase
      */
     async function signIn(): Promise<void> {
-        const { error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
                 scopes: 'repo read:org',
                 redirectTo: 'http://localhost:3000/api/auth/callback',
             },
         });
-
-        if (error) {
-            // Error handling method?
-            console.log('Error signing in');
-        }
+        //TODO: Error handling?
     }
 
     /**

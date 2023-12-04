@@ -1,7 +1,7 @@
 import supabase from '@/lib/supabase/db';
 import { useRouter } from 'next/navigation';
 
-export default function useLogin() {
+export default function useAuth() {
     const router = useRouter();
 
     /**

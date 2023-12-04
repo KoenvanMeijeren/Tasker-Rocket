@@ -10,16 +10,14 @@ import {
     MenuItem,
     MenuDivider,
 } from '@chakra-ui/react';
-import { FaAngleDown } from 'react-icons/fa';
-import { FaRegUser } from 'react-icons/fa';
+import { FaAngleDown, FaRegUser } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
-import useLogin from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { SessionContext } from '@/providers/SessionProvider';
 
 export default function UserProfileCard() {
-    const { signOut } = useLogin();
+    const { signOut } = useAuth();
     const { session } = useContext(SessionContext);
-    console.log(session);
 
     if (!session) {
         return null;
@@ -27,7 +25,7 @@ export default function UserProfileCard() {
         return (
             <Menu>
                 <Text className="text-center m-4">
-                    {session?.user?.user_metadata.user_name}
+                    {session.user.user_metadata.user_name}
                 </Text>
                 <MenuButton
                     as={Button}
@@ -39,12 +37,11 @@ export default function UserProfileCard() {
                     <Flex alignItems="center" direction="row">
                         <Avatar
                             name={
-                                session?.user?.user_metadata.user_name as string
+                                session.user.user_metadata.user_name as string
                             }
                             size="md"
                             src={
-                                session?.user?.user_metadata
-                                    .avatar_url as string
+                                session.user.user_metadata.avatar_url as string
                             }
                         />
                         <FaAngleDown />

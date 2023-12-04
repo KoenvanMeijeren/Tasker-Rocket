@@ -1,3 +1,9 @@
+import AudioView from '@/components/fileView/AudioView';
+import OfficeFileView from '@/components/fileView/OfficeFileView';
+import CodeView from '@/components/fileView/CodeView';
+import MarkdownView from '@/components/fileView/MarkdownView';
+import PdfFileView from '@/components/fileView/PdfFileView';
+import VideoView from '@/components/fileView/VideoView';
 import { useModeColors } from '@/hooks/useColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
@@ -102,8 +108,9 @@ const FileContentView = observer((props: Props) => {
             content: data,
             fileType: fileInfo.type,
             mimeType: fileInfo.mimeType,
+            downloadUrl: contentUrl,
         });
-    }, [data, name]);
+    }, [data, name, contentUrl]);
 
     const handleDownload = useCallback(() => {
         if (!file) return;
@@ -136,7 +143,9 @@ const FileContentView = observer((props: Props) => {
             case FileType.Video:
                 return <VideoView file={file} />;
             case FileType.Docx:
+                return <OfficeFileView file={file} />;
             case FileType.PowerPoint:
+                return <OfficeFileView file={file} />;
             case FileType.Excel:
                 return <ExcelView file={file} />;
             case FileType.Unsupported:

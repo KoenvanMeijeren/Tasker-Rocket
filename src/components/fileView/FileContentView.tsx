@@ -1,3 +1,8 @@
+import AudioView from '@/components/fileView/AudioView';
+import CodeView from '@/components/fileView/CodeView';
+import MarkdownView from '@/components/fileView/MarkdownView';
+import PdfFileView from '@/components/fileView/PdfFileView';
+import VideoView from '@/components/fileView/VideoView';
 import { useModeColors } from '@/hooks/useColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
@@ -5,24 +10,25 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
+import { File } from '@/types/file';
 import {
     CheckCircleIcon,
     ChevronDownIcon,
     DownloadIcon,
 } from '@chakra-ui/icons';
-import { AiOutlineFullscreen } from 'react-icons/ai';
-import { Box, Button, Collapse, Divider, Text } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+    Box,
+    Button,
+    Collapse,
+    Divider,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
+import ExcelView from './ExcelView';
 import ImageView from './ImageView';
 import './fileContentView.css';
-import { File } from '@/types/file';
-import CodeView from '@/components/fileView/CodeView';
-import PdfFileView from '@/components/fileView/PdfFileView';
-import MarkdownView from '@/components/fileView/MarkdownView';
-import AudioView from '@/components/fileView/AudioView';
-import VideoView from '@/components/fileView/VideoView';
-import ExcelView from './ExcelView';
 
 export default function FileContentView({
     name,
@@ -133,10 +139,10 @@ export default function FileContentView({
                 return <AudioView file={file} />;
             case FileType.Video:
                 return <VideoView file={file} />;
-            case FileType.Docx:
-            case FileType.PowerPoint:
             case FileType.Excel:
                 return <ExcelView file={file} />;
+            case FileType.Docx:
+            case FileType.PowerPoint:
             case FileType.Unsupported:
                 setFileViewable(false);
                 return (
@@ -154,6 +160,33 @@ export default function FileContentView({
                 );
         }
     }, [file, handleDownload]);
+
+    const icon = useMemo(() => {
+        if (!file) return;
+
+        switch (file.fileType) {
+            case FileType.Markdown:
+                return <FaMarkdown />;
+            case FileType.Image:
+                return <FaFileImage />;
+            case FileType.Code:
+                return <FaFileCode />;
+            case FileType.Pdf:
+                return <FaFilePdf />;
+            case FileType.Audio:
+                return <FaFileAudio />;
+            case FileType.Video:
+                return <FaFileVideo />;
+            case FileType.Docx:
+                return <FaFileWord />;
+            case FileType.PowerPoint:
+                return <FaFilePowerpoint />;
+            case FileType.Excel:
+                return <FaFileExcel />;
+            case FileType.Unsupported:
+                return <FaFile />;
+        }
+    }, [file]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -187,7 +220,10 @@ export default function FileContentView({
                 <Box alignItems="center" display="flex" gap="10px">
                     <CheckCircleIcon boxSize="20px" color={colorConfig.green} />
                     <Text className="noselect" fontSize="18px">
-                        {file.name}
+                        <Flex align="center">
+                            {icon}
+                            <Text ml={1}>{file.name}</Text>
+                        </Flex>
                     </Text>
                 </Box>
                 <Box alignItems="center" display="flex">

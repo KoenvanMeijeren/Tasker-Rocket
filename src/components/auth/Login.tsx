@@ -1,5 +1,13 @@
 import useAuth from '@/hooks/useAuth';
-import { Container, Heading, Stack, Button, Flex } from '@chakra-ui/react';
+import {
+    Container,
+    Heading,
+    Stack,
+    Button,
+    Flex,
+    Text,
+    HStack,
+} from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 
 export default function Login() {
@@ -18,18 +26,24 @@ export default function Login() {
                             spacing={{ base: '2', md: '3' }}
                             textAlign="center"
                         >
-                            <Heading size={{ base: 'xs', md: 'md' }}>
-                                Log in to your github account
+                            <Heading size={{ base: 'xl' }} marginBottom={2}>
+                                Welcome to Tasker Rocket
                             </Heading>
                         </Stack>
                     </Stack>
                 </Stack>
                 <Button
+                    mt={4}
                     onClick={() => {
                         void signIn();
                     }}
+                    p={2}
+                    size={{ base: '2xl' }}
                 >
-                    <FaGithub />
+                    <HStack>
+                        <FaGithub size={30} />
+                        <Text>Sign in with Github</Text>
+                    </HStack>
                 </Button>
             </Flex>
         </Container>

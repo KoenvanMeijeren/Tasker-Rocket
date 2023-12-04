@@ -2,7 +2,7 @@ import { useModeColors } from '@/hooks/useColors';
 import { GitHubTreeItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { CheckCircleIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Icon, useDisclosure } from '@chakra-ui/react';
+import { Box, Collapse, Flex, Icon, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import Heading from '../textStyles/Heading';
 import Text from '../textStyles/Text';
@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
+import { FaFolderOpen } from 'react-icons/fa6';
 
 type GitHubTreeFolder = {
     name: string;
@@ -99,8 +100,13 @@ const FoldersSection = observer(({ data, label }: Props) => {
                                                     color="blue"
                                                 />
                                             )}
-                                            <Text fontWeight="medium">
-                                                {item.name}
+                                            <Text>
+                                                <Flex align="center">
+                                                    <FaFolderOpen />
+                                                    <Text ml={1}>
+                                                        {item.name}
+                                                    </Text>
+                                                </Flex>
                                             </Text>
                                         </Box>
                                     </CardBody>

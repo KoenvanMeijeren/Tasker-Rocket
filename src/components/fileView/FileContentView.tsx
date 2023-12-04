@@ -15,11 +15,24 @@ import {
     Button,
     Collapse,
     Divider,
+    Flex,
     Icon,
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+    FaFile,
+    FaFileAudio,
+    FaFileCode,
+    FaFileExcel,
+    FaFileImage,
+    FaFilePdf,
+    FaFilePowerpoint,
+    FaFileVideo,
+    FaFileWord,
+    FaMarkdown,
+} from 'react-icons/fa6';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -144,6 +157,33 @@ const FileContentView = observer((props: Props) => {
         }
     }, [file, handleDownload]);
 
+    const icon = useMemo(() => {
+        if (!file) return;
+
+        switch (file.fileType) {
+            case FileType.Markdown:
+                return <FaMarkdown />;
+            case FileType.Image:
+                return <FaFileImage />;
+            case FileType.Code:
+                return <FaFileCode />;
+            case FileType.Pdf:
+                return <FaFilePdf />;
+            case FileType.Audio:
+                return <FaFileAudio />;
+            case FileType.Video:
+                return <FaFileVideo />;
+            case FileType.Docx:
+                return <FaFileWord />;
+            case FileType.PowerPoint:
+                return <FaFilePowerpoint />;
+            case FileType.Excel:
+                return <FaFileExcel />;
+            case FileType.Unsupported:
+                return <FaFile />;
+        }
+    }, [file]);
+
     if (error) {
         return <div>laden mislukt...</div>;
     }
@@ -180,7 +220,10 @@ const FileContentView = observer((props: Props) => {
                             <Icon as={RiTodoFill} color={colorConfig.blue} />
                         ) : null}
                         <Text className="noselect" fontSize="18px">
-                            {file.name}
+                            <Flex align="center">
+                                {icon}
+                                <Text ml={1}>{file.name}</Text>
+                            </Flex>
                         </Text>
                     </Box>
                     <Box>

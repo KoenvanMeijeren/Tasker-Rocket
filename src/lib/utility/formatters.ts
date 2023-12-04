@@ -1,11 +1,9 @@
+import { decodeURI } from '@/lib/utility/uri';
+
 export function urlToReadableString(url: string): string {
     const result = url.charAt(0).toUpperCase() + url.slice(1);
 
-    try {
-        return decodeURIComponent(result);
-    } catch (error) {
-        return result;
-    }
+    return decodeURI(result);
 }
 
 export function urlToFileExtension(url: string): string {

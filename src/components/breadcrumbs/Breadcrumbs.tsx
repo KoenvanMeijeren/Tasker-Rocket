@@ -6,6 +6,7 @@ import { replaceAll, urlToReadableString } from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import React from 'react';
 import { BiSolidChevronRight } from 'react-icons/bi';
+import { decodeURI } from '@/lib/utility/uri';
 
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -14,14 +15,8 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    let url: string = '/';
-    try {
-        url = decodeURIComponent(path);
-    } catch (error) {
-        return [];
-    }
-
-    if (url === '/') {
+    const url: string = decodeURI(path);
+    if (url.length < 1 || url === '/') {
         return [];
     }
 

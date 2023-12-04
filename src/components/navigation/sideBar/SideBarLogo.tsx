@@ -5,7 +5,7 @@ import { TaskerLogo } from '../../icons/TaskerLogo';
 
 export const SideBarLogo = ({ navSize }: { navSize: NavSize }) => {
     const { title } = useModeColors();
-    const boxShadow = '0px -5px 10px rgba(0,0,0,0.5)';
+    const boxShadow = '-3px -5px 10px rgba(0,0,0,0.5)';
     return (
         <Flex
             alignItems="center"

@@ -35,7 +35,7 @@ export const Header = () => {
                 <Spacer />
                 <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? (
-                        <MdDarkMode color="white" />
+                        <MdDarkMode color="black" />
                     ) : (
                         <MdLightMode />
                     )}

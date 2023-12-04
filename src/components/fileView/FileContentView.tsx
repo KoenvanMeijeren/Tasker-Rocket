@@ -1,9 +1,3 @@
-import AudioView from '@/components/fileView/AudioView';
-import OfficeFileView from '@/components/fileView/OfficeFileView';
-import CodeView from '@/components/fileView/CodeView';
-import MarkdownView from '@/components/fileView/MarkdownView';
-import PdfFileView from '@/components/fileView/PdfFileView';
-import VideoView from '@/components/fileView/VideoView';
 import { useModeColors } from '@/hooks/useColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
@@ -55,6 +49,7 @@ import { GitHubTreeParentItem } from '@/types/gitHubData';
 import { parentRootKey } from '@/lib/utility/dataStructure';
 import { useStore } from '@/lib/store';
 import { observer } from 'mobx-react-lite';
+import OfficeFileView from '@/components/fileView/OfficeFileView';
 
 type Props = {
     currentParent: GitHubTreeParentItem | undefined | null;

@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/icons';
 import { AiOutlineFullscreen } from 'react-icons/ai';
 import { Box, Button, Collapse, Divider, Text } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
@@ -52,6 +52,7 @@ export default function FileContentView({
     const { fullScreen } = fileContentOpen[name] || {
         fullScreen: false,
     };
+    const prevIsOpenRef = useRef(isOpen);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, fontColor, border } = useModeColors();
@@ -79,13 +80,17 @@ export default function FileContentView({
 
     useEffect(() => {
         setFileContentOpen(name, contentUrl, fullScreen, isOpen);
-    }, [isOpen]);
+    }, [contentUrl, fullScreen, isOpen, name, setFileContentOpen]);
 
     useEffect(() => {
-        if (fileContentOpen[name] && fileContentOpen[name].isOpen !== isOpen) {
+        if (
+            fileContentOpen[name] &&
+            fileContentOpen[name].isOpen !== prevIsOpenRef.current
+        ) {
             setIsOpen(fileContentOpen[name].isOpen);
         }
-    }, []);
+        prevIsOpenRef.current = isOpen;
+    }, [fileContentOpen, isOpen, name]);
 
     const handleDownload = useCallback(() => {
         if (!file) return;

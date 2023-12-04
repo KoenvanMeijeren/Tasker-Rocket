@@ -18,14 +18,22 @@ export const colorConfig = {
     dark: {
         backgroundSecondary: '#151c27', //boxes
         backgroundPrimary: '#0c1016', // background
+        menuBackground: '#0f161f', //menu 1017229
         border: '#232d3b',
         font: 'white',
+        title: 'white',
+        tint: '#616d79',
+        hoverBackground: '#1a2636',
     },
     light: {
-        backgroundSecondary: 'white',
-        backgroundPrimary: '#edf2f7',
-        border: '#9394a5',
-        font: '#282c37',
+        backgroundSecondary: '#ffffff',
+        backgroundPrimary: '#f5f7fc',
+        menuBackground: '#ffffff', //menu 101722
+        border: '#dde2ed',
+        font: '#000001',
+        title: 'black',
+        tint: '#dbdee6',
+        hoverBackground: '#e8eaf3',
     },
     green: '#239964',
     grey: '#464b53',

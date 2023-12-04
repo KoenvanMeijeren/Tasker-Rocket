@@ -1,9 +1,10 @@
-import { useModeColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useModeColors';
 import { GitHubTreeItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
+import { colorConfig } from '../../theme.config';
 import Heading from './textStyles/Heading';
 import Text from './textStyles/Text';
 
@@ -16,7 +17,7 @@ export const FoldersSection = ({
 }) => {
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const { backgroundColorSecondary, backgroundColorPrimary, fontColor } =
+    const { backgroundColorSecondary, backgroundColorPrimary, tint } =
         useModeColors();
 
     return (
@@ -41,7 +42,7 @@ export const FoldersSection = ({
                 <Heading className="noselect">{label}</Heading>
                 <ChevronDownIcon
                     boxSize={10}
-                    color={fontColor}
+                    color={colorConfig.iconGrey}
                     transform={rotate}
                     transition="all 0.2s linear"
                 />
@@ -49,7 +50,23 @@ export const FoldersSection = ({
 
             {/* Content */}
             <Collapse in={isOpen}>
-                <Box display="flex" gap={4} overflowX="auto" py={3}>
+                <Box
+                    css={{
+                        '&::-webkit-scrollbar': {
+                            height: '6px',
+                            width: '10%',
+                        },
+
+                        '&::-webkit-scrollbar-thumb': {
+                            background: tint,
+                            borderRadius: '24px',
+                        },
+                    }}
+                    display="flex"
+                    gap={4}
+                    overflowX="auto"
+                    py={3}
+                >
                     {data.map((item: GitHubTreeItem) => {
                         return (
                             <Link

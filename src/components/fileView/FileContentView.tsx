@@ -3,7 +3,7 @@ import CodeView from '@/components/fileView/CodeView';
 import MarkdownView from '@/components/fileView/MarkdownView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import VideoView from '@/components/fileView/VideoView';
-import { useModeColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
     removeFileExtension,
@@ -164,7 +164,7 @@ export default function FileContentView({
                 </Box>
                 <ChevronDownIcon
                     boxSize={10}
-                    color={fontColor}
+                    color={colorConfig.iconGrey}
                     transform={rotate}
                     transition="all 0.2s linear"
                 />

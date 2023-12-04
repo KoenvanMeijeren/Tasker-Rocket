@@ -1,5 +1,6 @@
 'use client';
 
+import { useModeColors } from '@/hooks/useModeColors';
 import {
     removeQueryParamsFromURl,
     replaceAll,
@@ -51,6 +52,7 @@ function pathToBreadcrumbs(path: string): {
 }
 
 export function Breadcrumbs() {
+    const { fontColor } = useModeColors();
     const router = useRouter();
     const breadcrumbs = pathToBreadcrumbs(router.asPath);
     if (breadcrumbs.length < 1) {
@@ -69,6 +71,7 @@ export function Breadcrumbs() {
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
                         <BreadcrumbLink
+                            color={fontColor}
                             href="#"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => router.push(item.path)}

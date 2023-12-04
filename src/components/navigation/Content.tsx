@@ -1,4 +1,4 @@
-import { useModeColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useModeColors';
 import { Box } from '@chakra-ui/layout';
 import type { AppProps } from 'next/app';
 import { Header } from './Header';

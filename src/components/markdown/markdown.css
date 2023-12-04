@@ -129,7 +129,7 @@ html[data-theme='dark'] {
 
 html[data-theme='light'] {
     .markdown-body {
-        background-color: #f2f4f5;
+        background-color: #f5f7fc;
         color: #282c37;
     }
 

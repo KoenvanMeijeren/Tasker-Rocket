@@ -1,3 +1,4 @@
+import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { reconstructGithubTree } from '@/lib/utility/dataStructure';
 import { NavSize } from '@/types/navSize';
@@ -5,7 +6,7 @@ import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
 import { useEffect, useMemo, useState } from 'react';
-import { themeConfig } from '../../../../theme.config';
+import { colorConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 
@@ -26,6 +27,12 @@ export const SideBar = () => {
     const { data } = useGitHubContentTree('', true);
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
     const [navSize, changeNavSize] = useState(NavSize.Large);
+    const { menuBackground, tint } = useModeColors();
+
+    const boxShadow = useColorModeValue(
+        '-5px 0px 10px rgba(0,0,0,0.5)',
+        '0px 0px 10px rgba(0,0,0,0.5)'
+    );
 
     const sidebarWidth = useMemo(
         () => (navSize === NavSize.Small ? '4vw' : '20vw'),
@@ -48,29 +55,29 @@ export const SideBar = () => {
 
     return (
         <Stack
-            bg={themeConfig.menuBgColor}
+            bg={menuBackground}
+            boxShadow={boxShadow}
             height="100vh"
             justifyContent="space-between"
             minWidth={sidebarWidth}
-            pos="sticky"
+            position="relative"
             spacing={0}
             transition="all 0.5s ease"
             w={sidebarWidth}
+            zIndex={3}
         >
             <SideBarLogo navSize={navSize} />
 
             {/* navitems */}
             <Stack
                 alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
-                borderRight="1px"
-                borderRightColor={useColorModeValue('gray.200', 'gray.700')}
                 css={{
                     '&::-webkit-scrollbar': {
                         width: '6px',
                     },
 
                     '&::-webkit-scrollbar-thumb': {
-                        background: '#616d79',
+                        background: tint,
                         borderRadius: '24px',
                     },
                 }}
@@ -95,8 +102,6 @@ export const SideBar = () => {
             {/* collapse/expand button */}
             <Flex
                 alignItems="center"
-                borderRight="1px"
-                borderRightColor={useColorModeValue('gray.200', 'gray.700')}
                 justifyContent="center"
                 paddingBottom={4}
                 paddingTop={2}
@@ -113,7 +118,7 @@ export const SideBar = () => {
                 >
                     <ChevronLeftIcon
                         boxSize={8}
-                        color="white"
+                        color={colorConfig.iconGrey}
                         transform={rotate}
                         transition="all 0.2s linear"
                     />

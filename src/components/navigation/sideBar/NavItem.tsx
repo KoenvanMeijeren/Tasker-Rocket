@@ -4,6 +4,7 @@ import FolderIcon from '@/components/icons/FolderIcon';
 import ImageIcon from '@/components/icons/ImageIcon';
 import MarkdownIcon from '@/components/icons/MarkdownIcon';
 import VideoIcon from '@/components/icons/VideoIcon';
+import { useModeColors } from '@/hooks/useModeColors';
 import {
     getParentFromUrl,
     nameToLogo,
@@ -33,31 +34,37 @@ interface NavItemProps {
     root?: boolean;
 }
 
-const Title = ({ name }: { name: string }) => (
-    <Heading
-        color={colorConfig.dark.font}
-        display="flex"
-        fontSize={fontSize}
-        noOfLines={1}
-    >
-        {name}
-    </Heading>
-);
+const Title = ({ name }: { name: string }) => {
+    const { fontColor } = useModeColors();
+    return (
+        <Heading
+            color={fontColor}
+            display="flex"
+            fontSize={fontSize}
+            noOfLines={1}
+        >
+            {name}
+        </Heading>
+    );
+};
 
-const Logo = ({ name }: { name: string }) => (
-    <Flex
-        alignItems="center"
-        aspectRatio={1}
-        backgroundColor={colorConfig.dark.backgroundSecondary}
-        borderRadius={4}
-        height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
-        justifyContent="center"
-        my="2px"
-        opacity={0.8}
-    >
-        <Title name={nameToLogo(name).toUpperCase()} />
-    </Flex>
-);
+const Logo = ({ name }: { name: string }) => {
+    const { backgroundColorPrimary } = useModeColors();
+    return (
+        <Flex
+            alignItems="center"
+            aspectRatio={1}
+            backgroundColor={backgroundColorPrimary}
+            borderRadius={4}
+            height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
+            justifyContent="center"
+            my="2px"
+            opacity={0.8}
+        >
+            <Title name={nameToLogo(name).toUpperCase()} />
+        </Flex>
+    );
+};
 
 const getFileIcon = (fileType: FileType) => {
     switch (fileType) {
@@ -85,6 +92,8 @@ export default function NavItem({
         [isOpen]
     );
 
+    const { hoverBackground, fontColor } = useModeColors();
+
     const containerStyle: CSSProperties = {
         alignItems: 'center',
         borderRadius: '4px',
@@ -95,7 +104,7 @@ export default function NavItem({
     };
 
     const hover = {
-        backgroundColor: '#1a2636',
+        backgroundColor: hoverBackground,
         opacity: 1,
     };
 
@@ -133,7 +142,7 @@ export default function NavItem({
                 <Flex _hover={hover} onClick={onToggle} style={containerStyle}>
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
-                        color="white"
+                        color={colorConfig.iconGrey}
                         transform={rotate}
                         transition="all 0.2s linear"
                     />

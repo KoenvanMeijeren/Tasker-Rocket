@@ -1,6 +1,7 @@
 import { Box, Button, Show, Spacer, useColorMode } from '@chakra-ui/react';
 import { Breadcrumbs } from '@/components/breadcrumbs/Breadcrumbs';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import UserProfileCard from '../userProfile/UserProfileCard';
 
 export function DesktopHeader() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -11,9 +12,11 @@ export function DesktopHeader() {
                 <Breadcrumbs />
             </Box>
             <Spacer />
+
             <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MdDarkMode /> : <MdLightMode />}
             </Button>
+            <UserProfileCard />
         </Show>
     );
 }

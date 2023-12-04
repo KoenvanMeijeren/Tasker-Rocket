@@ -7,20 +7,25 @@ export default function useAuth() {
     /**
      * SignIn user session with supabase
      */
-    async function signIn() {
-        const { data } = await supabase.auth.signInWithOAuth({
+    async function signIn(): Promise<void> {
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
                 scopes: 'repo read:org',
                 redirectTo: 'http://localhost:3000/api/auth/callback',
             },
         });
+
+        if (error) {
+            // Error handling method?
+            console.log('Error signing in');
+        }
     }
 
     /**
      * SignOut user session with supabase
      */
-    async function signOut() {
+    async function signOut(): Promise<void> {
         await supabase.auth.signOut();
         router.refresh();
     }

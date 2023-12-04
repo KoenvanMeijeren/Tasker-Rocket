@@ -9,15 +9,18 @@ import {
     MenuList,
     MenuItem,
     MenuDivider,
+    HStack,
 } from '@chakra-ui/react';
 import { FaAngleDown, FaRegUser } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 import useAuth from '@/hooks/useAuth';
 import { SessionContext } from '@/providers/SessionProvider';
+import { useRouter } from 'next/navigation';
 
 export default function UserProfileCard() {
     const { signOut } = useAuth();
     const { session } = useContext(SessionContext);
+    const router = useRouter();
 
     if (!session) {
         return null;
@@ -49,16 +52,23 @@ export default function UserProfileCard() {
                 </MenuButton>
                 <MenuList>
                     <MenuItem
-                        _hover={{ bg: '#f5f5f5' }}
                         onClick={() => (window.location.href = '/profile')}
                     >
-                        <FaRegUser />
-                        Profile
+                        <HStack>
+                            <FaRegUser />
+                            <Text>Profile</Text>
+                        </HStack>
                     </MenuItem>
                     <MenuDivider />
-                    <MenuItem _hover={{ bg: '#f5f5f5' }} onClick={signOut}>
-                        <MdLogout />
-                        Sign out
+                    <MenuItem
+                        onClick={() => {
+                            void signOut();
+                        }}
+                    >
+                        <HStack>
+                            <MdLogout />
+                            <Text>Sign out</Text>
+                        </HStack>
                     </MenuItem>
                 </MenuList>
             </Menu>

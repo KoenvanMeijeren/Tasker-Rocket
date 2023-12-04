@@ -24,7 +24,11 @@ export default function Login() {
                         </Stack>
                     </Stack>
                 </Stack>
-                <Button onClick={signIn}>
+                <Button
+                    onClick={() => {
+                        void signIn();
+                    }}
+                >
                     <FaGithub />
                 </Button>
             </Flex>

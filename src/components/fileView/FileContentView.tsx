@@ -114,7 +114,6 @@ export default function FileContentView({
                 return <OfficeFileView file={file} />;
             case FileType.PowerPoint:
                 return <OfficeFileView file={file} />;
-
             case FileType.Excel:
                 return <ExcelView file={file} />;
             case FileType.Unsupported:

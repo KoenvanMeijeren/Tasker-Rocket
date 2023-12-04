@@ -159,8 +159,8 @@ export default function FileContentView({
     }, [file]);
 
     if (error) {
-		return ErrorCard(error.message);
-	}
+        return ErrorCard(error.message);
+    }
 
     if (isLoading || !file) {
         return null;

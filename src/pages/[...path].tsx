@@ -15,9 +15,9 @@ export default function ProjectContent() {
         decodeURIComponent(path)
     );
 
-	if (error) {
-		return ErrorCard(error.message);
-	}
+    if (error) {
+        return ErrorCard(error.message);
+    }
 
     if (isLoading || !data) {
         return <LoadingIndicator />;

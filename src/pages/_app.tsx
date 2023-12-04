@@ -6,13 +6,13 @@ import ErrorBoundary from '@/components/error/ErrorBoundary';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default function App({ Component, pageProps }: AppProps) {
-	return (
-		<Providers>
-			<ErrorBoundary>
-				<SidebarWithHeader>
-					<Component {...pageProps} />
-				</SidebarWithHeader>
-			</ErrorBoundary>
-		</Providers>
-	);
+    return (
+        <Providers>
+            <ErrorBoundary>
+                <SidebarWithHeader>
+                    <Component {...pageProps} />
+                </SidebarWithHeader>
+            </ErrorBoundary>
+        </Providers>
+    );
 }

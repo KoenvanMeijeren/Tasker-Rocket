@@ -6,9 +6,9 @@ import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 export default function Home() {
     const { data, error, isLoading } = useGitHubContentTree('');
 
-	if (error) {
-		return ErrorCard(error.message);
-	}
+    if (error) {
+        return ErrorCard(error.message);
+    }
 
     if (isLoading || !data) {
         return <LoadingIndicator />;

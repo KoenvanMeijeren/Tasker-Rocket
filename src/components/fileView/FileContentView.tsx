@@ -108,10 +108,10 @@ export default function FileContentView({
                 return <AudioView file={file} />;
             case FileType.Video:
                 return <VideoView file={file} />;
-            case FileType.Docx:
-            case FileType.PowerPoint:
             case FileType.Excel:
                 return <ExcelView file={file} />;
+            case FileType.Docx:
+            case FileType.PowerPoint:
             case FileType.Unsupported:
                 setFileViewable(false);
                 return (

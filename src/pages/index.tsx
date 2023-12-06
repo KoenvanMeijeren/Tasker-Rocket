@@ -1,12 +1,12 @@
 import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ProjectView } from '@/components/ProjectView';
+import { useOpenedFileName } from '@/hooks/useOpenedFileName';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { useSearchParams } from 'next/navigation';
+import { GitHubTreeItem } from '@/types/gitHubData';
 
 export default function Home() {
     const { data, error, isLoading } = useGitHubContentTree('');
-    const searchParams = useSearchParams();
-    const openedFile = searchParams.get('file');
+    const openedFileName = useOpenedFileName();
     if (error) {
         return <div>laden mislukt...</div>;
     }
@@ -14,5 +14,11 @@ export default function Home() {
     if (isLoading || !data) {
         return <LoadingIndicator />;
     }
-    return <ProjectView data={data} openedFileName={openedFile} parent="" />;
+    return (
+        <ProjectView
+            data={data as GitHubTreeItem | GitHubTreeItem[]}
+            openedFileName={openedFileName}
+            parent=""
+        />
+    );
 }

@@ -24,7 +24,7 @@ export function ProjectView({
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     parent: string;
-    openedFileName: string | null;
+    openedFileName: string;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 

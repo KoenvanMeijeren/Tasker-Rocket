@@ -9,11 +9,11 @@
     color: #474c55;
 }
 
-.markdown-body>ul {
+.markdown-body > ul {
     list-style: square;
 }
 
-.markdown-body>ol {
+.markdown-body > ol {
     list-style: decimal;
 }
 

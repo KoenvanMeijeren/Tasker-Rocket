@@ -16,18 +16,6 @@ You might need to create a GitHub access token to be able to use this app.
 cp .env.example .env
 ```
 
-### Make GitHub access token
-
-To be able to use the GitHub API you need to create a personal access token. This can be done by following the steps below:
-
-1. Go to [GitHub](https://github.com) and login to your account.
-2. Go to [Settings -> Developer Settings -> Tokens ](https://github.com/settings/tokens) and click on `Generate new token`.
-3. Give the token a name and select the `repo` scope and `admin:org -> read:org` premissions.
-4. Click on `Generate token` and copy the token to your clipboard.
-5. Paste the token in the `.env` file.
-
-![GitHub Permissions](assets/gh_prems.png)
-
 Then install the dependencies of our project:
 
 ```bash

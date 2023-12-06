@@ -1,8 +1,9 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { getEnvValue, EnvOptions } from '@/lib/utility/env';
 
 const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    getEnvValue(EnvOptions.SupabaseUrl),
+    getEnvValue(EnvOptions.SupabaseKey)
 );
 
 export default supabase;

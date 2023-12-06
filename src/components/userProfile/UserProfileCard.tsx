@@ -20,56 +20,48 @@ export default function UserProfileCard() {
     const { signOut } = useAuth();
     const { session } = useContext(SessionContext);
 
-    if (!session) {
-        return null;
-    } else {
-        return (
-            <Menu>
-                <Text className="text-center m-4">
-                    {session.user.user_metadata.user_name}
-                </Text>
-                <MenuButton
-                    as={Button}
-                    cursor="pointer"
-                    minW={0}
-                    rounded="full"
-                    variant="link"
+    if (!session) return null;
+
+    return (
+        <Menu>
+            <Text className="text-center m-4">
+                {session.user.user_metadata.user_name}
+            </Text>
+            <MenuButton
+                as={Button}
+                cursor="pointer"
+                minW={0}
+                rounded="full"
+                variant="link"
+            >
+                <Flex alignItems="center" direction="row">
+                    <Avatar
+                        name={session.user.user_metadata.user_name as string}
+                        size="md"
+                        src={session.user.user_metadata.avatar_url as string}
+                    />
+                    <FaAngleDown />
+                </Flex>
+            </MenuButton>
+            <MenuList>
+                <MenuItem onClick={() => (window.location.href = '/profile')}>
+                    <HStack>
+                        <FaRegUser />
+                        <Text>Profile</Text>
+                    </HStack>
+                </MenuItem>
+                <MenuDivider />
+                <MenuItem
+                    onClick={() => {
+                        void signOut();
+                    }}
                 >
-                    <Flex alignItems="center" direction="row">
-                        <Avatar
-                            name={
-                                session.user.user_metadata.user_name as string
-                            }
-                            size="md"
-                            src={
-                                session.user.user_metadata.avatar_url as string
-                            }
-                        />
-                        <FaAngleDown />
-                    </Flex>
-                </MenuButton>
-                <MenuList>
-                    <MenuItem
-                        onClick={() => (window.location.href = '/profile')}
-                    >
-                        <HStack>
-                            <FaRegUser />
-                            <Text>Profile</Text>
-                        </HStack>
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem
-                        onClick={() => {
-                            void signOut();
-                        }}
-                    >
-                        <HStack>
-                            <MdLogout />
-                            <Text>Sign out</Text>
-                        </HStack>
-                    </MenuItem>
-                </MenuList>
-            </Menu>
-        );
-    }
+                    <HStack>
+                        <MdLogout />
+                        <Text>Sign out</Text>
+                    </HStack>
+                </MenuItem>
+            </MenuList>
+        </Menu>
+    );
 }

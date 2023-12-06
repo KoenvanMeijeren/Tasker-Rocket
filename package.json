@@ -35,6 +35,7 @@
         "@codemirror/language-data": "github:codemirror/language-data",
         "@fontsource/open-sans": "^5.0.12",
         "@fontsource/roboto": "^5.0.8",
+        "@supabase/auth-helpers-nextjs": "^0.8.7",
         "@supabase/gotrue-js": "^2.46.1",
         "@supabase/ssr": "^0.0.10",
         "@supabase/supabase-js": "^2.39.0",

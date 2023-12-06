@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
+import { getEnvValue, EnvOptions } from '@/lib/utility/env';
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
@@ -11,8 +12,8 @@ export async function GET(request: Request) {
     if (code) {
         const cookieStore = cookies();
         const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            getEnvValue(EnvOptions.SupabaseUrl),
+            getEnvValue(EnvOptions.SupabaseKey),
             {
                 cookies: {
                     get(name: string) {
@@ -37,5 +38,5 @@ export async function GET(request: Request) {
     }
 
     // return the user to an error page
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+    return NextResponse.redirect(`${origin}/auth-error`);
 }

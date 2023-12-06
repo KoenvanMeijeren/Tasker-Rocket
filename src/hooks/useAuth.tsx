@@ -1,21 +1,22 @@
 import supabase from '@/lib/supabase/db';
 import { useRouter } from 'next/navigation';
+import { oAuthSettings } from '@/lib/utility/oAuthSettings';
+import { useCustomToast } from '@/lib/utility/toast';
 
 export default function useAuth() {
     const router = useRouter();
+    const customToast = useCustomToast();
 
     /**
      * SignIn user session with supabase
      */
     async function signIn(): Promise<void> {
-        await supabase.auth.signInWithOAuth({
-            provider: 'github',
-            options: {
-                scopes: 'repo read:org',
-                redirectTo: 'http://localhost:3000/api/auth/callback',
-            },
-        });
-        //TODO: Error handling?
+        const { error } = await supabase.auth.signInWithOAuth(oAuthSettings);
+
+        if (error) {
+            customToast(error.name, error.message, 'error');
+            return;
+        }
     }
 
     /**

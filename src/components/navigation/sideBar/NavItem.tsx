@@ -11,6 +11,7 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
+import { GithubTreeMenuItem } from '@/types/gitHubData';
 import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
@@ -18,7 +19,6 @@ import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import Heading from '../../textStyles/Heading';
-import { GithubTreeMenuItem } from './SideBar';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;

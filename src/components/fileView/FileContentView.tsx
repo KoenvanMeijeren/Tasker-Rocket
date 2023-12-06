@@ -23,6 +23,7 @@ import MarkdownView from '@/components/fileView/MarkdownView';
 import AudioView from '@/components/fileView/AudioView';
 import VideoView from '@/components/fileView/VideoView';
 import ExcelView from './ExcelView';
+import OfficeFileView from './OfficeFileView';
 
 export default function FileContentView({
     name,
@@ -75,6 +76,7 @@ export default function FileContentView({
             content: data,
             fileType: fileInfo.type,
             mimeType: fileInfo.mimeType,
+            downloadUrl: contentUrl,
         });
     }, [data, name]);
 
@@ -134,7 +136,9 @@ export default function FileContentView({
             case FileType.Video:
                 return <VideoView file={file} />;
             case FileType.Docx:
+                return <OfficeFileView file={file} />;
             case FileType.PowerPoint:
+                return <OfficeFileView file={file} />;
             case FileType.Excel:
                 return <ExcelView file={file} />;
             case FileType.Unsupported:

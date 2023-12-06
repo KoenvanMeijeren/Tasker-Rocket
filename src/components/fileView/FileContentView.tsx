@@ -78,7 +78,7 @@ export default function FileContentView({
             mimeType: fileInfo.mimeType,
             downloadUrl: contentUrl,
         });
-    }, [data, name]);
+    }, [contentUrl, data, name]);
 
     useEffect(() => {
         setFileContentOpen(name, contentUrl, fullScreen, isOpen);

@@ -9,24 +9,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
-
-export type GithubTreeMenuItem = {
-    path: string;
-    name: string;
-    type: string;
-    url: string;
-    tree: GithubTreeMenuItem[];
-};
-
-export type GithubTree = {
-    tree: GithubTreeMenuItem[];
-    url: string;
-};
+import { GithubTree, GithubTreeMenuItem } from '@/types/gitHubData';
 
 export const SideBar = () => {
     const { data } = useGitHubContentTree('', true);
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
-    const [navSize, changeNavSize] = useState(NavSize.Large);
+    const [navSize, toggleNavSize] = useState(NavSize.Large);
     const { menuBackground, tint } = useModeColors();
 
     const boxShadow = useColorModeValue(
@@ -111,9 +99,11 @@ export const SideBar = () => {
                 <Button
                     aspectRatio={1}
                     onClick={() => {
-                        if (navSize === NavSize.Small)
-                            changeNavSize(NavSize.Large);
-                        else changeNavSize(NavSize.Small);
+                        toggleNavSize(
+                            navSize === NavSize.Small
+                                ? NavSize.Large
+                                : NavSize.Small
+                        );
                     }}
                 >
                     <ChevronLeftIcon

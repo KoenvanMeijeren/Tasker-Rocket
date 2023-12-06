@@ -67,7 +67,6 @@ export function Breadcrumbs() {
             {breadcrumbs.map((item, index: number) => {
                 return (
                     <BreadcrumbItem
-                        color="white"
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
                         <BreadcrumbLink

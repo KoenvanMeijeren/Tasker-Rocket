@@ -14,5 +14,5 @@ export default function Home() {
     if (isLoading || !data) {
         return <LoadingIndicator />;
     }
-    return <ProjectView data={data} openedFile={openedFile} parent="" />;
+    return <ProjectView data={data} openedFileName={openedFile} parent="" />;
 }

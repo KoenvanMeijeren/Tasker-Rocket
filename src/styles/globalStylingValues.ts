@@ -1,4 +1,4 @@
-export const GlobalValues = {
+export const GlobalStylingValues = {
     sidebar: {
         icons: {
             size: 16,

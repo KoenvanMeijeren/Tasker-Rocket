@@ -1,7 +1,7 @@
-import { GlobalValues } from '@/styles/globalValues';
+import { GlobalStylingValues } from '@/styles/globalStylingValues';
 import { SVGProps } from 'react';
 import { colorConfig } from '../../../theme.config';
-const size = GlobalValues.sidebar.icons.size;
+const size = GlobalStylingValues.sidebar.icons.size;
 
 const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     <svg

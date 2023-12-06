@@ -1,11 +1,10 @@
-import { GithubTree } from '@/components/navigation/sideBar/SideBar';
 import {
     fetchBlobData,
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',

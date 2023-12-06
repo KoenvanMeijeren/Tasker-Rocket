@@ -28,7 +28,7 @@ export default function ProjectContent() {
     return (
         <ProjectView
             data={data as GitHubTreeItem[]}
-            openedFile={openedFile}
+            openedFileName={openedFile}
             parent={parent || ''}
         />
     );

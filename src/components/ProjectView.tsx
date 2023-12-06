@@ -20,11 +20,11 @@ type Data = {
 export function ProjectView({
     data,
     parent,
-    openedFile,
+    openedFileName,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     parent: string;
-    openedFile: string | null;
+    openedFileName: string | null;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 
@@ -59,7 +59,7 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
-                                defaultIsOpen={item.name === openedFile}
+                                defaultIsOpen={item.name === openedFileName}
                                 key={item.url}
                                 name={item.name}
                             />

@@ -1,5 +1,4 @@
-import { GithubTreeMenuItem } from '@/components/navigation/sideBar/SideBar';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeItem, GithubTreeMenuItem } from '@/types/gitHubData';
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
 import { getFileNameFromUrl, getParentFromUrl } from './formatters';
 
@@ -62,9 +61,10 @@ export function reconstructGithubTree(tree: GithubTreeMenuItem[]) {
         const parentPath = getParentFromUrl(item.path);
 
         const parent = map.get(parentPath);
-        const curr = map.get(item.path);
-        if (!parent || !curr) throw new Error('parent or curr is undefined');
-        parent.tree.push(curr);
+        const current = map.get(item.path);
+        if (!parent || !current)
+            throw new Error('parent or current node is undefined');
+        parent.tree.push(current);
     });
 
     const rootItems = tree.filter((item) => !item.path.includes('/'));

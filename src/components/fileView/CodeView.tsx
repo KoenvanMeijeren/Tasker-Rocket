@@ -1,12 +1,12 @@
+import { useModeColors } from '@/hooks/useModeColors';
+import { blobToString } from '@/lib/utility/dataStructure';
 import { codeExtensions } from '@/types/extensions';
 import { File } from '@/types/file';
-import CodeMirror from '@uiw/react-codemirror';
+import { CopyIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex } from '@chakra-ui/react';
-import { useModeColors } from '@/hooks/useColors';
+import CodeMirror from '@uiw/react-codemirror';
 import { useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CopyIcon } from '@chakra-ui/icons';
-import { blobToString } from '@/lib/utility/dataStructure';
 
 export default function CodeView({ file }: { file: File }) {
     const { codeMirror } = useModeColors();

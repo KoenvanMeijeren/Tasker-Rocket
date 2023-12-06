@@ -1,7 +1,7 @@
 'use client';
-import { GitHubTreeItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
@@ -20,9 +20,11 @@ type Data = {
 export function ProjectView({
     data,
     parent,
+    openedFileName,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
-    parent: string | undefined;
+    parent: string;
+    openedFileName: string;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 
@@ -57,6 +59,7 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
+                                defaultIsOpen={item.name === openedFileName}
                                 key={item.url}
                                 name={item.name}
                             />

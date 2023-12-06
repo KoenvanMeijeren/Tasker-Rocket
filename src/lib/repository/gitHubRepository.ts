@@ -1,10 +1,10 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import {
     fetchBlobData,
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
+import { EnvOptions, getEnvValue } from '@/lib/utility/env';
+import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -28,11 +28,14 @@ export const gitHubConfig = {
  * - - - File 1.1.2.md
  * - Folder 2
  */
-export function useGitHubContentTree(path: string) {
+
+export function useGitHubContentTree(path: string, recursive = false) {
+    path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
+
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
+        GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
         bearerToken: gitHubConfig.token,
         isPrivateData: gitHubConfig.is_private,
     });

@@ -1,10 +1,10 @@
 import AudioView from '@/components/fileView/AudioView';
-import OfficeFileView from '@/components/fileView/OfficeFileView';
 import CodeView from '@/components/fileView/CodeView';
 import MarkdownView from '@/components/fileView/MarkdownView';
+import OfficeFileView from '@/components/fileView/OfficeFileView';
 import PdfFileView from '@/components/fileView/PdfFileView';
 import VideoView from '@/components/fileView/VideoView';
-import { useModeColors } from '@/hooks/useColors';
+import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
     removeFileExtension,
@@ -47,16 +47,25 @@ import './fileContentView.css';
 export default function FileContentView({
     name,
     contentUrl,
+    defaultIsOpen,
 }: {
     name: string;
     contentUrl: string;
+    defaultIsOpen: boolean;
 }) {
-    const { isOpen, onToggle } = useDisclosure();
+    const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
+        defaultIsOpen,
+    });
+    // Update the 'isOpen' state when 'defaultIsOpen' changes
+    useEffect(() => {
+        return defaultIsOpen ? onOpen() : onClose();
+    }, [defaultIsOpen, onClose, onOpen]);
+
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const { backgroundColorSecondary, fontColor, border } = useModeColors();
+    const { backgroundColorSecondary, border } = useModeColors();
 
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
@@ -171,19 +180,21 @@ export default function FileContentView({
 
     return (
         <Box
+            alignItems="center"
             backgroundColor={backgroundColorSecondary}
             borderRadius={8}
             boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+            justifyContent="center"
             outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
             p={2}
             transition="outline-width 200ms ease"
-            zIndex={2}
         >
             {/* Task header (collapsible) */}
             <Box
                 alignItems="center"
                 cursor="pointer"
                 display="flex"
+                flex={1}
                 justifyContent="space-between"
                 onClick={onToggle}
                 px={4}
@@ -197,19 +208,17 @@ export default function FileContentView({
                         </Flex>
                     </Text>
                 </Box>
-                <Box>
-                    <ChevronDownIcon
-                        boxSize={10}
-                        color={fontColor}
-                        transform={rotate}
-                        transition="all 0.2s linear"
-                    />
-                </Box>
+                <ChevronDownIcon
+                    boxSize={10}
+                    color={colorConfig.iconGrey}
+                    transform={rotate}
+                    transition="all 0.2s linear"
+                />
             </Box>
 
             {/* Content */}
             <Collapse in={isOpen}>
-                <Divider borderWidth={1.5} my={4} />
+                <Divider borderColor={border} borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
                     <Box
                         className="btn-group"

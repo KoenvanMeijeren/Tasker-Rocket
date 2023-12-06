@@ -1,0 +1,9 @@
+build
+coverage
+.gitlab
+.vscode
+node_modules
+.next
+.github
+assets
+public

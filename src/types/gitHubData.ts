@@ -11,3 +11,16 @@ export interface GitHubTreeItem {
     content: string | null;
     type: string;
 }
+
+export type GithubTreeMenuItem = {
+    path: string;
+    name: string;
+    type: string;
+    url: string;
+    tree: GithubTreeMenuItem[];
+};
+
+export type GithubTree = {
+    tree: GithubTreeMenuItem[];
+    url: string;
+};

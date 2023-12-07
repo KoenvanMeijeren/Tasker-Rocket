@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@/types/response';
+import { HttpStatusCode } from '@/lib/api/response';
 import { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 

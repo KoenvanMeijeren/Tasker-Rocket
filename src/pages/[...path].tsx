@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 
 export default function ProjectContent() {
     const router = useRouter();
-    const path = removeQueryParamsFromURl(decodeURIComponent(router.asPath));
+    const path = removeQueryParamsFromURl(decodeURI(router.asPath));
     const parent = path.split('/').pop();
 
     const openedFileName = useOpenedFileName();

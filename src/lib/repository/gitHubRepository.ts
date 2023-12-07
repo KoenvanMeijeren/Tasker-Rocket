@@ -11,7 +11,6 @@ import { useCustomToast } from '@/lib/utility/toast';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
-    token: getEnvValue(EnvOptions.GitHubToken),
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
     is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };

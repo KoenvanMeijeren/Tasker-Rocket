@@ -3,12 +3,14 @@ import {
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
+import { SessionContext } from '@/providers/SessionProvider';
+import { useContext } from 'react';
+import { useCustomToast } from '@/lib/utility/toast';
+import { getEnvValue, EnvOptions } from '@/lib/utility/env';
 import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
-    token: getEnvValue(EnvOptions.GitHubToken),
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
     is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
@@ -32,13 +34,21 @@ export const gitHubConfig = {
 export function useGitHubContentTree(path: string, recursive = false) {
     path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
 
+    const customToast = useCustomToast();
+    const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
         url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
-        bearerToken: gitHubConfig.token,
+        bearerToken: session?.provider_token ?? undefined,
         isPrivateData: gitHubConfig.is_private,
     });
+
+    if (error) {
+        if (session) {
+            customToast(error.name, error.message, 'error');
+        }
+    }
 
     return { data, isLoading, error };
 }

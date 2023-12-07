@@ -5,13 +5,15 @@ import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 import { GithubTree, GithubTreeMenuItem } from '@/types/gitHubData';
+import { SessionContext } from '@/providers/SessionProvider';
 
 export const SideBar = () => {
+    const { session } = useContext(SessionContext);
     const { data } = useGitHubContentTree('', true);
     const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
     const [navSize, toggleNavSize] = useState(NavSize.Large);
@@ -41,6 +43,9 @@ export const SideBar = () => {
         }
     }, [data]);
 
+    if (!session) {
+        return;
+    }
     return (
         <Stack
             bg={menuBackground}

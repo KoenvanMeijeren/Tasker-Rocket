@@ -4,9 +4,21 @@ import { Providers } from '@/providers/Providers';
 import { Content } from '@/components/navigation/Content';
 import { SideBar } from '@/components/navigation/sideBar/SideBar';
 import { Flex } from '@chakra-ui/layout';
+import { useContext } from 'react';
+import { SessionContext } from '@/providers/SessionProvider';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export default function App({ Component, pageProps }: AppProps) {
+    if (!useContext(SessionContext)) {
+        return (
+            <Providers>
+                <Flex height="100vh" overflow="hidden">
+                    <Content Component={Component} {...pageProps} />
+                </Flex>
+            </Providers>
+        );
+    }
+
     return (
         <Providers>
             <Flex height="100vh" overflow="hidden">

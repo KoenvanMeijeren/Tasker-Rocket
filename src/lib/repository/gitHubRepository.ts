@@ -6,6 +6,8 @@ import {
 import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
+import { getEnvValue, EnvOptions } from '@/lib/utility/env';
+import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -28,19 +30,25 @@ export const gitHubConfig = {
  * - - - File 1.1.2.md
  * - Folder 2
  */
-export function useGitHubContentTree(path: string) {
+
+export function useGitHubContentTree(path: string, recursive = false) {
+    path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
+
     const customToast = useCustomToast();
     const { session } = useContext(SessionContext);
+
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
         bearerToken: session?.provider_token ?? undefined,
         isPrivateData: gitHubConfig.is_private,
     });
 
     if (error) {
-        customToast(error.name, error.message, 'error');
+        if (session) {
+            customToast(error.name, error.message, 'error');
+        }
     }
 
     return { data, isLoading, error };

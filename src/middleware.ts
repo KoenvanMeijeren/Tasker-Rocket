@@ -3,6 +3,8 @@ import type { NextRequest } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 
 export async function middleware(req: NextRequest) {
+    if (req.nextUrl.pathname === '/login') return NextResponse.next();
+
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
     const { data, error } = await supabase.auth.getSession();
@@ -14,5 +16,14 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: '/',
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    ],
 };

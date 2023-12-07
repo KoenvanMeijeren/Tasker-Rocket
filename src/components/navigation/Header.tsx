@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
+import UserProfileCard from '../userProfile/UserProfileCard';
 
 export const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -40,6 +41,7 @@ export const Header = () => {
                         <MdLightMode />
                     )}
                 </Button>
+                <UserProfileCard />
             </Show>
         </Flex>
     );

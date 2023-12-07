@@ -46,7 +46,7 @@ export const nameToLogo = (name: string) => {
         : name.replace(/[^a-zA-Z\s]/g, '').trim(); // Remove non-letter characters except spaces
     const words = lettersOnly.split(' ');
 
-    let result = lettersOnly;
+    let result = '';
     if (words.length > 1) {
         for (let i = 0; i < words.length && result.length < 2; i++) {
             const word = words[i];
@@ -57,6 +57,8 @@ export const nameToLogo = (name: string) => {
     } else if (lettersOnly.length > 2) {
         result =
             lettersOnly[0] + lettersOnly[Math.floor(lettersOnly.length / 2)];
+    } else {
+        result = lettersOnly;
     }
 
     return result.toUpperCase(); // Ensure the heading is in uppercase

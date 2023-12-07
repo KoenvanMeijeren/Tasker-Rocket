@@ -16,6 +16,9 @@ You might need to create a GitHub access token to be able to use this app.
 cp .env.example .env
 ```
 
+Now you need to retrieve the Supabase URL, this should be provided to you by your organisation.
+For Windesheim students can be found [here](https://liveadminwindesheim-my.sharepoint.com/:w:/g/personal/s1158062_student_windesheim_nl/Ebg-lJwY-gVJp-eCDxehlGEBYJxFo1c1RYUwR3OWoKABGg?e=n3W5y6)
+
 Then install the dependencies of our project:
 
 ```bash

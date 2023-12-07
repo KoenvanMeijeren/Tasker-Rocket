@@ -11,6 +11,15 @@
     @apply bg-green-500;
 }
 
+.btn-primary {
+  @apply text-white;
+  background-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background-color: #3b82f6;
+}
+
 .copy-btn {
     @apply text-white;
     background-color: #239964;

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 import AudioView from '@/components/fileView/AudioView';
 import CodeView from '@/components/fileView/CodeView';
 import MarkdownView from '@/components/fileView/MarkdownView';
@@ -16,6 +17,7 @@ import {
     CheckCircleIcon,
     ChevronDownIcon,
     DownloadIcon,
+    Icon,
 } from '@chakra-ui/icons';
 import {
     Box,
@@ -43,16 +45,35 @@ import { colorConfig } from '../../../theme.config';
 import ExcelView from './ExcelView';
 import ImageView from './ImageView';
 import './fileContentView.css';
+import { GitHubTreeParentItem } from '@/types/gitHubData';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/lib/store';
+import { parentRootKey } from '@/lib/utility/dataStructure';
+import VerticalDivider from '@/components/general/VerticalDivider';
+import { RiTodoFill } from 'react-icons/ri';
 
-export default function FileContentView({
-    name,
-    contentUrl,
-    defaultIsOpen,
-}: {
+type Props = {
     name: string;
     contentUrl: string;
     defaultIsOpen: boolean;
-}) {
+    currentParent: GitHubTreeParentItem | undefined | null;
+    uniqueKey: string;
+    lastItem: boolean;
+    parentTree: GitHubTreeParentItem[];
+};
+
+const FileContentView = observer((props: Props) => {
+    const {
+        currentParent,
+        uniqueKey,
+        name,
+        contentUrl,
+        defaultIsOpen,
+        lastItem,
+        parentTree,
+    } = props;
+
+    const store = useStore();
     const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
         defaultIsOpen,
     });
@@ -62,12 +83,25 @@ export default function FileContentView({
     }, [defaultIsOpen, onClose, onOpen]);
 
     const [file, setFile] = useState<File | undefined>(undefined);
-    const [fileViewable, setFileViewable] = useState(true);
+    const [isFileViewable, setIsFileViewable] = useState(true);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, border } = useModeColors();
 
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
+
+    const isItemCompleted = store.gitHubItems.isCompleted(
+        currentParent?.unique_key ?? parentRootKey,
+        uniqueKey
+    );
+
+    const toggleTaskCompleted = () => {
+        store.gitHubItems.toggleCompletedInTree({
+            parentTree: parentTree,
+            parentKey: currentParent?.unique_key ?? parentRootKey,
+            itemKey: uniqueKey,
+        });
+    };
 
     useEffect(() => {
         if (!data) return;
@@ -126,7 +160,7 @@ export default function FileContentView({
             case FileType.Excel:
                 return <ExcelView file={file} />;
             case FileType.Unsupported:
-                setFileViewable(false);
+                setIsFileViewable(false);
                 return (
                     <>
                         De weergave van dit bestandstype wordt niet ondersteund.
@@ -179,72 +213,104 @@ export default function FileContentView({
     }
 
     return (
-        <Box
-            alignItems="center"
-            backgroundColor={backgroundColorSecondary}
-            borderRadius={8}
-            boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
-            justifyContent="center"
-            outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
-            p={2}
-            transition="outline-width 200ms ease"
-        >
-            {/* Task header (collapsible) */}
+        <>
             <Box
                 alignItems="center"
-                cursor="pointer"
-                display="flex"
-                flex={1}
-                justifyContent="space-between"
-                onClick={onToggle}
-                px={4}
+                backgroundColor={backgroundColorSecondary}
+                borderRadius={8}
+                boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+                justifyContent="center"
+                outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
+                p={2}
+                transition="outline-width 200ms ease"
             >
-                <Box alignItems="center" display="flex" gap="10px">
-                    <CheckCircleIcon boxSize="20px" color={colorConfig.green} />
-                    <Text className="noselect" fontSize="18px">
-                        <Flex align="center">
-                            {icon}
-                            <Text ml={1}>{file.name}</Text>
-                        </Flex>
-                    </Text>
+                {/* Task header (collapsible) */}
+                <Box
+                    alignItems="center"
+                    cursor="pointer"
+                    display="flex"
+                    flex={1}
+                    justifyContent="space-between"
+                    onClick={onToggle}
+                    px={4}
+                >
+                    <Box alignItems="center" display="flex" gap="10px">
+                        {isItemCompleted ? (
+                            <CheckCircleIcon color={colorConfig.green} />
+                        ) : null}
+                        {!isItemCompleted ? (
+                            <Icon as={RiTodoFill} color={colorConfig.blue} />
+                        ) : null}
+                        <Text className="noselect" fontSize="18px">
+                            <Flex align="center">
+                                {icon}
+                                <Text ml={1}>{file.name}</Text>
+                            </Flex>
+                        </Text>
+                    </Box>
+                    <ChevronDownIcon
+                        boxSize={10}
+                        color={colorConfig.iconGrey}
+                        transform={rotate}
+                        transition="all 0.2s linear"
+                    />
                 </Box>
-                <ChevronDownIcon
-                    boxSize={10}
-                    color={colorConfig.iconGrey}
-                    transform={rotate}
-                    transition="all 0.2s linear"
-                />
+
+                {/* Content */}
+                <Collapse in={isOpen}>
+                    <Divider borderColor={border} borderWidth={1.5} my={4} />
+                    <Box px={4} py={4}>
+                        <Box
+                            className="btn-group"
+                            display="flex"
+                            justifyContent="flex-end"
+                            mb={6}
+                        >
+                            {isFileViewable ? (
+                                <Button
+                                    className="btn btn-gray"
+                                    onClick={handleDownload}
+                                    size="sm"
+                                >
+                                    <DownloadIcon />
+                                </Button>
+                            ) : null}
+                            <button
+                                className={
+                                    isItemCompleted
+                                        ? 'btn btn-primary'
+                                        : 'btn btn-green'
+                                }
+                                onClick={toggleTaskCompleted}
+                                type="button"
+                            >
+                                <Box
+                                    alignItems="center"
+                                    display="flex"
+                                    gap="8px"
+                                >
+                                    {!isItemCompleted ? (
+                                        <CheckCircleIcon color="white" />
+                                    ) : (
+                                        <Icon as={RiTodoFill} color="white" />
+                                    )}
+                                    <Text fontWeight="medium">
+                                        {isItemCompleted
+                                            ? 'In progress'
+                                            : 'Done'}
+                                    </Text>
+                                </Box>
+                            </button>
+                        </Box>
+                        {content}
+                    </Box>
+                </Collapse>
             </Box>
 
-            {/* Content */}
-            <Collapse in={isOpen}>
-                <Divider borderColor={border} borderWidth={1.5} my={4} />
-                <Box px={4} py={4}>
-                    <Box
-                        className="btn-group"
-                        display="flex"
-                        justifyContent="flex-end"
-                        mb={6}
-                    >
-                        {fileViewable ? (
-                            <Button
-                                className="btn btn-gray"
-                                onClick={handleDownload}
-                                size="sm"
-                            >
-                                <DownloadIcon />
-                            </Button>
-                        ) : null}
-                        <button className="btn btn-green" type="button">
-                            <Box alignItems="center" display="flex" gap="8px">
-                                <CheckCircleIcon color="white" />
-                                <Text fontWeight="medium">Done</Text>
-                            </Box>
-                        </button>
-                    </Box>
-                    {content}
-                </Box>
-            </Collapse>
-        </Box>
+            {!lastItem ? <VerticalDivider /> : null}
+        </>
     );
-}
+});
+
+FileContentView.displayName = 'FileContentView';
+export default FileContentView;

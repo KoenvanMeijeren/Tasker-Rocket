@@ -1,21 +1,46 @@
-import { GitHubTreeItem, GithubTreeMenuItem } from '@/types/gitHubData';
+import {
+    GitHubRecursiveTree,
+    GitHubRecursiveTreeItem,
+    GitHubTreeItem,
+    GithubTreeMenuItem,
+    GitHubTreeParentItem,
+} from '@/types/gitHubData';
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { getFileNameFromUrl, getParentFromUrl } from './formatters';
+import {
+    getFileNameFromUrl,
+    getParentFromUrl,
+    removeQueryParamsFromURl,
+} from './formatters';
+import objectHash from 'object-hash';
 
 export function hasKeyInMap(map: object, key: string): boolean {
     return Object.keys(map).includes(key);
 }
 
-export const isFile = (file: GitHubTreeItem) =>
-    file.type === (GitHubTreeItemType.File as string);
+export const isDir = (
+    file: GitHubTreeItem | GitHubRecursiveTreeItem | GithubTreeMenuItem
+) => file.type === (GitHubTreeItemType.Dir as string) || file.type === 'tree';
 
-export const isDir = (file: GitHubTreeItem) =>
-    file.type === (GitHubTreeItemType.Dir as string);
+export const isFile = (
+    file: GitHubTreeItem | GitHubRecursiveTreeItem | GithubTreeMenuItem
+) => file.type === (GitHubTreeItemType.File as string) || !isDir(file);
+
+export const hashGitHubItem = (
+    item: GitHubTreeItem | GitHubRecursiveTreeItem | GithubTreeMenuItem
+) => {
+    item.unique_key = objectHash({
+        path: item.path,
+        sha: item.sha,
+        type: isDir(item) ? GitHubTreeItemType.Dir : GitHubTreeItemType.File,
+    });
+};
 
 export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
     const dirs: GitHubTreeItem[] = [];
     const files: GitHubTreeItem[] = [];
     data.forEach((item) => {
+        hashGitHubItem(item);
+
         if (isDir(item)) {
             dirs.push(item);
         } else if (isFile(item)) {
@@ -44,7 +69,11 @@ export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
 export function reconstructGithubTree(tree: GithubTreeMenuItem[]) {
     const map = new Map<string, GithubTreeMenuItem>();
     tree.forEach((item) => {
+        hashGitHubItem(item);
+
         map.set(item.path, {
+            unique_key: item.unique_key,
+            sha: item.sha,
             path: item.path,
             name: getFileNameFromUrl(item.path),
             type: item.type,
@@ -74,3 +103,85 @@ export function reconstructGithubTree(tree: GithubTreeMenuItem[]) {
         return treeItem;
     });
 }
+
+interface GitHubIndexedData {
+    [key: string]: {
+        path: string;
+        unique_key: string;
+        children: number;
+        isTopLevel: boolean;
+    };
+}
+
+export const parentRootKey = 'root';
+export const convertRecursiveTreeToIndexedByPath = (
+    input: GitHubRecursiveTreeItem[]
+): GitHubIndexedData => {
+    const result: GitHubIndexedData = {};
+
+    input.forEach((item) => {
+        const pathParts = item.path.split('/').filter(Boolean);
+        pathParts.pop();
+
+        const searchParentPath = pathParts.join('/');
+        if (hasKeyInMap(result, searchParentPath)) {
+            result[searchParentPath].children++;
+        }
+
+        hashGitHubItem(item);
+        result[item.path] = {
+            path: item.path,
+            unique_key: item.unique_key,
+            children: 0,
+            isTopLevel: pathParts.length === 0,
+        };
+    });
+
+    const rootItems = Object.values(result).filter((item) => item.isTopLevel);
+
+    result.root = {
+        path: 'root',
+        unique_key: parentRootKey,
+        children: rootItems.length,
+        isTopLevel: true,
+    };
+
+    return result;
+};
+
+export const recursiveTreeToParentTree = (
+    searchPath: string,
+    recursiveTree: GitHubRecursiveTree
+): GitHubTreeParentItem[] => {
+    const result: GitHubTreeParentItem[] = [];
+    const indexedItems = convertRecursiveTreeToIndexedByPath(
+        recursiveTree.tree
+    );
+
+    // Build the result array by traversing the search path parts
+    searchPath = removeQueryParamsFromURl(searchPath);
+    const searchPathParts = searchPath.split('/').filter(Boolean);
+    while (searchPathParts.length > 0) {
+        const currentPath = searchPathParts.join('/');
+        const item = indexedItems[currentPath];
+        searchPathParts.pop();
+        if (!item) {
+            return [];
+        }
+
+        result.push({
+            unique_key: item.unique_key,
+            name: item.path,
+            children: item.children,
+        });
+    }
+
+    // Add the root item to the result array
+    result.push({
+        unique_key: parentRootKey,
+        name: indexedItems.root.path,
+        children: indexedItems.root.children,
+    });
+
+    return result;
+};

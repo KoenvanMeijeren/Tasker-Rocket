@@ -16,9 +16,10 @@ export default function Home() {
     }
     return (
         <ProjectView
+            currentParent={undefined}
             data={data as GitHubTreeItem | GitHubTreeItem[]}
             openedFileName={openedFileName}
-            parent=""
+            parentTree={[]}
         />
     );
 }

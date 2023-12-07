@@ -15,6 +15,7 @@ import { FaAngleDown, FaRegUser } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 import useAuth from '@/hooks/useAuth';
 import { SessionContext } from '@/providers/SessionProvider';
+import Link from 'next/link';
 
 export default function UserProfileCard() {
     const { signOut } = useAuth();
@@ -44,10 +45,12 @@ export default function UserProfileCard() {
                 </Flex>
             </MenuButton>
             <MenuList>
-                <MenuItem onClick={() => (window.location.href = '/profile')}>
+                <MenuItem>
                     <HStack>
                         <FaRegUser />
-                        <Text>Profile</Text>
+                        <Link href="/profile">
+                            <Text>Profile</Text>
+                        </Link>
                     </HStack>
                 </MenuItem>
                 <MenuDivider />

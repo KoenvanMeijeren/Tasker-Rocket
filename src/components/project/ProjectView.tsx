@@ -5,8 +5,8 @@ import { GitHubTreeItem } from '@/types/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
-import VerticalDivider from './VerticalDivider';
-import FileContentView from './fileView/FileContentView';
+import VerticalDivider from '../general/VerticalDivider';
+import FileContentView from '../fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')

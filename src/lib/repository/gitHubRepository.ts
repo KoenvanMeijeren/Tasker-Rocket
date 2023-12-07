@@ -33,7 +33,7 @@ export const gitHubConfig = {
 
 export function useGitHubContentTree(path: string, recursive = false) {
     path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
-  
+
     const customToast = useCustomToast();
     const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<

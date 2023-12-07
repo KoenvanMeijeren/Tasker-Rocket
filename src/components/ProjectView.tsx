@@ -60,7 +60,7 @@ export function ProjectView({
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
                                 defaultIsOpen={item.name === openedFileName}
-                                key={`/${item.url}`}
+                                key={item.url}
                                 name={item.name}
                             />
 

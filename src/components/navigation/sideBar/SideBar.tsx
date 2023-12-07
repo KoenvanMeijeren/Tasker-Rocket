@@ -9,7 +9,7 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
-import { GithubTree, GithubTreeMenuItem } from '@/types/gitHubData';
+import { GithubTree, GithubTreeMenuItem } from '@/types/gitHubData'
 import { SessionContext } from '@/providers/SessionProvider';
 
 export const SideBar = () => {

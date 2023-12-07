@@ -4,10 +4,10 @@ import { Card, CardBody } from '@chakra-ui/card';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
-import { colorConfig } from '../../theme.config';
+import { colorConfig } from '../../../theme.config';
 import { FaFolderOpen } from 'react-icons/fa6';
-import Heading from './textStyles/Heading';
-import Text from './textStyles/Text';
+import Heading from '../textStyles/Heading';
+import Text from '../textStyles/Text';
 
 export const FoldersSection = ({
     data,

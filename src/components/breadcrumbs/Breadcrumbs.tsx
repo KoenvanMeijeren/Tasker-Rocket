@@ -18,8 +18,8 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = removeQueryParamsFromURl(decodeURIComponent(path));
-    if (url === '/') {
+    const url = removeQueryParamsFromURl(decodeURI(path));
+    if (url.length < 1 || url === '/') {
         return [];
     }
 

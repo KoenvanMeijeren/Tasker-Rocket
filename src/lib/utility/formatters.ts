@@ -1,7 +1,9 @@
+import { decodeURI } from '@/lib/utility/uri';
+
 export function urlToReadableString(url: string): string {
     const result = url.charAt(0).toUpperCase() + url.slice(1);
 
-    return decodeURIComponent(result);
+    return decodeURI(result);
 }
 
 export function urlToFileExtension(url: string): string {
@@ -25,8 +27,7 @@ export function replaceAll(
 
 export function getFileNameFromUrl(url: string) {
     const parts = url.split('/');
-    const name = parts[parts.length - 1];
-    return name;
+    return parts[parts.length - 1];
 }
 
 export const getParentFromUrl = (url: string) => {
@@ -44,8 +45,8 @@ export const nameToLogo = (name: string) => {
         ? name.trim()
         : name.replace(/[^a-zA-Z\s]/g, '').trim(); // Remove non-letter characters except spaces
     const words = lettersOnly.split(' ');
-    let result = '';
 
+    let result = '';
     if (words.length > 1) {
         for (let i = 0; i < words.length && result.length < 2; i++) {
             const word = words[i];

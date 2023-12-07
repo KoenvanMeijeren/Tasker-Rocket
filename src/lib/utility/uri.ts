@@ -1,4 +1,4 @@
-export function decodeURI(url: string): string {
+export function decodeUrl(url: string): string {
     try {
         return decodeURIComponent(url);
     } catch (error) {

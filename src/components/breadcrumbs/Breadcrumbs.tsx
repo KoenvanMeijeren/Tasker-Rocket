@@ -10,6 +10,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { BiSolidChevronRight } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
+import { decodeUrl } from '@/lib/utility/uri';
 
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -18,7 +19,7 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = removeQueryParamsFromURl(decodeURI(path));
+    const url = removeQueryParamsFromURl(decodeUrl(path));
     if (url.length < 1 || url === '/') {
         return [];
     }

@@ -43,83 +43,82 @@ export const SideBar = () => {
         }
     }, [data]);
 
-    if (session) {
-        return (
-            <Stack
-                bg={menuBackground}
-                boxShadow={boxShadow}
-                height="100vh"
-                justifyContent="space-between"
-                minWidth={sidebarWidth}
-                position="relative"
-                spacing={0}
-                transition="all 0.5s ease"
-                w={sidebarWidth}
-                zIndex={3}
-            >
-                <SideBarLogo navSize={navSize} />
-
-                {/* navitems */}
-                <Stack
-                    alignItems={
-                        navSize === NavSize.Small ? 'center' : 'flex-start'
-                    }
-                    css={{
-                        '&::-webkit-scrollbar': {
-                            width: '6px',
-                        },
-
-                        '&::-webkit-scrollbar-thumb': {
-                            background: tint,
-                            borderRadius: '24px',
-                        },
-                    }}
-                    flex={1}
-                    overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
-                    p={3}
-                    spacing={0}
-                    width="100%"
-                >
-                    <>
-                        {tree.map((item) => (
-                            <NavItem
-                                key={item.path}
-                                navSize={navSize}
-                                root={true}
-                                treeItem={item}
-                            />
-                        ))}
-                    </>
-                </Stack>
-
-                {/* collapse/expand button */}
-                <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    paddingBottom={4}
-                    paddingTop={2}
-                    px={2}
-                    width="100%"
-                >
-                    <Button
-                        aspectRatio={1}
-                        onClick={() => {
-                            toggleNavSize(
-                                navSize === NavSize.Small
-                                    ? NavSize.Large
-                                    : NavSize.Small
-                            );
-                        }}
-                    >
-                        <ChevronLeftIcon
-                            boxSize={8}
-                            color={colorConfig.iconGrey}
-                            transform={rotate}
-                            transition="all 0.2s linear"
-                        />
-                    </Button>
-                </Flex>
-            </Stack>
-        );
+    if (!session) {
+        return;
     }
+    return (
+        <Stack
+            bg={menuBackground}
+            boxShadow={boxShadow}
+            height="100vh"
+            justifyContent="space-between"
+            minWidth={sidebarWidth}
+            position="relative"
+            spacing={0}
+            transition="all 0.5s ease"
+            w={sidebarWidth}
+            zIndex={3}
+        >
+            <SideBarLogo navSize={navSize} />
+
+            {/* navitems */}
+            <Stack
+                alignItems={navSize === NavSize.Small ? 'center' : 'flex-start'}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        width: '6px',
+                    },
+
+                    '&::-webkit-scrollbar-thumb': {
+                        background: tint,
+                        borderRadius: '24px',
+                    },
+                }}
+                flex={1}
+                overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
+                p={3}
+                spacing={0}
+                width="100%"
+            >
+                <>
+                    {tree.map((item) => (
+                        <NavItem
+                            key={item.path}
+                            navSize={navSize}
+                            root={true}
+                            treeItem={item}
+                        />
+                    ))}
+                </>
+            </Stack>
+
+            {/* collapse/expand button */}
+            <Flex
+                alignItems="center"
+                justifyContent="center"
+                paddingBottom={4}
+                paddingTop={2}
+                px={2}
+                width="100%"
+            >
+                <Button
+                    aspectRatio={1}
+                    onClick={() => {
+                        toggleNavSize(
+                            navSize === NavSize.Small
+                                ? NavSize.Large
+                                : NavSize.Small
+                        );
+                    }}
+                >
+                    <ChevronLeftIcon
+                        boxSize={8}
+                        color={colorConfig.iconGrey}
+                        transform={rotate}
+                        transition="all 0.2s linear"
+                    />
+                </Button>
+            </Flex>
+        </Stack>
+    );
 };

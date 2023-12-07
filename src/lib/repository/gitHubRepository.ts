@@ -1,5 +1,3 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import {
     fetchBlobData,
     fetchJsonData,
@@ -34,7 +32,7 @@ export function useGitHubContentTree(path: string) {
     const customToast = useCustomToast();
     const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
+        GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
         url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
         bearerToken: session?.provider_token ?? undefined,

@@ -1,5 +1,6 @@
+import { GitHubTreeItem, GithubTreeMenuItem } from '@/types/gitHubData';
 import { GitHubTreeItemType, GithubContent } from '@/types/githubTreeItemType';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { getFileNameFromUrl, getParentFromUrl } from './formatters';
 
 export function hasKeyInMap(map: object, key: string): boolean {
     return Object.keys(map).includes(key);
@@ -39,3 +40,37 @@ export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
 
     return URL.createObjectURL(newBlob);
 };
+
+export function reconstructGithubTree(tree: GithubTreeMenuItem[]) {
+    const map = new Map<string, GithubTreeMenuItem>();
+    tree.forEach((item) => {
+        map.set(item.path, {
+            path: item.path,
+            name: getFileNameFromUrl(item.path),
+            type: item.type,
+            url: item.url,
+            tree: [],
+        });
+    });
+
+    tree.forEach((item) => {
+        //if root node, return
+        if (!item.path.includes('/')) {
+            return;
+        }
+        const parentPath = getParentFromUrl(item.path);
+
+        const parent = map.get(parentPath);
+        const current = map.get(item.path);
+        if (!parent || !current)
+            throw new Error('parent or current node is undefined');
+        parent.tree.push(current);
+    });
+
+    const rootItems = tree.filter((item) => !item.path.includes('/'));
+    return rootItems.map((item) => {
+        const treeItem = map.get(item.path);
+        if (!treeItem) throw new Error('item is undefined');
+        return treeItem;
+    });
+}

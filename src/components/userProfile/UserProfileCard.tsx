@@ -45,14 +45,15 @@ export default function UserProfileCard() {
                 </Flex>
             </MenuButton>
             <MenuList>
-                <MenuItem>
-                    <HStack>
-                        <FaRegUser />
-                        <Link href="/profile">
+                <Link href="/profile">
+                    <MenuItem>
+                        <HStack>
+                            <FaRegUser />
+
                             <Text>Profile</Text>
-                        </Link>
-                    </HStack>
-                </MenuItem>
+                        </HStack>
+                    </MenuItem>
+                </Link>
                 <MenuDivider />
                 <MenuItem
                     onClick={() => {

@@ -23,6 +23,12 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
+            - name: 'Create & configure env file'
+              shell: bash
+              run: |
+                cp .env.example .env
+                cat .env
+
             - name: Install dependencies
               run: npm install
 

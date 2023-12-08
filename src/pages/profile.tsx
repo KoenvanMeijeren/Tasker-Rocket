@@ -1,4 +1,3 @@
-import Heading from '@/components/textStyles/Heading';
 import { useModeColors } from '@/hooks/useModeColors';
 import { SessionContext } from '@/providers/SessionProvider';
 import {
@@ -19,7 +18,6 @@ import ChangeProfileInfoTab from './profileTabs/changeProfileInfo';
 
 export default function Profile() {
     const { session } = useContext(SessionContext);
-    // console.log(session);
     const { backgroundColorSecondary } = useModeColors();
 
     return (

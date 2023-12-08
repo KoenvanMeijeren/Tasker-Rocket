@@ -1,4 +1,4 @@
-import { updateUserData } from '@/hooks/updateUserData';
+import { updateUserData } from '@/lib/profile/profileHandler';
 import {
     Button,
     Heading,

@@ -12,7 +12,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
-import { deleteUser } from '@/hooks/deleteUser';
+import { deleteUser } from '@/lib/profile/profileHandler';
 
 export default function DeleteAccountTab() {
     const { isOpen, onOpen, onClose } = useDisclosure();

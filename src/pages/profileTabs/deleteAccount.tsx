@@ -12,12 +12,9 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
+import { deleteUser } from '@/hooks/deleteUser';
 
 export default function DeleteAccountTab() {
-    const handleDeleteAccount = () => {
-        // TODO: Implement delete account logic
-    };
-
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef<HTMLButtonElement | null>(null); // Add variable declarator
 
@@ -41,7 +38,8 @@ export default function DeleteAccountTab() {
                             <Button
                                 colorScheme="red"
                                 ml={3}
-                                onClick={handleDeleteAccount}
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                                onClick={deleteUser}
                                 variant="ghost"
                             >
                                 Delete

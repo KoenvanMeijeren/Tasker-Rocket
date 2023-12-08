@@ -1,3 +1,4 @@
+import { updateUserData } from '@/hooks/updateUserData';
 import {
     Button,
     Heading,
@@ -11,10 +12,6 @@ import { useState } from 'react';
 export default function ChangeProfileInfoTab() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-
-    const handleSaveChanges = () => {
-        // TODO: Implement save changes logic
-    };
 
     return (
         <TabPanel>
@@ -33,7 +30,8 @@ export default function ChangeProfileInfoTab() {
                 />
                 <Button
                     colorScheme="blue"
-                    onClick={handleSaveChanges}
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={updateUserData}
                     variant="ghost"
                 >
                     Save Changes

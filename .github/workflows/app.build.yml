@@ -43,3 +43,9 @@ jobs:
 
             - name: Run build
               run: npm run build
+
+            - name: 'Remove env file'
+              if: always()
+              shell: bash
+              run: |
+                rm .env

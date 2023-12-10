@@ -26,17 +26,19 @@ export default function CodeView({ file }: { file: File }) {
     return (
         <Box className="pos-r">
             <Flex alignItems="center" justifyContent="flex-end" mb={2}>
-                <CopyToClipboard onCopy={handleCopy} text={content}>
-                    <Button
-                        className="copy-btn"
-                        colorScheme="green"
-                        mr={2}
-                        size="sm"
-                    >
-                        <CopyIcon mr={1} />
-                        {copied ? 'Copied!' : 'Copy'}
-                    </Button>
-                </CopyToClipboard>
+                {content ? (
+                    <CopyToClipboard onCopy={handleCopy} text={content}>
+                        <Button
+                            className="copy-btn"
+                            colorScheme="green"
+                            mr={2}
+                            size="sm"
+                        >
+                            <CopyIcon mr={1} />
+                            {copied ? 'Copied!' : 'Copy'}
+                        </Button>
+                    </CopyToClipboard>
+                ) : null}
             </Flex>
             <CodeMirror
                 editable={false}

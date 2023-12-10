@@ -56,6 +56,7 @@ export default function FileContentView({
     ) => void;
     defaultIsOpen: boolean;
 }) {
+    // set the default state of the file content
     const [isFileContentOpen, setIsFileContentOpen] = useState(false);
 
     const { isOpen, onClose, onOpen } = useDisclosure({
@@ -71,6 +72,7 @@ export default function FileContentView({
     const { fullScreen } = fileContentOpen[name] || {
         fullScreen: false,
     };
+    // keep track of the previous isOpen state
     const prevIsOpenRef = useRef(isFileContentOpen);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
@@ -98,10 +100,12 @@ export default function FileContentView({
         });
     }, [contentUrl, data, name]);
 
+    // update the file content state when the fullscreen, isFilecontentOpen states changes
     useEffect(() => {
         setFileContentOpen(name, contentUrl, fullScreen, isFileContentOpen);
     }, [contentUrl, fullScreen, isFileContentOpen, name, setFileContentOpen]);
 
+    // update the isOpen state when the fileContentOpen state changes
     useEffect(() => {
         if (
             fileContentOpen[name] &&
@@ -122,7 +126,7 @@ export default function FileContentView({
         link.click();
     }, [file]);
 
-    // change fullscreen state
+    // change the fullscreen state
     const handleToggle = () => {
         setFileContentOpen(
             name,
@@ -204,7 +208,7 @@ export default function FileContentView({
                 flex={1}
                 justifyContent="space-between"
                 onClick={() => {
-                    setIsFileContentOpen(!isFileContentOpen); // Toggle isOpen state independently
+                    setIsFileContentOpen(!isFileContentOpen);
                 }}
                 px={4}
             >

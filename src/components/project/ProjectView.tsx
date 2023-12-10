@@ -26,6 +26,7 @@ export function ProjectView({
     parent: string;
     openedFileName: string;
 }) {
+    // make a useState for all file content states
     const [fileContentOpenStates, setFileContentOpenStates] = useState<{
         [key: string]: {
             fullScreen: boolean;
@@ -36,10 +37,12 @@ export function ProjectView({
 
     const [content, setContent] = useState<Data | null>(null);
 
-    const hasTrueValue = Object.values(fileContentOpenStates).some(
+    // check if fullscreen in any of the file content states is true
+    const isFullscreenOpen = Object.values(fileContentOpenStates).some(
         (item) => item.fullScreen
     );
 
+    // update the file content state (fullscreen, isFileContentOpen)
     const updateFileContentToggle = (
         name: string,
         contentUrl: string,
@@ -62,6 +65,7 @@ export function ProjectView({
         }
     }, [data]);
 
+    // set the file content states when the content is loaded
     useEffect(() => {
         if (content?.files) {
             const allContentStates: {
@@ -84,6 +88,7 @@ export function ProjectView({
         }
     }, [content]);
 
+    // filter the file content states to only the ones that are fullscreen (otherwise the file content couldn't be rendered on line 123)
     const filteredFileContentOpenStates = Object.entries(fileContentOpenStates)
         .filter(([, value]) => value.fullScreen)
         .reduce(
@@ -113,7 +118,7 @@ export function ProjectView({
                 />
             ) : null}
 
-            {hasTrueValue ? (
+            {isFullscreenOpen ? (
                 <Stack>
                     {Object.keys(filteredFileContentOpenStates).map((key) => {
                         const item = fileContentOpenStates[key];

@@ -1,4 +1,11 @@
-import { useModeColors } from '@/hooks/useColors';
+import AudioView from '@/components/fileView/AudioView';
+import CodeView from '@/components/fileView/CodeView';
+import MarkdownView from '@/components/fileView/MarkdownView';
+import OfficeFileView from '@/components/fileView/OfficeFileView';
+import PdfFileView from '@/components/fileView/PdfFileView';
+import VideoView from '@/components/fileView/VideoView';
+import ExcelView from './ExcelView';
+import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
     removeFileExtension,
@@ -11,25 +18,26 @@ import {
     DownloadIcon,
 } from '@chakra-ui/icons';
 import { AiOutlineFullscreen } from 'react-icons/ai';
-import { Box, Button, Collapse, Divider, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Collapse,
+    Divider,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { colorConfig } from '../../../theme.config';
 import ImageView from './ImageView';
 import './fileContentView.css';
 import { File } from '@/types/file';
-import CodeView from '@/components/fileView/CodeView';
-import PdfFileView from '@/components/fileView/PdfFileView';
-import MarkdownView from '@/components/fileView/MarkdownView';
-import AudioView from '@/components/fileView/AudioView';
-import VideoView from '@/components/fileView/VideoView';
-import ExcelView from './ExcelView';
-import OfficeFileView from './OfficeFileView';
 
 export default function FileContentView({
     name,
     contentUrl,
     fileContentOpen,
     setFileContentOpen,
+    defaultIsOpen,
 }: {
     name: string;
     contentUrl: string;
@@ -37,26 +45,36 @@ export default function FileContentView({
         [key: string]: {
             fullScreen: boolean;
             contentUrl: string;
-            isOpen: boolean;
+            isFileContentOpen: boolean;
         };
     };
     setFileContentOpen: (
         name: string,
         contentUrl: string,
         fullScreen: boolean,
-        isOpen: boolean
+        isFileContentOpen: boolean
     ) => void;
+    defaultIsOpen: boolean;
 }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isFileContentOpen, setIsFileContentOpen] = useState(false);
+
+    const { isOpen, onClose, onOpen } = useDisclosure({
+        defaultIsOpen,
+    });
+    // Update the 'isOpen' state when 'defaultIsOpen' changes
+    useEffect(() => {
+        return defaultIsOpen ? onOpen() : onClose();
+    }, [defaultIsOpen, onClose, onOpen]);
+
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileViewable, setFileViewable] = useState(true);
     const { fullScreen } = fileContentOpen[name] || {
         fullScreen: false,
     };
-    const prevIsOpenRef = useRef(isOpen);
+    const prevIsOpenRef = useRef(isFileContentOpen);
 
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const { backgroundColorSecondary, fontColor, border } = useModeColors();
+    const { backgroundColorSecondary, border } = useModeColors();
 
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
@@ -81,18 +99,18 @@ export default function FileContentView({
     }, [contentUrl, data, name]);
 
     useEffect(() => {
-        setFileContentOpen(name, contentUrl, fullScreen, isOpen);
-    }, [contentUrl, fullScreen, isOpen, name, setFileContentOpen]);
+        setFileContentOpen(name, contentUrl, fullScreen, isFileContentOpen);
+    }, [contentUrl, fullScreen, isFileContentOpen, name, setFileContentOpen]);
 
     useEffect(() => {
         if (
             fileContentOpen[name] &&
-            fileContentOpen[name].isOpen !== prevIsOpenRef.current
+            fileContentOpen[name].isFileContentOpen !== prevIsOpenRef.current
         ) {
-            setIsOpen(fileContentOpen[name].isOpen);
+            setIsFileContentOpen(fileContentOpen[name].isFileContentOpen);
         }
-        prevIsOpenRef.current = isOpen;
-    }, [fileContentOpen, isOpen, name]);
+        prevIsOpenRef.current = isFileContentOpen;
+    }, [fileContentOpen, isFileContentOpen, name]);
 
     const handleDownload = useCallback(() => {
         if (!file) return;
@@ -110,9 +128,9 @@ export default function FileContentView({
             name,
             contentUrl,
             !fileContentOpen[name]?.fullScreen,
-            isOpen
+            isFileContentOpen
         );
-        setIsOpen(!isOpen);
+        setIsFileContentOpen(!isFileContentOpen);
     };
 
     const content = useMemo(() => {
@@ -169,22 +187,24 @@ export default function FileContentView({
 
     return (
         <Box
+            alignItems="center"
             backgroundColor={backgroundColorSecondary}
             borderRadius={8}
             boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
+            justifyContent="center"
             outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
             p={2}
             transition="outline-width 200ms ease"
-            zIndex={2}
         >
             {/* Task header (collapsible) */}
             <Box
                 alignItems="center"
                 cursor="pointer"
                 display="flex"
+                flex={1}
                 justifyContent="space-between"
                 onClick={() => {
-                    setIsOpen(!isOpen); // Toggle isOpen state independently
+                    setIsFileContentOpen(!isFileContentOpen); // Toggle isOpen state independently
                 }}
                 px={4}
             >
@@ -194,11 +214,12 @@ export default function FileContentView({
                         {file.name}
                     </Text>
                 </Box>
+
                 <Box alignItems="center" display="flex">
                     <AiOutlineFullscreen onClick={handleToggle} size="20px" />
                     <ChevronDownIcon
                         boxSize={10}
-                        color={fontColor}
+                        color={colorConfig.iconGrey}
                         transform={rotate}
                         transition="all 0.2s linear"
                     />
@@ -206,8 +227,8 @@ export default function FileContentView({
             </Box>
 
             {/* Content */}
-            <Collapse in={isOpen}>
-                <Divider borderWidth={1.5} my={4} />
+            <Collapse in={isFileContentOpen}>
+                <Divider borderColor={border} borderWidth={1.5} my={4} />
                 <Box px={4} py={4}>
                     <Box
                         className="btn-group"

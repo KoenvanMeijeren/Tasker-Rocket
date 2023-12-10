@@ -1,12 +1,12 @@
 'use client';
-import { GitHubTreeItem } from '@/types/gitHubData';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { EnvOptions, getEnvValue } from '@/lib/utility/env';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import { FoldersSection } from './FoldersSection';
-import VerticalDivider from './VerticalDivider';
-import FileContentView from './fileView/FileContentView';
+import VerticalDivider from '../general/VerticalDivider';
+import FileContentView from '../fileView/FileContentView';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')
@@ -20,15 +20,17 @@ type Data = {
 export function ProjectView({
     data,
     parent,
+    openedFileName,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
-    parent: string | undefined;
+    parent: string;
+    openedFileName: string;
 }) {
     const [fileContentOpenStates, setFileContentOpenStates] = useState<{
         [key: string]: {
             fullScreen: boolean;
             contentUrl: string;
-            isOpen: boolean;
+            isFileContentOpen: boolean;
         };
     }>({});
 
@@ -42,14 +44,14 @@ export function ProjectView({
         name: string,
         contentUrl: string,
         fullScreen: boolean,
-        isOpen: boolean
+        isFileContentOpen: boolean
     ) => {
         setFileContentOpenStates((prevState) => ({
             ...prevState,
             [name]: {
                 contentUrl,
                 fullScreen,
-                isOpen,
+                isFileContentOpen,
             },
         }));
     };
@@ -66,7 +68,7 @@ export function ProjectView({
                 [key: string]: {
                     fullScreen: boolean;
                     contentUrl: string;
-                    isOpen: boolean;
+                    isFileContentOpen: boolean;
                 };
             } = {};
 
@@ -74,7 +76,7 @@ export function ProjectView({
                 allContentStates[item.name] = {
                     fullScreen: false,
                     contentUrl: item.download_url ?? '',
-                    isOpen: false,
+                    isFileContentOpen: false,
                 };
             });
 
@@ -93,7 +95,7 @@ export function ProjectView({
                 [key: string]: {
                     fullScreen: boolean;
                     contentUrl: string;
-                    isOpen: boolean;
+                    isFileContentOpen: boolean;
                 };
             }
         );
@@ -119,6 +121,7 @@ export function ProjectView({
                             <Box key={key}>
                                 <FileContentView
                                     contentUrl={item.contentUrl}
+                                    defaultIsOpen={key === openedFileName}
                                     fileContentOpen={fileContentOpenStates}
                                     key={key}
                                     name={key}
@@ -153,6 +156,7 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
+                                defaultIsOpen={item.name === openedFileName}
                                 fileContentOpen={fileContentOpenStates}
                                 key={item.url}
                                 name={item.name}

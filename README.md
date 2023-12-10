@@ -16,17 +16,8 @@ You might need to create a GitHub access token to be able to use this app.
 cp .env.example .env
 ```
 
-### Make GitHub access token
-
-To be able to use the GitHub API you need to create a personal access token. This can be done by following the steps below:
-
-1. Go to [GitHub](https://github.com) and login to your account.
-2. Go to [Settings -> Developer Settings -> Tokens ](https://github.com/settings/tokens) and click on `Generate new token`.
-3. Give the token a name and select the `repo` scope and `admin:org -> read:org` premissions.
-4. Click on `Generate token` and copy the token to your clipboard.
-5. Paste the token in the `.env` file.
-
-![GitHub Permissions](assets/gh_prems.png)
+Now you need to retrieve the Supabase URL, this should be provided to you by your organisation.
+For Windesheim students it can be found [here](https://liveadminwindesheim-my.sharepoint.com/:w:/g/personal/s1158062_student_windesheim_nl/Ebg-lJwY-gVJp-eCDxehlGEBYJxFo1c1RYUwR3OWoKABGg?e=n3W5y6)
 
 Then install the dependencies of our project:
 

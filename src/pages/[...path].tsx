@@ -1,18 +1,19 @@
 'use client';
-import { LoadingIndicator } from '@/components/LoadingIndicator';
-import { ProjectView } from '@/components/ProjectView';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { LoadingIndicator } from '@/components/general/LoadingIndicator';
+import { ProjectView } from '@/components/project/ProjectView';
+import { useOpenedFileName } from '@/hooks/useOpenedFileName';
 import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
+import { GitHubTreeItem } from '@/types/gitHubData';
 import { useRouter } from 'next/router';
 
 export default function ProjectContent() {
     const router = useRouter();
-    const path = decodeURIComponent(router.asPath);
+    const path = removeQueryParamsFromURl(decodeURI(router.asPath));
     const parent = path.split('/').pop();
 
-    const { data, error, isLoading } = useGitHubContentTree(
-        decodeURIComponent(path)
-    );
+    const openedFileName = useOpenedFileName();
+    const { data, error, isLoading } = useGitHubContentTree(path);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -23,6 +24,10 @@ export default function ProjectContent() {
     }
 
     return (
-        <ProjectView data={data as GitHubTreeItem[]} parent={parent || ''} />
+        <ProjectView
+            data={data as GitHubTreeItem[]}
+            openedFileName={openedFileName}
+            parent={parent || ''}
+        />
     );
 }

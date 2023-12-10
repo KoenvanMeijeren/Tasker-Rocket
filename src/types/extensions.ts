@@ -1,14 +1,14 @@
-import { javascript } from '@codemirror/lang-javascript';
-import { json } from '@codemirror/lang-json';
+import { hasKeyInMap } from '@/lib/utility/dataStructure';
+import { cpp } from '@codemirror/lang-cpp';
 import { css } from '@codemirror/lang-css';
 import { html } from '@codemirror/lang-html';
-import { LanguageSupport } from '@codemirror/language';
-import { sql } from '@codemirror/lang-sql';
 import { java } from '@codemirror/lang-java';
-import { sass } from '@codemirror/lang-sass';
-import { cpp } from '@codemirror/lang-cpp';
-import { hasKeyInMap } from '@/lib/utility/dataStructure';
+import { javascript } from '@codemirror/lang-javascript';
+import { json } from '@codemirror/lang-json';
 import { php } from '@codemirror/lang-php';
+import { sass } from '@codemirror/lang-sass';
+import { sql } from '@codemirror/lang-sql';
+import { LanguageSupport } from '@codemirror/language';
 
 export enum FileType {
     Code,
@@ -48,6 +48,7 @@ export const codeExtensions: CodeExtensions = {
     gitattributes: [],
     gitignore: [],
     npmrc: [],
+    yml: [],
 };
 
 export interface FileExtensionInfo {

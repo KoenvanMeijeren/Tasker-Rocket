@@ -1,11 +1,16 @@
 'use client';
 
-import { HiHome } from 'react-icons/hi';
-import { useRouter } from 'next/router';
-import { replaceAll, urlToReadableString } from '@/lib/utility/formatters';
+import { useModeColors } from '@/hooks/useModeColors';
+import {
+    removeQueryParamsFromURl,
+    replaceAll,
+    urlToReadableString,
+} from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
-import React from 'react';
+import { useRouter } from 'next/router';
 import { BiSolidChevronRight } from 'react-icons/bi';
+import { HiHome } from 'react-icons/hi';
+import { decodeUrl } from '@/lib/utility/uri';
 
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -14,8 +19,8 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = decodeURIComponent(path);
-    if (url === '/') {
+    const url = removeQueryParamsFromURl(decodeUrl(path));
+    if (url.length < 1 || url === '/') {
         return [];
     }
 
@@ -48,6 +53,7 @@ function pathToBreadcrumbs(path: string): {
 }
 
 export function Breadcrumbs() {
+    const { fontColor } = useModeColors();
     const router = useRouter();
     const breadcrumbs = pathToBreadcrumbs(router.asPath);
     if (breadcrumbs.length < 1) {
@@ -65,6 +71,7 @@ export function Breadcrumbs() {
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
                         <BreadcrumbLink
+                            color={fontColor}
                             href="#"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => router.push(item.path)}

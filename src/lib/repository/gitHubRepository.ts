@@ -1,14 +1,16 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
-import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 import {
     fetchBlobData,
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
+import { SessionContext } from '@/providers/SessionProvider';
+import { useContext } from 'react';
+import { useCustomToast } from '@/lib/utility/toast';
+import { getEnvValue, EnvOptions } from '@/lib/utility/env';
+import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
-    token: getEnvValue(EnvOptions.GitHubToken),
     content_repository: getEnvValue(EnvOptions.GithubContentRepository),
     is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
@@ -28,14 +30,31 @@ export const gitHubConfig = {
  * - - - File 1.1.2.md
  * - Folder 2
  */
-export function useGitHubContentTree(path: string) {
+
+export function useGitHubContentTree(path: string, recursive = false) {
+    // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
+    // because next.js renders the app twice, once on server and once on client.
+    if (path === '/[...path]') {
+        path = '';
+    }
+
+    path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
+
+    const customToast = useCustomToast();
+    const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
+        GitHubTreeItem[] | GitHubTreeItem | GithubTree
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
-        bearerToken: gitHubConfig.token,
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
+        bearerToken: session?.provider_token ?? undefined,
         isPrivateData: gitHubConfig.is_private,
     });
+
+    if (error) {
+        if (session) {
+            customToast(error.name, error.message, 'error');
+        }
+    }
 
     return { data, isLoading, error };
 }

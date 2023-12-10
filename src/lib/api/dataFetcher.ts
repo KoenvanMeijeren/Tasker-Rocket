@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@/types/response';
+import { HttpStatusCode } from '@/lib/api/response';
 import { BareFetcher, Fetcher, SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
@@ -15,7 +15,10 @@ export const fetchData = async (options: FetcherOptions) => {
     }
 
     if (response.status !== HttpStatusCode.Ok.valueOf()) {
-        throw new Error('An error occurred while fetching the data.');
+        throw new Error(
+            'An error occurred while fetching the data. Expected status code 200, but received: ' +
+                response.status
+        );
     }
 
     return response;

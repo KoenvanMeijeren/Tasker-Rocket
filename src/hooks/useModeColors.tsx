@@ -22,6 +22,24 @@ export function useModeColors() {
         colorConfig.dark.border
     );
     const codeMirror = useColorModeValue(githubLight, githubDark);
+    const menuBackground = useColorModeValue(
+        colorConfig.light.menuBackground,
+        colorConfig.dark.menuBackground
+    );
+
+    const title = useColorModeValue(
+        colorConfig.light.title,
+        colorConfig.dark.title
+    );
+
+    const tint = useColorModeValue(
+        colorConfig.light.tint,
+        colorConfig.dark.tint
+    );
+    const hoverBackground = useColorModeValue(
+        colorConfig.light.hoverBackground,
+        colorConfig.dark.hoverBackground
+    );
 
     return {
         backgroundColorSecondary,
@@ -29,5 +47,9 @@ export function useModeColors() {
         fontColor,
         border,
         codeMirror,
+        menuBackground,
+        title,
+        tint,
+        hoverBackground,
     };
 }

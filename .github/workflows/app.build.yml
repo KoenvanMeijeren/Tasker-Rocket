@@ -23,6 +23,16 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
+            - name: 'Create & configure env file'
+              shell: bash
+              run: |
+                touch .env
+                echo "GITHUB_CONTENT_REPOSITORY=Tasker-Rocket/Content" >> .env
+                echo "GITHUB_REPOSITORY_IS_PRIVATE=false" >> .env
+                echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env
+                echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env
+                cat .env
+
             - name: Install dependencies
               run: npm install
 
@@ -34,3 +44,12 @@ jobs:
 
             - name: Run TypeScript check
               run: npm run tsc
+
+            - name: Run build
+              run: npm run build
+
+            - name: 'Remove env file'
+              if: always()
+              shell: bash
+              run: |
+                rm .env

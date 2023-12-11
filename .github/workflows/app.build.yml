@@ -26,7 +26,11 @@ jobs:
             - name: 'Create & configure env file'
               shell: bash
               run: |
-                cp .env.example .env
+                touch .env
+                echo "GITHUB_CONTENT_REPOSITORY=Tasker-Rocket/Content" >> .env
+                echo "GITHUB_REPOSITORY_IS_PRIVATE=false" >> .env
+                echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env
+                echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" >> .env
                 cat .env
 
             - name: Install dependencies

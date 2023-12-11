@@ -1,6 +1,6 @@
 import supabase from '@/lib/supabase/db';
 import { Session } from '@supabase/supabase-js';
-import { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
 
 interface SessionContextTypes {

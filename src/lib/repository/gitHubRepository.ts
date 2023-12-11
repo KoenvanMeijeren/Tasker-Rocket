@@ -32,6 +32,12 @@ export const gitHubConfig = {
  */
 
 export function useGitHubContentTree(path: string, recursive = false) {
+    // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
+    // because next.js renders the app twice, once on server and once on client.
+    if (path === '/[...path]') {
+        path = '';
+    }
+
     path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
 
     const customToast = useCustomToast();

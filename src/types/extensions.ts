@@ -48,6 +48,7 @@ export const codeExtensions: CodeExtensions = {
     gitattributes: [],
     gitignore: [],
     npmrc: [],
+    yml: [],
 };
 
 export interface FileExtensionInfo {

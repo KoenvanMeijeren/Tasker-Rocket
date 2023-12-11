@@ -7,7 +7,11 @@ import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
 import { getEnvValue, EnvOptions } from '@/lib/utility/env';
-import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
+import {
+    GitHubTreeItem,
+    GithubTree,
+    GitHubRecursiveTree,
+} from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -57,6 +61,33 @@ export function useGitHubContentTree(path: string, recursive = false) {
     }
 
     return { data, isLoading, error };
+}
+
+/**
+ * Fetches recursively all items of a repository.
+ *
+ * The function constructs a parent tree for the given path by iteratively
+ * appending parent paths to the GitHub repository's content endpoint.
+ *
+ * Example tree:
+ * - Folder 1
+ * - - File 1.md
+ * - - File 2.md
+ * - - Folder 1.1
+ * - - - File 1.1.1.md
+ * - - - File 1.1.2.md
+ * - Folder 2
+ *
+ * Note: These items don't contain the content of the files.
+ */
+export function useGitHubRecursiveTree() {
+    const { session } = useContext(SessionContext);
+
+    return useImmutableDataFetcher<GitHubRecursiveTree>(fetchJsonData, {
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/git/trees/main?recursive=1`,
+        bearerToken: session?.provider_token ?? undefined,
+        isPrivateData: gitHubConfig.is_private,
+    });
 }
 
 /**

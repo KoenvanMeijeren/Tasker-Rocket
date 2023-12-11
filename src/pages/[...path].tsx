@@ -1,33 +1,60 @@
 'use client';
+
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
-import { useOpenedFileName } from '@/hooks/useOpenedFileName';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
+import {
+    useGitHubContentTree,
+    useGitHubRecursiveTree,
+} from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { recursiveTreeToParentTree } from '@/lib/utility/dataStructure';
+import { decodeUrl } from '@/lib/utility/uri';
+import { useOpenedFileName } from '@/hooks/useOpenedFileName';
 
 export default function ProjectContent() {
     const router = useRouter();
-    const path = removeQueryParamsFromURl(decodeURI(router.asPath));
-    const parent = path.split('/').pop();
+    const [currentParentItem, setCurrentParentItem] =
+        useState<GitHubTreeParentItem | null>(null);
+    const [parentTree, setParentTree] = useState<GitHubTreeParentItem[]>([]);
 
+    const path = decodeUrl(router.asPath).replaceAll('#', '');
     const openedFileName = useOpenedFileName();
     const { data, error, isLoading } = useGitHubContentTree(path);
+    const {
+        data: parentData,
+        isLoading: parentIsLoading,
+        error: parentError,
+    } = useGitHubRecursiveTree();
 
-    if (error) {
+    useEffect(() => {
+        if (!parentData) return;
+
+        const buildParentTree: GitHubTreeParentItem[] =
+            recursiveTreeToParentTree(path, parentData);
+        if (!buildParentTree || buildParentTree.length < 1) return;
+
+        setParentTree(buildParentTree);
+        if (buildParentTree) {
+            setCurrentParentItem(buildParentTree[0]);
+        }
+    }, [path, parentData]);
+
+    if (error || parentError) {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || !data) {
+    if (isLoading || parentIsLoading) {
         return <LoadingIndicator />;
     }
 
     return (
         <ProjectView
+            currentParent={currentParentItem}
             data={data as GitHubTreeItem[]}
             openedFileName={openedFileName}
-            parent={parent || ''}
+            parentTree={parentTree}
         />
     );
 }

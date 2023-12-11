@@ -36,6 +36,8 @@ export const colorConfig = {
         hoverBackground: '#e8eaf3',
     },
     green: '#239964',
+    blue: '#3b82f6',
+    red: '#ef4444',
     grey: '#464b53',
     iconGrey: '#768390',
 };

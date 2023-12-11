@@ -296,8 +296,8 @@ const FileContentView = observer((props: Props) => {
                                     )}
                                     <Text fontWeight="medium">
                                         {isItemCompleted
-                                            ? 'In progress'
-                                            : 'Done'}
+                                            ? 'Activate task'
+                                            : 'Complete task'}
                                     </Text>
                                 </Box>
                             </button>

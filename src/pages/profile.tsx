@@ -13,8 +13,8 @@ import {
     TabPanels,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
-import DeleteAccountTab from './profileTabs/deleteAccount';
-import ChangeProfileInfoTab from './profileTabs/changeProfileInfo';
+import DeleteAccountTab from '../components/profile/tabs/DeleteAccountTab';
+import ChangeProfileInfoTab from '../components/profile/tabs/ChangeProfileInfoTab';
 
 export default function Profile() {
     const { session } = useContext(SessionContext);

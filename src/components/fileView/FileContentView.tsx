@@ -105,8 +105,7 @@ const FileContentView = observer((props: Props) => {
 
     useEffect(() => {
         if (progressData === undefined) return;
-        console.log(progressData);
-        // store.gitHubItems.initState(progressData.state);
+        store.gitHubItems.initState(progressData.state);
     }, [progressData, store.gitHubItems]);
 
     const toggleTaskCompleted = () => {

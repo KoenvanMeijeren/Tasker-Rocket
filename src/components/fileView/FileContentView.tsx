@@ -27,8 +27,9 @@ import {
     Flex,
     Text,
     useDisclosure,
+    useFormControlStyles,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import {
     FaFile,
     FaFileAudio,
@@ -51,6 +52,10 @@ import { useStore } from '@/lib/store';
 import { parentRootKey } from '@/lib/utility/dataStructure';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
+import { SessionContext } from '@/providers/SessionProvider';
+import supabase from '@/lib/supabase/db';
+import { useUserProgress } from '@/hooks/useUserProgress';
+import { useCustomToast } from '@/lib/utility/toast';
 
 type Props = {
     name: string;
@@ -77,6 +82,7 @@ const FileContentView = observer((props: Props) => {
     const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
         defaultIsOpen,
     });
+
     // Update the 'isOpen' state when 'defaultIsOpen' changes
     useEffect(() => {
         return defaultIsOpen ? onOpen() : onClose();
@@ -95,12 +101,22 @@ const FileContentView = observer((props: Props) => {
         uniqueKey
     );
 
+    const { progressData, upsertDataToDatabase } = useUserProgress();
+
+    useEffect(() => {
+        if (progressData === undefined) return;
+        console.log(progressData);
+        // store.gitHubItems.initState(progressData.state);
+    }, [progressData, store.gitHubItems]);
+
     const toggleTaskCompleted = () => {
         store.gitHubItems.toggleCompletedInTree({
             parentTree: parentTree,
             parentKey: currentParent?.unique_key ?? parentRootKey,
             itemKey: uniqueKey,
         });
+
+        void upsertDataToDatabase();
     };
 
     useEffect(() => {

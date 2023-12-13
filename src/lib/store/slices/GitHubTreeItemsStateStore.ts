@@ -22,8 +22,13 @@ export class GitHubTreeItemsStateStore {
         makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
+    public initState(data: GitHubTreeItemsState) {
+        // init state
+        this.state = data;
+    }
+
     /**
-     * Initializes the tree with the given parentKey and children.
+     * Initializes the tree with the given parentKey and children.s
      *
      * It is important to call this method ASAP while traversing the tree.
      * This method will ensure that the parentKey exists in the state and

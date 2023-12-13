@@ -7,6 +7,7 @@ import { GitHubTreeItem } from '@/types/gitHubData';
 export default function Home() {
     const { data, error, isLoading } = useGitHubContentTree('');
     const openedFileName = useOpenedFileName();
+
     if (error) {
         return <div>laden mislukt...</div>;
     }
@@ -14,6 +15,7 @@ export default function Home() {
     if (isLoading || !data) {
         return <LoadingIndicator />;
     }
+
     return (
         <ProjectView
             currentParent={undefined}

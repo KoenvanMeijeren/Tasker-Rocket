@@ -3,16 +3,17 @@ import supabase from '@/lib/supabase/db';
 import { useContext, useEffect, useState } from 'react';
 import { SessionContext } from '@/providers/SessionProvider';
 import { useStore } from '@/lib/store';
+import { GitHubTreeItemsState } from '@/lib/store/slices/GitHubTreeItemsStateStore';
 
 interface ProgressData {
-    state: string;
+    state: GitHubTreeItemsState;
 }
 
 export function useUserProgress() {
     const customToast = useCustomToast();
-    const [progressData, setProgressData] = useState<ProgressData>();
-    const { session } = useContext(SessionContext);
     const store = useStore();
+    const { session } = useContext(SessionContext);
+    const [progressData, setProgressData] = useState<ProgressData>();
 
     const fetchData = async () => {
         const { data, error } = await supabase
@@ -38,10 +39,10 @@ export function useUserProgress() {
     }, []);
 
     /**
-     * upsert database with new tree state
+     * update database with new tree state
      */
-    const upsertDataToDatabase = async () => {
-        const { error: errorData } = await supabase
+    const updateDataToDatabase = async () => {
+        const { error } = await supabase
             .from('users')
             .update([
                 {
@@ -49,12 +50,10 @@ export function useUserProgress() {
                 },
             ])
             .eq('user_id', session?.user.id);
-
-        if (errorData) {
-            //TODO: add error toast
-            console.log(errorData);
+        if (error) {
+            if (error) customToast(error.details, error.message, 'error');
         }
     };
 
-    return { progressData, upsertDataToDatabase };
+    return { progressData, updateDataToDatabase };
 }

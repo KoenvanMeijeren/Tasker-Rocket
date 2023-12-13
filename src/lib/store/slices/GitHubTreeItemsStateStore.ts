@@ -23,7 +23,6 @@ export class GitHubTreeItemsStateStore {
     }
 
     public initState(data: GitHubTreeItemsState) {
-        // init state
         this.state = data;
     }
 

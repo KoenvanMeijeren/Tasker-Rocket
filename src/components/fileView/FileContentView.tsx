@@ -27,9 +27,8 @@ import {
     Flex,
     Text,
     useDisclosure,
-    useFormControlStyles,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState, useContext } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     FaFile,
     FaFileAudio,
@@ -52,10 +51,7 @@ import { useStore } from '@/lib/store';
 import { parentRootKey } from '@/lib/utility/dataStructure';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
-import { SessionContext } from '@/providers/SessionProvider';
-import supabase from '@/lib/supabase/db';
 import { useUserProgress } from '@/hooks/useUserProgress';
-import { useCustomToast } from '@/lib/utility/toast';
 
 type Props = {
     name: string;
@@ -101,7 +97,7 @@ const FileContentView = observer((props: Props) => {
         uniqueKey
     );
 
-    const { progressData, upsertDataToDatabase } = useUserProgress();
+    const { progressData, updateDataToDatabase } = useUserProgress();
 
     useEffect(() => {
         if (progressData === undefined) return;
@@ -115,7 +111,7 @@ const FileContentView = observer((props: Props) => {
             itemKey: uniqueKey,
         });
 
-        void upsertDataToDatabase();
+        void updateDataToDatabase();
     };
 
     useEffect(() => {

@@ -20,15 +20,15 @@ export function makeSlicePersistable(
             })
                 .then(() => {
                     // Manually process the promise to silence errors on
-                    // server side.
+                    // server side. Localforage is only available on client side.
                 })
                 .catch(() => {
                     // Silence errors on server side, because localforage is
-                    // not available there.
+                    // not available there. Localforage is only available on client side.
                 });
         })
         .catch(() => {
             // Silence errors on server side, because localforage is not
-            // available there.
+            // available there. Localforage is only available on client side.
         });
 }

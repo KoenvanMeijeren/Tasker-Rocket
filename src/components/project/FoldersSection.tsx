@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
+import { gitHubConfig } from '@/lib/repository/gitHubRepository';
 
 type GitHubTreeFolder = {
     name: string;
@@ -28,6 +29,7 @@ type Props = {
 
 const FoldersSection = observer(({ data, label }: Props) => {
     const store = useStore();
+    const repository = gitHubConfig.content_repository;
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
@@ -44,12 +46,13 @@ const FoldersSection = observer(({ data, label }: Props) => {
                     unique_key: item.unique_key,
                     path: item.path,
                     completed: store.gitHubItems.isFolderCompleted(
+                        repository,
                         item.unique_key ?? ''
                     ),
                 } as GitHubTreeFolder;
             })
         );
-    }, [data, store.gitHubItems]);
+    }, [data, repository, store.gitHubItems]);
 
     return (
         <Box

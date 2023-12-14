@@ -1,65 +1,89 @@
 import { makeAutoObservable } from 'mobx';
-import { GitHubTreeParentItem } from '@/types/gitHubData';
+import { GithubTreeMenuItem, GitHubTreeParentItem } from '@/types/gitHubData';
 import { makeSlicePersistable } from '@/lib/store/hooks';
+import { isDir } from '@/lib/utility/dataStructure';
 
 export interface GitHubTreeItemsState {
-    [parentKey: string]: {
-        children: number;
-        childrenStatus: {
-            [taskKey: string]: boolean;
+    repositories: {
+        [repository: string]: {
+            tree: {
+                [parentKey: string]: {
+                    children: number;
+                    childrenStatus: {
+                        [taskKey: string]: boolean;
+                    };
+                };
+            };
         };
     };
 }
 
-/**
- * This store is used to keep track of the completed state of the GitHub tree.
- */
 export class GitHubTreeItemsStateStore {
-    public state: GitHubTreeItemsState = {};
+    public state: GitHubTreeItemsState = {
+        repositories: {},
+    };
 
     constructor() {
         makeAutoObservable(this);
         makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
-    /**
-     * Initializes the tree with the given parentKey and children.
-     *
-     * It is important to call this method ASAP while traversing the tree.
-     * This method will ensure that the parentKey exists in the state and
-     * initialize it with the given children. This method should be called
-     * before calling toggleCompletedInTree.
-     */
-    public initTree(payload: { unique_key: string; children: number }) {
-        const { unique_key: parentKey, children } = payload;
-        if (!parentKey) {
-            throw new Error('initTree called without a valid parentKey.');
-        }
+    public initTree(payload: {
+        repository: string;
+        items: Map<string, GithubTreeMenuItem>;
+    }) {
+        const { repository, items } = payload;
+        const newState = { ...this.state };
 
-        // Ensure the parentKey exists in the state
-        if (!this.state[parentKey]) {
-            this.state[parentKey] = {
-                children: children,
-                childrenStatus: {},
-            };
-            return;
-        }
+        items.forEach((item) => {
+            if (isDir(item)) return;
 
-        this.state[parentKey].children = children;
+            const { unique_key: parentKey, children } = item;
+            if (!parentKey) {
+                throw new Error('initTree called without a valid parentKey.');
+            }
+
+            if (!newState.repositories[repository]) {
+                newState.repositories[repository] = {
+                    tree: {
+                        [parentKey]: {
+                            children: children,
+                            childrenStatus: {},
+                        },
+                    },
+                };
+                return;
+            }
+
+            const repositoryState = this.state.repositories[repository];
+            if (!repositoryState) {
+                throw new Error(
+                    'initTree called without a valid repository state.'
+                );
+            }
+
+            if (!repositoryState.tree[parentKey]) {
+                repositoryState.tree[parentKey] = {
+                    children: children,
+                    childrenStatus: {},
+                };
+                return;
+            }
+
+            repositoryState.tree[parentKey].children = children;
+        });
+
+        this.state = newState;
     }
 
-    /**
-     * Toggles the completed state for the itemKey under the parentKey and
-     * all parentKeys up to the root.
-     */
     public toggleCompletedInTree(payload: {
+        repository: string;
         parentTree: GitHubTreeParentItem[];
         parentKey: string;
         itemKey: string;
     }) {
-        const { parentTree, parentKey, itemKey } = payload;
-
-        this.toggleCompleted(parentKey, itemKey);
+        const { repository, parentTree, parentKey, itemKey } = payload;
+        this.toggleCompleted(repository, parentKey, itemKey);
 
         let nextParentTreeItem: GitHubTreeParentItem | null = null;
         parentTree.forEach((parentTreeItem, index) => {
@@ -67,18 +91,32 @@ export class GitHubTreeItemsStateStore {
             if (!nextParentTreeItem) return;
 
             this.setFolderCompleted(
+                repository,
                 nextParentTreeItem.unique_key,
                 parentTreeItem.unique_key
             );
         });
     }
 
-    public isCompleted = (parentKey: string, itemKey: string): boolean => {
-        return this.state[parentKey]?.childrenStatus[itemKey];
+    public isCompleted = (
+        repository: string,
+        parentKey: string,
+        itemKey: string
+    ): boolean => {
+        const repositoryState = this.state.repositories[repository];
+        return (
+            repositoryState !== undefined &&
+            repositoryState.tree[parentKey]?.childrenStatus[itemKey]
+        );
     };
 
-    public isFolderCompleted = (parentKey: string): boolean => {
-        const parent = this.state[parentKey];
+    public isFolderCompleted = (
+        repository: string,
+        parentKey: string
+    ): boolean => {
+        const repositoryState = this.state.repositories[repository];
+        if (!repositoryState) return false;
+        const parent = repositoryState.tree[parentKey];
         if (!parent) return false;
 
         const completedChildren = Object.values(parent.childrenStatus).filter(
@@ -88,39 +126,43 @@ export class GitHubTreeItemsStateStore {
         return completedChildren.length === parent.children;
     };
 
-    /**
-     * Toggles the completed state for the itemKey under the parentKey.
-     */
-    private toggleCompleted = (parentKey: string, itemKey: string) => {
-        // Ensure the parentKey exists in the state
-        if (!this.state[parentKey]) {
-            this.state[parentKey] = {
+    private toggleCompleted = (
+        repository: string,
+        parentKey: string,
+        itemKey: string
+    ) => {
+        const repositoryState = this.state.repositories[repository];
+        if (!repositoryState)
+            throw new Error(`Repository '${repository}' state not found.`);
+
+        if (!repositoryState.tree[parentKey]) {
+            repositoryState.tree[parentKey] = {
                 children: 0,
                 childrenStatus: {},
             };
         }
 
-        // Toggle the completed state for the specific itemKey under the parentKey
-        this.state[parentKey].childrenStatus[itemKey] = !this.isCompleted(
-            parentKey,
-            itemKey
-        );
+        repositoryState.tree[parentKey].childrenStatus[itemKey] =
+            !this.isCompleted(repository, parentKey, itemKey);
     };
 
-    /**
-     * Sets the completed state of the folder for the item under the parent.
-     */
-    private setFolderCompleted = (parentKey: string, itemKey: string) => {
-        // Ensure the parentKey exists in the state
-        if (!this.state[parentKey]) {
-            this.state[parentKey] = {
+    private setFolderCompleted = (
+        repository: string,
+        parentKey: string,
+        itemKey: string
+    ) => {
+        const repositoryState = this.state.repositories[repository];
+        if (!repositoryState)
+            throw new Error(`Repository '${repository}' state not found.`);
+
+        if (!repositoryState.tree[parentKey]) {
+            repositoryState.tree[parentKey] = {
                 children: 0,
                 childrenStatus: {},
             };
         }
 
-        // Sets the completed state for the specific itemKey under the parentKey
-        this.state[parentKey].childrenStatus[itemKey] =
-            this.isFolderCompleted(itemKey);
+        repositoryState.tree[parentKey].childrenStatus[itemKey] =
+            this.isFolderCompleted(repository, itemKey);
     };
 }

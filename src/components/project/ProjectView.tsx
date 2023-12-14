@@ -21,11 +21,13 @@ export function ProjectView({
     openedFileName,
     parent,
     parentTree,
+    repository,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     openedFileName: string;
     parent?: GitHubTreeParentItem | undefined | null;
     parentTree?: GitHubTreeParentItem[];
+    repository: string;
 }) {
     const [content, setContent] = useState<Data | null>(null);
 
@@ -66,6 +68,7 @@ export function ProjectView({
                                 lastItem={index == content.files.length - 1}
                                 name={item.name}
                                 parentTree={parentTree ?? []}
+                                repository={repository}
                                 uniqueKey={item.unique_key ?? item.url}
                             />
                         </Box>

@@ -3,7 +3,10 @@
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
 import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
+import {
+    gitHubConfig,
+    useGitHubContentTree,
+} from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { decodeUrl } from '@/lib/utility/uri';
@@ -16,6 +19,7 @@ const ProjectContent = observer(() => {
     const router = useRouter();
     const store = useStore();
     const path = decodeUrl(router.asPath).replaceAll('#', '');
+    const repository = gitHubConfig.content_repository;
 
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
@@ -49,6 +53,7 @@ const ProjectContent = observer(() => {
             openedFileName={openedFileName}
             parent={parent}
             parentTree={parentTree}
+            repository={repository}
         />
     );
 });

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useGitHubTree } from '@/lib/repository/gitHubRepository';
-import { buildIndexedGitHubTree, isDir } from '@/lib/utility/dataStructure';
+import { gitHubConfig, useGitHubTree } from '@/lib/repository/gitHubRepository';
+import { buildIndexedGitHubTree } from '@/lib/utility/dataStructure';
 import { useStore } from '@/lib/store';
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 
 export default function AppInitializerProvider({ children }: Props) {
     const store = useStore();
+    const repository = gitHubConfig.content_repository;
     const { data, isLoading } = useGitHubTree();
 
     useEffect(() => {
@@ -17,15 +18,11 @@ export default function AppInitializerProvider({ children }: Props) {
         const result = buildIndexedGitHubTree(data.tree);
         store.indexedTree.initialize(result.items, result.menuTree);
 
-        result.items.forEach((item) => {
-            if (!isDir(item)) return;
-
-            store.gitHubItems.initTree({
-                unique_key: item.unique_key,
-                children: item.children,
-            });
+        store.gitHubItems.initTree({
+            repository,
+            items: result.items,
         });
-    }, [data, isLoading, store.gitHubItems, store.indexedTree]);
+    }, [data, isLoading, repository, store.gitHubItems, store.indexedTree]);
 
     return children;
 }

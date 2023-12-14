@@ -1,6 +1,6 @@
 import { GitHubTreeItemsStateStore } from '@/lib/store/slices/GitHubTreeItemsStateStore';
 
-export class RootStore {
+export class MobxStore {
     public readonly gitHubItems: GitHubTreeItemsStateStore;
 
     constructor() {

@@ -20,6 +20,11 @@ export default function ProjectContent() {
     const [parentTree, setParentTree] = useState<GitHubTreeParentItem[]>([]);
 
     const path = decodeUrl(router.asPath).replaceAll('#', '');
+
+    // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
+    // because next.js renders the app twice, once on server and once on client.
+    const isEmptyPath = path === '/[...path]';
+
     const openedFileName = useOpenedFileName();
     const { data, error, isLoading } = useGitHubContentTree(path);
     const {
@@ -45,7 +50,7 @@ export default function ProjectContent() {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || parentIsLoading) {
+    if (isLoading || parentIsLoading || isEmptyPath) {
         return <LoadingIndicator />;
     }
 

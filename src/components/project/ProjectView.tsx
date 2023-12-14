@@ -6,7 +6,6 @@ import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
-import { useStore } from '@/lib/store';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')
@@ -25,22 +24,16 @@ export function ProjectView({
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     openedFileName: string;
-    currentParent: GitHubTreeParentItem | undefined | null;
-    parentTree: GitHubTreeParentItem[];
+    currentParent?: GitHubTreeParentItem | undefined | null;
+    parentTree?: GitHubTreeParentItem[];
 }) {
-    const store = useStore();
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {
         if (!data) return;
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-
-        // Init the parent tree, so we can complete the tree items later.
-        parentTree.forEach((parentTreeItem) => {
-            store.gitHubItems.initTree(parentTreeItem);
-        });
-    }, [data, parentTree, store.gitHubItems]);
+    }, [data, parentTree]);
 
     if (!content) {
         return null;
@@ -72,7 +65,7 @@ export function ProjectView({
                                 key={item.url}
                                 lastItem={index == content.files.length - 1}
                                 name={item.name}
-                                parentTree={parentTree}
+                                parentTree={parentTree ?? []}
                                 uniqueKey={item.unique_key ?? item.url}
                             />
                         </Box>

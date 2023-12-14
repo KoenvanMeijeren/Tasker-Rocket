@@ -30,7 +30,7 @@ export class GitHubTreeItemsStateStore {
      * initialize it with the given children. This method should be called
      * before calling toggleCompletedInTree.
      */
-    public initTree(payload: GitHubTreeParentItem) {
+    public initTree(payload: { unique_key: string; children: number }) {
         const { unique_key: parentKey, children } = payload;
         if (!parentKey) {
             throw new Error('initTree called without a valid parentKey.');

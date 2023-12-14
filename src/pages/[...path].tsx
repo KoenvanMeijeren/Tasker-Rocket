@@ -3,22 +3,18 @@
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
 import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
-import {
-    useGitHubContentTree,
-    useGitHubRecursiveTree,
-} from '@/lib/repository/gitHubRepository';
+import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { recursiveTreeToParentTree } from '@/lib/utility/dataStructure';
+import { useEffect, useMemo, useState } from 'react';
 import { decodeUrl } from '@/lib/utility/uri';
 import { useOpenedFileName } from '@/hooks/useOpenedFileName';
+import { buildParentTreeForSearchPath } from '@/lib/utility/dataStructure';
+import { useStore } from '@/lib/store';
+import { observer } from 'mobx-react-lite';
 
-export default function ProjectContent() {
+const ProjectContent = observer(() => {
     const router = useRouter();
-    const [currentParentItem, setCurrentParentItem] =
-        useState<GitHubTreeParentItem | null>(null);
-    const [parentTree, setParentTree] = useState<GitHubTreeParentItem[]>([]);
-
+    const store = useStore();
     const path = decodeUrl(router.asPath).replaceAll('#', '');
 
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
@@ -27,39 +23,36 @@ export default function ProjectContent() {
 
     const openedFileName = useOpenedFileName();
     const { data, error, isLoading } = useGitHubContentTree(path);
-    const {
-        data: parentData,
-        isLoading: parentIsLoading,
-        error: parentError,
-    } = useGitHubRecursiveTree();
+
+    const [currentParent, setCurrentParent] =
+        useState<GitHubTreeParentItem | null>(null);
+    const parentTree: GitHubTreeParentItem[] = useMemo(() => {
+        return buildParentTreeForSearchPath(path, store.indexedTree.items);
+    }, [path, store.indexedTree]);
 
     useEffect(() => {
-        if (!parentData) return;
+        if (parentTree.length < 1) return;
 
-        const buildParentTree: GitHubTreeParentItem[] =
-            recursiveTreeToParentTree(path, parentData);
-        if (!buildParentTree || buildParentTree.length < 1) return;
+        setCurrentParent(parentTree[0]);
+    }, [parentTree]);
 
-        setParentTree(buildParentTree);
-        if (buildParentTree) {
-            setCurrentParentItem(buildParentTree[0]);
-        }
-    }, [path, parentData]);
-
-    if (error || parentError) {
+    if (error) {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || parentIsLoading || isEmptyPath) {
+    if (isLoading || isEmptyPath) {
         return <LoadingIndicator />;
     }
 
     return (
         <ProjectView
-            currentParent={currentParentItem}
+            currentParent={currentParent}
             data={data as GitHubTreeItem[]}
             openedFileName={openedFileName}
             parentTree={parentTree}
         />
     );
-}
+});
+
+ProjectContent.displayName = 'ProjectContent';
+export default ProjectContent;

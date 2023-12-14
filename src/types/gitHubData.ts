@@ -15,19 +15,17 @@ export interface GitHubTreeItem {
 
 export type GithubTreeMenuItem = {
     unique_key: string;
-    sha: string;
     path: string;
     name: string;
+    mode: string;
     type: string;
-    url: string;
-    tree: GithubTreeMenuItem[];
-};
-
-export type GithubTree = {
     sha: string;
-    tree: GithubTreeMenuItem[];
+    size: number;
     url: string;
-    truncated: boolean;
+    children: number;
+    isTopLevel: boolean;
+    isRoot: boolean;
+    tree: GithubTreeMenuItem[];
 };
 
 export type GitHubTreeParentItem = {
@@ -36,16 +34,17 @@ export type GitHubTreeParentItem = {
     children: number;
 };
 
-export interface GitHubRecursiveTree {
+export interface GitHubTree {
     sha: string;
-    tree: GitHubRecursiveTreeItem[];
+    tree: GitHubGitTreeItem[];
     truncated: boolean;
     url: string;
 }
 
-export interface GitHubRecursiveTreeItem {
+export interface GitHubGitTreeItem {
     unique_key: string;
     path: string;
+    name: string;
     mode: string;
     type: string;
     sha: string;

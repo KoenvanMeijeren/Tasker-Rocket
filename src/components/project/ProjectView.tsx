@@ -19,12 +19,12 @@ type Data = {
 export function ProjectView({
     data,
     openedFileName,
-    currentParent,
+    parent,
     parentTree,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     openedFileName: string;
-    currentParent?: GitHubTreeParentItem | undefined | null;
+    parent?: GitHubTreeParentItem | undefined | null;
     parentTree?: GitHubTreeParentItem[];
 }) {
     const [content, setContent] = useState<Data | null>(null);
@@ -33,7 +33,7 @@ export function ProjectView({
         if (!data) return;
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-    }, [data, parentTree]);
+    }, [data]);
 
     if (!content) {
         return null;
@@ -44,7 +44,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={currentParent?.name ?? repositoryName ?? 'Projecten'}
+                    label={parent?.name ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -60,7 +60,7 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
-                                currentParent={currentParent}
+                                currentParent={parent}
                                 defaultIsOpen={item.name === openedFileName}
                                 key={item.url}
                                 lastItem={index == content.files.length - 1}

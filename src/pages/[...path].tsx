@@ -24,8 +24,7 @@ const ProjectContent = observer(() => {
     const openedFileName = useOpenedFileName();
     const { data, error, isLoading } = useGitHubContentTree(path);
 
-    const [currentParent, setCurrentParent] =
-        useState<GitHubTreeParentItem | null>(null);
+    const [parent, setParent] = useState<GitHubTreeParentItem | null>(null);
     const parentTree: GitHubTreeParentItem[] = useMemo(() => {
         return buildParentTreeForSearchPath(path, store.indexedTree.items);
     }, [path, store.indexedTree]);
@@ -33,7 +32,7 @@ const ProjectContent = observer(() => {
     useEffect(() => {
         if (parentTree.length < 1) return;
 
-        setCurrentParent(parentTree[0]);
+        setParent(parentTree[0]);
     }, [parentTree]);
 
     if (error) {
@@ -46,9 +45,9 @@ const ProjectContent = observer(() => {
 
     return (
         <ProjectView
-            currentParent={currentParent}
             data={data as GitHubTreeItem[]}
             openedFileName={openedFileName}
+            parent={parent}
             parentTree={parentTree}
         />
     );

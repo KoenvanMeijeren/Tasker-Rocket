@@ -25,7 +25,7 @@ export class GitHubTreeItemsStateStore {
 
     constructor() {
         makeAutoObservable(this);
-        makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
+        void makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
     public initTree(payload: {
@@ -33,18 +33,18 @@ export class GitHubTreeItemsStateStore {
         items: Map<string, GithubTreeMenuItem>;
     }) {
         const { repository, items } = payload;
-        const newState = { ...this.state };
 
         items.forEach((item) => {
-            if (isDir(item)) return;
+            if (!isDir(item)) return;
 
             const { unique_key: parentKey, children } = item;
             if (!parentKey) {
                 throw new Error('initTree called without a valid parentKey.');
             }
 
-            if (!newState.repositories[repository]) {
-                newState.repositories[repository] = {
+            const repositoryState = this.state.repositories[repository];
+            if (!repositoryState) {
+                this.state.repositories[repository] = {
                     tree: {
                         [parentKey]: {
                             children: children,
@@ -55,25 +55,17 @@ export class GitHubTreeItemsStateStore {
                 return;
             }
 
-            const repositoryState = this.state.repositories[repository];
-            if (!repositoryState) {
-                throw new Error(
-                    'initTree called without a valid repository state.'
-                );
-            }
-
             if (!repositoryState.tree[parentKey]) {
-                repositoryState.tree[parentKey] = {
+                this.state.repositories[repository].tree[parentKey] = {
                     children: children,
                     childrenStatus: {},
                 };
                 return;
             }
 
-            repositoryState.tree[parentKey].children = children;
+            this.state.repositories[repository].tree[parentKey].children =
+                children;
         });
-
-        this.state = newState;
     }
 
     public toggleCompletedInTree(payload: {
@@ -114,9 +106,10 @@ export class GitHubTreeItemsStateStore {
         repository: string,
         parentKey: string
     ): boolean => {
-        const repositoryState = this.state.repositories[repository];
+        const repositoryState = this.state.repositories[repository] ?? null;
         if (!repositoryState) return false;
-        const parent = repositoryState.tree[parentKey];
+
+        const parent = repositoryState.tree[parentKey] ?? null;
         if (!parent) return false;
 
         const completedChildren = Object.values(parent.childrenStatus).filter(
@@ -132,8 +125,9 @@ export class GitHubTreeItemsStateStore {
         itemKey: string
     ) => {
         const repositoryState = this.state.repositories[repository];
-        if (!repositoryState)
+        if (!repositoryState) {
             throw new Error(`Repository '${repository}' state not found.`);
+        }
 
         if (!repositoryState.tree[parentKey]) {
             repositoryState.tree[parentKey] = {
@@ -152,8 +146,9 @@ export class GitHubTreeItemsStateStore {
         itemKey: string
     ) => {
         const repositoryState = this.state.repositories[repository];
-        if (!repositoryState)
+        if (!repositoryState) {
             throw new Error(`Repository '${repository}' state not found.`);
+        }
 
         if (!repositoryState.tree[parentKey]) {
             repositoryState.tree[parentKey] = {

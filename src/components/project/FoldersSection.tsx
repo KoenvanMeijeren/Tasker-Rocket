@@ -29,7 +29,6 @@ type Props = {
 
 const FoldersSection = observer(({ data, label }: Props) => {
     const store = useStore();
-    const repository = gitHubConfig.content_repository;
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
@@ -38,21 +37,22 @@ const FoldersSection = observer(({ data, label }: Props) => {
     const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);
 
     useEffect(() => {
-        setFolders(
-            data.map((item: GitHubTreeItem) => {
-                return {
-                    name: item.name,
-                    url: item.url,
-                    unique_key: item.unique_key,
-                    path: item.path,
-                    completed: store.gitHubItems.isFolderCompleted(
-                        repository,
-                        item.unique_key ?? ''
-                    ),
-                } as GitHubTreeFolder;
-            })
-        );
-    }, [data, repository, store.gitHubItems]);
+        const repository = gitHubConfig.content_repository;
+        const newFolders = data.map((item: GitHubTreeItem) => {
+            return {
+                name: item.name,
+                url: item.url,
+                unique_key: item.unique_key,
+                path: item.path,
+                completed: store.gitHubItems.isFolderCompleted(
+                    repository,
+                    item.unique_key ?? ''
+                ),
+            } as GitHubTreeFolder;
+        });
+
+        setFolders(newFolders);
+    }, [data, store.gitHubItems]);
 
     return (
         <Box

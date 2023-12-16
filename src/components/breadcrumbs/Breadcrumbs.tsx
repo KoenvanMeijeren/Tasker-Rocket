@@ -20,7 +20,10 @@ function pathToBreadcrumbs(path: string): {
     path: string;
 }[] {
     const url = removeQueryParamsFromURl(decodeUrl(path));
-    if (url.length < 1 || url === '/') {
+    // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
+    // because next.js renders the app twice, once on server and once on client.
+    const isEmptyPath = path === '/[...path]';
+    if (url.length < 1 || url === '/' || isEmptyPath) {
         return [];
     }
 

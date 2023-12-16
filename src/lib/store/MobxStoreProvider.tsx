@@ -1,11 +1,11 @@
 import React, { createContext, useMemo } from 'react';
 import { useStore } from '@/lib/store';
-import { RootStore } from '@/lib/store/RootStore';
+import { MobxStore } from '@/lib/store/MobxStore';
 
-export function RootStoreProvider({ children }: { children: React.ReactNode }) {
+export function MobxStoreProvider({ children }: { children: React.ReactNode }) {
     const mobxStore = useStore();
     const MobxContext = useMemo(
-        () => createContext<RootStore>(mobxStore),
+        () => createContext<MobxStore>(mobxStore),
         [mobxStore]
     );
 

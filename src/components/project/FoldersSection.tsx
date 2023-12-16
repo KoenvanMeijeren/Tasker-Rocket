@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
+import { gitHubConfig } from '@/lib/repository/gitHubRepository';
 
 type GitHubTreeFolder = {
     name: string;
@@ -36,19 +37,21 @@ const FoldersSection = observer(({ data, label }: Props) => {
     const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);
 
     useEffect(() => {
-        setFolders(
-            data.map((item: GitHubTreeItem) => {
-                return {
-                    name: item.name,
-                    url: item.url,
-                    unique_key: item.unique_key,
-                    path: item.path,
-                    completed: store.gitHubItems.isFolderCompleted(
-                        item.unique_key ?? ''
-                    ),
-                } as GitHubTreeFolder;
-            })
-        );
+        const repository = gitHubConfig.content_repository;
+        const newFolders = data.map((item: GitHubTreeItem) => {
+            return {
+                name: item.name,
+                url: item.url,
+                unique_key: item.unique_key,
+                path: item.path,
+                completed: store.gitHubItems.isFolderCompleted(
+                    repository,
+                    item.unique_key ?? ''
+                ),
+            } as GitHubTreeFolder;
+        });
+
+        setFolders(newFolders);
     }, [data, store.gitHubItems]);
 
     return (

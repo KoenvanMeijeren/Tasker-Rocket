@@ -1,21 +1,20 @@
 import { useModeColors } from '@/hooks/useModeColors';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { reconstructGithubTree } from '@/lib/utility/dataStructure';
 import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
-import { GithubTree, GithubTreeMenuItem } from '@/types/gitHubData';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
 
-export const SideBar = () => {
+const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
-    const { data } = useGitHubContentTree('', true);
-    const [tree, setTree] = useState<GithubTreeMenuItem[]>([]);
+    const store = useStore();
+    const menuItems = store.indexedTree.menuItems;
     const [navSize, toggleNavSize] = useState(NavSize.Large);
     const { menuBackground, tint } = useModeColors();
 
@@ -34,18 +33,10 @@ export const SideBar = () => {
         [navSize]
     );
 
-    useEffect(() => {
-        if (data) {
-            const reconstructedTree = reconstructGithubTree(
-                (data as GithubTree).tree
-            );
-            setTree(reconstructedTree);
-        }
-    }, [data]);
-
     if (!session) {
-        return;
+        return null;
     }
+
     return (
         <Stack
             bg={menuBackground}
@@ -81,7 +72,7 @@ export const SideBar = () => {
                 width="100%"
             >
                 <>
-                    {tree.map((item) => (
+                    {menuItems.map((item) => (
                         <NavItem
                             key={item.path}
                             navSize={navSize}
@@ -121,4 +112,7 @@ export const SideBar = () => {
             </Flex>
         </Stack>
     );
-};
+});
+
+SideBar.displayName = 'SideBar';
+export default SideBar;

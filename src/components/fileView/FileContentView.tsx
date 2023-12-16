@@ -60,6 +60,7 @@ type Props = {
     uniqueKey: string;
     lastItem: boolean;
     parentTree: GitHubTreeParentItem[];
+    repository: string;
 };
 
 const FileContentView = observer((props: Props) => {
@@ -71,6 +72,7 @@ const FileContentView = observer((props: Props) => {
         defaultIsOpen,
         lastItem,
         parentTree,
+        repository,
     } = props;
 
     const store = useStore();
@@ -91,12 +93,14 @@ const FileContentView = observer((props: Props) => {
     const { data, error, isLoading } = useGitHubFileContent(contentUrl);
 
     const isItemCompleted = store.gitHubItems.isCompleted(
+        repository,
         currentParent?.unique_key ?? parentRootKey,
         uniqueKey
     );
 
     const toggleTaskCompleted = () => {
         store.gitHubItems.toggleCompletedInTree({
+            repository,
             parentTree: parentTree,
             parentKey: currentParent?.unique_key ?? parentRootKey,
             itemKey: uniqueKey,

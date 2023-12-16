@@ -6,7 +6,6 @@ import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
-import { useStore } from '@/lib/store';
 
 const repositoryName = getEnvValue(EnvOptions.GithubContentRepository)
     .split('/')
@@ -20,27 +19,23 @@ type Data = {
 export function ProjectView({
     data,
     openedFileName,
-    currentParent,
+    parent,
     parentTree,
+    repository,
 }: {
     data: GitHubTreeItem[] | GitHubTreeItem;
     openedFileName: string;
-    currentParent: GitHubTreeParentItem | undefined | null;
-    parentTree: GitHubTreeParentItem[];
+    parent?: GitHubTreeParentItem | undefined | null;
+    parentTree?: GitHubTreeParentItem[];
+    repository: string;
 }) {
-    const store = useStore();
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {
         if (!data) return;
 
         setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-
-        // Init the parent tree, so we can complete the tree items later.
-        parentTree.forEach((parentTreeItem) => {
-            store.gitHubItems.initTree(parentTreeItem);
-        });
-    }, [data, parentTree, store.gitHubItems]);
+    }, [data]);
 
     if (!content) {
         return null;
@@ -51,7 +46,7 @@ export function ProjectView({
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection
                     data={content.dirs}
-                    label={currentParent?.name ?? repositoryName ?? 'Projecten'}
+                    label={parent?.name ?? repositoryName ?? 'Projecten'}
                 />
             ) : null}
             <Stack
@@ -67,12 +62,13 @@ export function ProjectView({
                         <Box key={item.url}>
                             <FileContentView
                                 contentUrl={item.download_url ?? ''}
-                                currentParent={currentParent}
+                                currentParent={parent}
                                 defaultIsOpen={item.name === openedFileName}
                                 key={item.url}
                                 lastItem={index == content.files.length - 1}
                                 name={item.name}
-                                parentTree={parentTree}
+                                parentTree={parentTree ?? []}
+                                repository={repository}
                                 uniqueKey={item.unique_key ?? item.url}
                             />
                         </Box>

@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import Test from '../Test';
+import { render } from '../utils/TestUtils';
 
 // Describe the test case
 describe('MyComponent', () => {

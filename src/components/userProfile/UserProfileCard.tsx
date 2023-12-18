@@ -16,6 +16,7 @@ import { MdLogout } from 'react-icons/md';
 import useAuth from '@/hooks/useAuth';
 import { SessionContext } from '@/providers/SessionProvider';
 import Link from 'next/link';
+import { HiOutlineUserGroup } from 'react-icons/hi';
 
 export default function UserProfileCard() {
     const { signOut } = useAuth();
@@ -51,6 +52,16 @@ export default function UserProfileCard() {
                             <FaRegUser />
 
                             <Text>Profile</Text>
+                        </HStack>
+                    </MenuItem>
+                </Link>
+                <MenuDivider />
+                <Link href="/groups/">
+                    <MenuItem>
+                        <HStack>
+                            <HiOutlineUserGroup />
+
+                            <Text>Groups</Text>
                         </HStack>
                     </MenuItem>
                 </Link>

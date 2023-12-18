@@ -13,7 +13,7 @@ export const useCustomToast = () => {
             description: description,
             status: status,
             duration: 5000,
-            isClosable: false,
+            isClosable: true,
             position: 'bottom-right',
         });
     };

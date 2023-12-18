@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "lib": ["dom", "dom.iterable", "esnext"],
+        "lib": ["dom", "dom.iterable", "esnext", "es2017", "es5"],
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
         "noEmit": true,
         "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
+        "module": "es2015",
+        "moduleResolution": "node",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "jsx": "preserve",
@@ -20,8 +20,10 @@
         ],
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "baseUrl": "./src",
+        "types": ["cypress", "node"],
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ""],
     "exclude": ["node_modules", ".next", "assets", ".github"]
 }

@@ -19,9 +19,12 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = removeQueryParamsFromURl(decodeUrl(path));
+    let url = removeQueryParamsFromURl(decodeUrl(path));
     if (url.length < 1 || url === '/') {
         return [];
+    }
+    if (url.startsWith('/groups/info/')) {
+        url = '/groups/info';
     }
 
     const breadcrumbs = url.split('/');

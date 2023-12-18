@@ -18,7 +18,6 @@ export default function useAuth() {
             return;
         }
     }
-
     /**
      * SignOut user session with supabase
      */

@@ -42,6 +42,9 @@ jobs:
             - name: Run prettier
               run: npm run prettier
 
+            - name: Run E2E & component tests
+              run: npm run test
+              
             - name: Run TypeScript check
               run: npm run tsc
 

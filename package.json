@@ -15,7 +15,9 @@
         "lint:fix": "echo \"Running eslint\" && eslint \"src/**/*.ts{,x}\" --fix --max-warnings=0 --cache **/*.ts",
         "prettier": "echo \"Running prettier check\" && prettier . --check",
         "prettier:fix": "echo \"Running prettier\" && prettier . --write",
-        "tests": "npm run lint && npm run prettier && npm run tsc"
+        "tests": "npm run lint && npm run prettier && npm run tsc",
+        "cypress:open": "cypress open",
+        "test": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npx cypress run\""
     },
     "dependencies": {
         "@chakra-ui/card": "^2.2.0",
@@ -79,6 +81,7 @@
         "@types/react-copy-to-clipboard": "^5.0.5",
         "@typescript-eslint/eslint-plugin": "^6.2.1",
         "@typescript-eslint/parser": "^6.2.1",
+        "cypress": "^13.6.1",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-typescript": "^17.1.0",
         "eslint-config-prettier": "^9.0.0",

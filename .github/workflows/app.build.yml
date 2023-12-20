@@ -41,13 +41,13 @@ jobs:
 
             - name: Run prettier
               run: npm run prettier
+        
+            - name: Run TypeScript check
+              run: npm run tsc
 
             - name: Run E2E & component tests
               run: npm run test
               
-            - name: Run TypeScript check
-              run: npm run tsc
-
             - name: Run build
               run: npm run build
 

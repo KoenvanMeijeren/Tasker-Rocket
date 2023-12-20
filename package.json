@@ -15,9 +15,9 @@
         "lint:fix": "echo \"Running eslint\" && eslint \"src/**/*.ts{,x}\" --fix --max-warnings=0 --cache **/*.ts",
         "prettier": "echo \"Running prettier check\" && prettier . --check",
         "prettier:fix": "echo \"Running prettier\" && prettier . --write",
-        "tests": "npm run lint && npm run prettier && npm run tsc",
+        "tests": "npm run lint && npm run prettier && npm run tsc && npm run test:cypress",
         "cypress:open": "cypress open",
-        "test": "echo \"Running cypress tests\" && concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npx cypress run\""
+        "test:cypress": "echo \"Running cypress tests\" && concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npx cypress run\""
     },
     "dependencies": {
         "@chakra-ui/card": "^2.2.0",
@@ -49,6 +49,7 @@
         "@uiw/codemirror-theme-github": "^4.21.13",
         "@uiw/react-codemirror": "^4.21.13",
         "autoprefixer": "^10.4.14",
+        "concurrently": "^8.2.2",
         "eslint": "^8.49.0",
         "eslint-config-next": "^13.4.19",
         "github-markdown-css": "^5.2.0",

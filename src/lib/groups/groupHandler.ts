@@ -21,6 +21,5 @@ export async function createNewGroup(
     if (error) {
         console.error(error);
     }
-    console.log(data);
     return data;
 }

@@ -25,6 +25,8 @@ function pathToBreadcrumbs(path: string): {
     }
     if (url.startsWith('/groups/info/')) {
         url = '/groups/info';
+    } else if (url.startsWith('/groups/add/')) {
+        url = '/groups/add';
     }
 
     const breadcrumbs = url.split('/');

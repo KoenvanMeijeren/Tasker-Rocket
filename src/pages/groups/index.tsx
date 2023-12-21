@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import React, { useContext, useEffect, useState } from 'react';
 import supabase from '@/lib/supabase/db';
-import { Card } from '@chakra-ui/card';
-import { Box, Flex, Heading, LinkBox, Spacer, Text } from '@chakra-ui/layout';
+import { Card, CardBody } from '@chakra-ui/card';
+import { Divider, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
 import Link from 'next/link';
 import { useModeColors } from '@/hooks/useModeColors';
-import { FaChevronDown, FaChevronUp, FaPlus } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { createNewGroup } from '@/lib/groups/groupHandler';
 import {
     Button,
@@ -19,6 +20,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { useCustomToast } from '@/lib/utility/toast';
+import { GroupContext } from '@/providers/GroupProvider';
 
 export default function Index() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,10 +28,10 @@ export default function Index() {
     const [filterData, setFilterData] = React.useState<any[]>([]); // Provide proper type for data state
     const { backgroundColorSecondary } = useModeColors();
     const { isOpen, onOpen: onOpen, onClose } = useDisclosure();
-    const [warned, setWarnedStatus] = useState(false);
     const [groupName, setGroupName] = useState('');
     const [groupDescription, SetGroupDescription] = useState('');
     const customToast = useCustomToast();
+    const { deleteGroup } = useContext(GroupContext);
 
     const [order, setOrder] = useState('DSC');
 
@@ -103,25 +105,43 @@ export default function Index() {
                         description: string;
                     } // Provide explicit types for group object properties
                 ) => (
-                    <Link
-                        href={'/groups/info/' + group.group_id}
+                    <Card
+                        m={5}
                         key={group.group_id}
+                        _hover={{
+                            shadow: 'xl',
+                            transitionDuration: '0.4s',
+                            transitionTimingFunction: 'ease-in-out',
+                        }}
                     >
-                        <Card
-                            m={5}
-                            p={3}
-                            _hover={{
-                                shadow: 'xl',
-                                transitionDuration: '0.4s',
-                                transitionTimingFunction: 'ease-in-out',
+                        <Link href={'/groups/info/' + group.group_id}>
+                            <CardBody width="inherit">
+                                <Flex>
+                                    <Heading
+                                        fontSize="2xl"
+                                        size="md"
+                                        wordBreak="break-word"
+                                    >
+                                        {group.name}
+                                    </Heading>
+                                    <Spacer />
+                                </Flex>
+                                <Divider py={2} />
+                                <Text>{group.description}</Text>
+                            </CardBody>
+                        </Link>
+                        {/* <Button
+                            m={3}
+                            onClick={() => {
+                                console.log(
+                                    `group.group_id: ${group.group_id}`
+                                );
+                                deleteGroup(group.group_id);
                             }}
                         >
-                            <Heading size="md" pb={1} wordBreak="break-word">
-                                {group.name}
-                            </Heading>
-                            <Text>{group.description}</Text>
-                        </Card>
-                    </Link>
+                            <FaTrashAlt />
+                        </Button> */}
+                    </Card>
                 )
             )}
 

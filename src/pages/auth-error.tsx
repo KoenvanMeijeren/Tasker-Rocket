@@ -1,14 +1,14 @@
 import {
     Container,
-    Flex,
     Stack,
     Heading,
     HStack,
-    Text,
     Button,
+    VStack,
 } from '@chakra-ui/react';
 import { IoArrowRedoSharp } from 'react-icons/io5';
 import { useRouter } from 'next/router';
+import SadLaptop from '@/components/icons/SadLaptop';
 
 export default function AuthError() {
     const router = useRouter();
@@ -19,7 +19,8 @@ export default function AuthError() {
             px={{ base: '0', sm: '8' }}
             py={{ base: '12', md: '24' }}
         >
-            <Flex alignItems="center" direction="column" gap={20}>
+            <VStack gap={20}>
+                <SadLaptop />
                 <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
                     <Heading size={{ base: 'xl' }}>
                         Oops, there was an issue with authentication. Please try
@@ -33,13 +34,13 @@ export default function AuthError() {
                     }}
                     p={2}
                     size={{ base: '2xl' }}
+                    leftIcon={<IoArrowRedoSharp />}
                 >
                     <HStack>
-                        <IoArrowRedoSharp />
-                        <Text>Return to login page</Text>
+                        <Heading fontSize="xl">Return to login page</Heading>
                     </HStack>
                 </Button>
-            </Flex>
+            </VStack>
         </Container>
     );
 }

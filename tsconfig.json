@@ -29,7 +29,6 @@
         "./src/*"
       ]
     },
-    // "baseUrl": "./src/*",
     "types": [
       "cypress",
       "node"

@@ -15,9 +15,9 @@
         "lint:fix": "echo \"Running eslint\" && eslint \"src/**/*.ts{,x}\" --fix --max-warnings=0 --cache **/*.ts",
         "prettier": "echo \"Running prettier check\" && prettier . --check",
         "prettier:fix": "echo \"Running prettier\" && prettier . --write",
-        "tests": "npm run lint && npm run prettier && npm run tsc && npm run test:cypress",
+        "tests": "npm run lint && npm run prettier && npm run tsc && npm run cypress:run",
         "cypress:open": "cypress open",
-        "test:cypress": "echo \"Running cypress tests\" && concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npx cypress run\""
+        "cypress:run": "echo \"Running cypress tests\" && concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npx cypress run\""
     },
     "dependencies": {
         "@chakra-ui/card": "^2.2.0",
@@ -75,6 +75,7 @@
         "swr": "^2.2.0",
         "tailwindcss": "3.3.3",
         "typescript": "^5.2.2",
+        "wait-on": "^7.2.0",
         "xlsx": "^0.18.5"
     },
     "devDependencies": {

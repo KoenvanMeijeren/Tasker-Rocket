@@ -26,6 +26,7 @@ export default function Login() {
                             spacing={{ base: '2', md: '3' }}
                             textAlign="center"
                         >
+                            <h1 data-cy="heading">stom</h1>
                             <Heading marginBottom={2} size={{ base: 'xl' }}>
                                 Welcome to Tasker Rocket
                             </Heading>
@@ -33,6 +34,7 @@ export default function Login() {
                     </Stack>
                 </Stack>
                 <Button
+                    data-cy="login-button"
                     mt={4}
                     onClick={() => {
                         void signIn();

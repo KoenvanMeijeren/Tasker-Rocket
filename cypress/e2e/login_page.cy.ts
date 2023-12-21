@@ -7,11 +7,11 @@ describe('Check /login page', () => {
 
     // Check if the page contains a title
     it('should contain a title', () => {
-        cy.get('.chakra-heading').should('exist');
+        cy.get('[data-cy="heading"]').should('exist');
     });
 
     // Check if the page contains a login button
     it('should contain a login button', () => {
-        cy.get('.css-dvxtzn > .chakra-button').should('exist');
+        cy.get('[data-cy="login-button"]').should('exist');
     });
 });

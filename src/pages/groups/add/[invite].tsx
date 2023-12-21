@@ -42,9 +42,11 @@ async function addToGroup(group_id: string) {
 }
 
 export default function InvitePage() {
-    const router = useRouter();
     const [inviteData, setInviteData] = useState<InviteData>();
     const [userData, setUserData] = useState<UserData>();
+
+    const router = useRouter();
+    const { invite: routerInvite } = router.query;
 
     useEffect(() => {
         const fetchInviteData = async () => {
@@ -98,7 +100,7 @@ export default function InvitePage() {
 
         void fetchInviteData();
         void fetchUserData();
-    }, [router.query.invite]);
+    }, [routerInvite]);
 
     if (!inviteData) {
         return (

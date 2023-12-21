@@ -21,11 +21,16 @@ export default function Login() {
         >
             <Flex alignItems="center" direction="column">
                 <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
-                    <Heading marginBottom={2} size={{ base: 'xl' }}>
+                    <Heading
+                        data-cy="heading"
+                        marginBottom={2}
+                        size={{ base: 'xl' }}
+                    >
                         Welcome to Tasker Rocket
                     </Heading>
                 </Stack>
                 <Button
+                    data-cy="login-button"
                     mt={4}
                     onClick={() => {
                         void signIn();

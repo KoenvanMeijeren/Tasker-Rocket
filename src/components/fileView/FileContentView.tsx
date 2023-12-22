@@ -1,18 +1,6 @@
 /* eslint-disable react/jsx-max-depth */
-import AudioView from '@/components/fileView/AudioView';
-import CodeView from '@/components/fileView/CodeView';
-import MarkdownView from '@/components/fileView/MarkdownView';
-import OfficeFileView from '@/components/fileView/OfficeFileView';
-import PdfFileView from '@/components/fileView/PdfFileView';
-import VideoView from '@/components/fileView/VideoView';
 import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
-import {
-    removeFileExtension,
-    urlToFileExtension,
-} from '@/lib/utility/formatters';
-import { FileType, findFileInfo } from '@/types/extensions';
-import { File } from '@/types/file';
 import {
     CheckCircleIcon,
     ChevronDownIcon,
@@ -28,22 +16,8 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-    FaFile,
-    FaFileAudio,
-    FaFileCode,
-    FaFileExcel,
-    FaFileImage,
-    FaFilePdf,
-    FaFilePowerpoint,
-    FaFileVideo,
-    FaFileWord,
-    FaMarkdown,
-} from 'react-icons/fa6';
+import { useEffect } from 'react';
 import { colorConfig } from '../../../theme.config';
-import ExcelView from './ExcelView';
-import ImageView from './ImageView';
 import './fileContentView.css';
 import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
 import { observer } from 'mobx-react-lite';
@@ -51,6 +25,10 @@ import { useStore } from '@/lib/store';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
 import { useRepositoryContext } from '@/lib/repository/useRepository';
+import { useFile, useFileHandlers } from '@/lib/project/useFileViewHandler';
+import { useFileIcon } from '@/lib/project/useFileIcon';
+import { useFileContent } from '@/lib/project/useFileContent';
+import { useGitHubItemsStateHandlers } from '@/lib/project/useGitHubItemsStateHandlers';
 
 type Props = {
     item: GitHubTreeItem;
@@ -60,142 +38,26 @@ type Props = {
 };
 
 const FileContentView = observer((props: Props) => {
-    const { item, parentTree, defaultIsOpen, isLastItem } = props;
-    const { name, download_url: contentUrl, unique_key: uniqueKey } = item;
-    const { repository } = useRepositoryContext();
+    const { backgroundColorSecondary, border } = useModeColors();
 
-    const store = useStore();
+    const { item, parentTree, defaultIsOpen, isLastItem } = props;
+    const { download_url: contentUrl } = item;
+    const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
+    const file = useFile(item, data);
+    const icon = useFileIcon(file);
+    const { handleDownload } = useFileHandlers(file);
+    const { content, isFileViewable } = useFileContent(file);
+    const { isItemCompleted, toggleTaskCompleted } =
+        useGitHubItemsStateHandlers(item, parentTree);
+
     const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
         defaultIsOpen,
     });
+
     // Update the 'isOpen' state when 'defaultIsOpen' changes
     useEffect(() => {
         return defaultIsOpen ? onOpen() : onClose();
     }, [defaultIsOpen, onClose, onOpen]);
-
-    const [file, setFile] = useState<File | undefined>(undefined);
-    const [isFileViewable, setIsFileViewable] = useState(true);
-
-    const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
-    const { backgroundColorSecondary, border } = useModeColors();
-
-    const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
-
-    const isItemCompleted = store.gitHubItemsState.isCompleted(
-        repository,
-        parentTree.parent.unique_key,
-        uniqueKey
-    );
-
-    const toggleTaskCompleted = () => {
-        store.gitHubItemsState.toggleCompletedInTree(
-            repository,
-            parentTree.tree,
-            parentTree.parent.unique_key,
-            uniqueKey
-        );
-    };
-
-    useEffect(() => {
-        if (!data) return;
-
-        const extension = urlToFileExtension(name);
-        const fileInfo = findFileInfo(extension);
-        const itemName =
-            fileInfo.type === FileType.Markdown
-                ? removeFileExtension(name)
-                : name;
-
-        setFile({
-            name: itemName,
-            extension,
-            content: data,
-            fileType: fileInfo.type,
-            mimeType: fileInfo.mimeType,
-            downloadUrl: contentUrl ?? '',
-        });
-    }, [data, name, contentUrl]);
-
-    const handleDownload = useCallback(() => {
-        if (!file) return;
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(file.content);
-        // if file.name ends with .file.extension, remove the extension
-        const fileName = removeFileExtension(file.name);
-        link.download = fileName + '.' + file.extension;
-        link.click();
-    }, [file]);
-
-    const content = useMemo(() => {
-        if (!file) return;
-
-        if (file.content.length < 1) {
-            return <>Dit bestand bevat geen content.</>;
-        }
-
-        switch (file.fileType) {
-            case FileType.Markdown:
-                return <MarkdownView file={file} />;
-            case FileType.Image:
-                return <ImageView file={file} />;
-            case FileType.Code:
-                return <CodeView file={file} />;
-            case FileType.Pdf:
-                return <PdfFileView file={file} />;
-            case FileType.Audio:
-                return <AudioView file={file} />;
-            case FileType.Video:
-                return <VideoView file={file} />;
-            case FileType.Docx:
-                return <OfficeFileView file={file} />;
-            case FileType.PowerPoint:
-                return <OfficeFileView file={file} />;
-            case FileType.Excel:
-                return <ExcelView file={file} />;
-            case FileType.Unsupported:
-                setIsFileViewable(false);
-                return (
-                    <>
-                        De weergave van dit bestandstype wordt niet ondersteund.
-                        <Button
-                            className="btn btn-green"
-                            ml={3}
-                            onClick={handleDownload}
-                            size="sm"
-                        >
-                            <DownloadIcon mr={1} /> Download
-                        </Button>
-                    </>
-                );
-        }
-    }, [file, handleDownload]);
-
-    const icon = useMemo(() => {
-        if (!file) return;
-
-        switch (file.fileType) {
-            case FileType.Markdown:
-                return <FaMarkdown />;
-            case FileType.Image:
-                return <FaFileImage />;
-            case FileType.Code:
-                return <FaFileCode />;
-            case FileType.Pdf:
-                return <FaFilePdf />;
-            case FileType.Audio:
-                return <FaFileAudio />;
-            case FileType.Video:
-                return <FaFileVideo />;
-            case FileType.Docx:
-                return <FaFileWord />;
-            case FileType.PowerPoint:
-                return <FaFilePowerpoint />;
-            case FileType.Excel:
-                return <FaFileExcel />;
-            case FileType.Unsupported:
-                return <FaFile />;
-        }
-    }, [file]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -244,7 +106,7 @@ const FileContentView = observer((props: Props) => {
                     <ChevronDownIcon
                         boxSize={10}
                         color={colorConfig.iconGrey}
-                        transform={rotate}
+                        transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                         transition="all 0.2s linear"
                     />
                 </Box>

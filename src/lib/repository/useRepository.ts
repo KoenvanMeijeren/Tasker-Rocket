@@ -9,10 +9,8 @@ export const useRepositoryContext = () => {
         );
     }
 
-    return context;
-};
-
-export const useRepository = () => {
-    const { repository } = useRepositoryContext();
-    return repository;
+    return {
+        context,
+        repository: context.repository,
+    };
 };

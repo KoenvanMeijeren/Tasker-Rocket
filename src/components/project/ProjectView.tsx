@@ -5,7 +5,7 @@ import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
-import { useRepository } from '@/lib/repository/hooks';
+import { useRepositoryContext } from '@/lib/repository/useRepository';
 
 type Data = {
     dirs: GitHubTreeItem[];
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function ProjectView({ data, parentTree, openedFileName }: Props) {
-    const repository = useRepository();
+    const { repository } = useRepositoryContext();
     const [content, setContent] = useState<Data | null>(null);
 
     useEffect(() => {

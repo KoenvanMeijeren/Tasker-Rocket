@@ -50,7 +50,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
-import { useRepository } from '@/lib/repository/hooks';
+import { useRepositoryContext } from '@/lib/repository/useRepository';
 
 type Props = {
     item: GitHubTreeItem;
@@ -62,7 +62,7 @@ type Props = {
 const FileContentView = observer((props: Props) => {
     const { item, parentTree, defaultIsOpen, isLastItem } = props;
     const { name, download_url: contentUrl, unique_key: uniqueKey } = item;
-    const repository = useRepository();
+    const { repository } = useRepositoryContext();
 
     const store = useStore();
     const { isOpen, onToggle, onClose, onOpen } = useDisclosure({

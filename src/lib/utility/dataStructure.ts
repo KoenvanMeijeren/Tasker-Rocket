@@ -1,6 +1,6 @@
 import {
-    GitHubGitTreeItem,
-    GitHubTreeItem,
+    GitHubTreeGitItem,
+    GitHubTreeContentItem,
     GithubTreeMenuItem,
     GitHubTreeParentItem,
 } from '@/types/gitHubData';
@@ -13,15 +13,15 @@ export function hasKeyInMap(map: object, key: string): boolean {
 }
 
 export const isDir = (
-    file: GitHubTreeItem | GitHubGitTreeItem | GithubTreeMenuItem
+    file: GitHubTreeContentItem | GitHubTreeGitItem | GithubTreeMenuItem
 ) => file.type === (GitHubTreeItemType.Dir as string) || file.type === 'tree';
 
 export const isFile = (
-    file: GitHubTreeItem | GitHubGitTreeItem | GithubTreeMenuItem
+    file: GitHubTreeContentItem | GitHubTreeGitItem | GithubTreeMenuItem
 ) => file.type === (GitHubTreeItemType.File as string) || !isDir(file);
 
 export const hashGitHubItem = (
-    item: GitHubTreeItem | GitHubGitTreeItem | GithubTreeMenuItem
+    item: GitHubTreeContentItem | GitHubTreeGitItem | GithubTreeMenuItem
 ) => {
     item.unique_key = objectHash({
         path: item.path,
@@ -30,9 +30,9 @@ export const hashGitHubItem = (
     });
 };
 
-export const splitFilesAndDirs = (data: GitHubTreeItem[]) => {
-    const dirs: GitHubTreeItem[] = [];
-    const files: GitHubTreeItem[] = [];
+export const splitFilesAndDirs = (data: GitHubTreeContentItem[]) => {
+    const dirs: GitHubTreeContentItem[] = [];
+    const files: GitHubTreeContentItem[] = [];
     data.forEach((item) => {
         hashGitHubItem(item);
 
@@ -61,7 +61,7 @@ export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
     return URL.createObjectURL(newBlob);
 };
 
-export function buildMenuTree(tree: GitHubGitTreeItem[]) {
+export function buildMenuTree(tree: GitHubTreeGitItem[]) {
     const result = new Map<string, GithubTreeMenuItem>();
     const menuTree: GithubTreeMenuItem[] = [];
     tree.forEach((item) => {
@@ -76,13 +76,11 @@ export function buildMenuTree(tree: GitHubGitTreeItem[]) {
             ...item,
             name: getFileNameFromUrl(item.path),
             tree: [],
-            children: 0,
             isTopLevel: pathParts.length === 0,
             isRoot: false,
         };
 
         if (parentItem) {
-            parentItem.children++;
             parentItem.tree.push(newItem);
         }
 
@@ -96,20 +94,20 @@ export function buildMenuTree(tree: GitHubGitTreeItem[]) {
     return menuTree;
 }
 
-export const parentRootKey = 'root';
 export const buildParentTreeForSearchPath = (
     inputSearchPath: string,
     menuTree: GithubTreeMenuItem[]
 ): GitHubTreeParentItem[] => {
     const result: GitHubTreeParentItem[] = [];
+    const rootItem: GitHubTreeParentItem = {
+        unique_key: 'root',
+        name: 'root',
+        children: 0,
+    };
 
     // When we don't have a tree, we assume that the root is the parent.
     if (menuTree.length < 1) {
-        result.push({
-            unique_key: parentRootKey,
-            name: 'root',
-            children: menuTree.length,
-        });
+        result.push(rootItem);
         return result;
     }
 
@@ -141,7 +139,7 @@ export const buildParentTreeForSearchPath = (
         result.unshift({
             unique_key: currentItem.unique_key,
             name: currentItem.name,
-            children: currentItem.children,
+            children: currentItem.tree.length,
         });
 
         currentTree = currentItem.tree || [];
@@ -149,8 +147,7 @@ export const buildParentTreeForSearchPath = (
 
     // Add the root item to the result.
     result.push({
-        unique_key: parentRootKey,
-        name: 'root',
+        ...rootItem,
         children: menuTree.length,
     });
 

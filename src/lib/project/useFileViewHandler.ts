@@ -4,10 +4,13 @@ import {
     urlToFileExtension,
 } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { File } from '@/types/file';
 
-export const useFile = (item: GitHubTreeItem, data: Blob | undefined) => {
+export const useFile = (
+    item: GitHubTreeContentItem,
+    data: Blob | undefined
+) => {
     const [file, setFile] = useState<File | undefined>(undefined);
 
     useEffect(() => {

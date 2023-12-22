@@ -1,5 +1,5 @@
 import { useModeColors } from '@/hooks/useModeColors';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { CheckCircleIcon, ChevronDownIcon, Icon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
@@ -23,7 +23,7 @@ type GitHubTreeFolder = {
 };
 
 type Props = {
-    data: GitHubTreeItem[];
+    data: GitHubTreeContentItem[];
     label: string;
 };
 
@@ -38,7 +38,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
     const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);
 
     useEffect(() => {
-        const newFolders = data.map((item: GitHubTreeItem) => {
+        const newFolders = data.map((item: GitHubTreeContentItem) => {
             return {
                 name: item.name,
                 url: item.url,

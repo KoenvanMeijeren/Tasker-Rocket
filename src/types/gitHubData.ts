@@ -1,25 +1,27 @@
 export interface GitHubTreeItem {
-    name: string;
+    unique_key: string; // Empty by default, needs to be manually set before usage.
     path: string;
+    type: string;
     sha: string;
-    unique_key: string;
     size: number;
     url: string;
+}
+
+export interface GitHubTreeContentItem extends GitHubTreeItem {
+    name: string;
     html_url: string;
     git_url: string;
     download_url: string | null;
     message: string | null;
     content: string | null;
-    type: string;
 }
 
-export type GithubTreeMenuItem = {
-    unique_key: string;
-    path: string;
+export interface GitHubTreeGitItem extends GitHubTreeItem {
+    mode: string;
+}
+
+export type GithubTreeMenuItem = GitHubTreeItem & {
     name: string;
-    type: string;
-    sha: string;
-    children: number;
     isTopLevel: boolean;
     isRoot: boolean;
     tree: GithubTreeMenuItem[];
@@ -31,25 +33,14 @@ export type GitHubTreeParentItem = {
     children: number;
 };
 
-export type GitHubParentTree = {
-    parent: GitHubTreeParentItem;
-    tree: GitHubTreeParentItem[];
-};
-
 export interface GitHubTree {
     sha: string;
-    tree: GitHubGitTreeItem[];
+    tree: GitHubTreeGitItem[];
     truncated: boolean;
     url: string;
 }
 
-export interface GitHubGitTreeItem {
-    unique_key: string;
-    path: string;
-    name: string;
-    mode: string;
-    type: string;
-    sha: string;
-    size: number;
-    url: string;
-}
+export type GitHubParentTree = {
+    parent: GitHubTreeParentItem;
+    tree: GitHubTreeParentItem[];
+};

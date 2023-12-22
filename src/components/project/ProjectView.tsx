@@ -1,6 +1,6 @@
 'use client';
 import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
-import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
 import { useEffect, useState } from 'react';
 import FoldersSection from './FoldersSection';
@@ -8,12 +8,12 @@ import FileContentView from '../fileView/FileContentView';
 import { useRepositoryContext } from '@/lib/repository/useRepository';
 
 type Data = {
-    dirs: GitHubTreeItem[];
-    files: GitHubTreeItem[];
+    dirs: GitHubTreeContentItem[];
+    files: GitHubTreeContentItem[];
 };
 
 type Props = {
-    data: GitHubTreeItem[] | GitHubTreeItem;
+    data: GitHubTreeContentItem[] | GitHubTreeContentItem;
     parentTree: GitHubParentTree;
     openedFileName: string;
 };
@@ -45,7 +45,7 @@ export function ProjectView({ data, parentTree, openedFileName }: Props) {
                 px="60px"
                 py="36px"
             >
-                {content.files.map((item: GitHubTreeItem, index) => {
+                {content.files.map((item: GitHubTreeContentItem, index) => {
                     return (
                         <Box key={item.url}>
                             <FileContentView

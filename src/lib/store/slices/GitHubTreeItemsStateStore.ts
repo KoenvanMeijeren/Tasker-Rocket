@@ -37,14 +37,14 @@ export class GitHubTreeItemsStateStore {
         items.forEach((item) => {
             if (!isDir(item)) return;
 
-            const { unique_key: uniqueKey, children } = item;
+            const { unique_key: uniqueKey, tree: treeItems } = item;
 
             if (!uniqueKey) {
                 throw new Error('initTree called without a valid unique key.');
             }
 
             tree[uniqueKey] = {
-                children,
+                children: treeItems.length,
                 childrenStatus: tree[uniqueKey]?.childrenStatus || {},
             };
 

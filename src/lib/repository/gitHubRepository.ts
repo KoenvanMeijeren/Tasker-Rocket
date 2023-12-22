@@ -7,7 +7,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
 import { getEnvValue, EnvOptions } from '@/lib/utility/env';
-import { GitHubTreeItem, GitHubTree } from '@/types/gitHubData';
+import { GitHubTreeContentItem, GitHubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -41,7 +41,7 @@ export function useGitHubTreeWithContent(path: string) {
     const customToast = useCustomToast();
     const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem
+        GitHubTreeContentItem[] | GitHubTreeContentItem
     >(fetchJsonData, {
         url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
         bearerToken: session?.provider_token ?? undefined,

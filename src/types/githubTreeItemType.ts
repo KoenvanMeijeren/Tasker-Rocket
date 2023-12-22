@@ -1,4 +1,4 @@
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
 
 export enum GitHubTreeItemType {
     Dir = 'dir',
@@ -6,6 +6,6 @@ export enum GitHubTreeItemType {
 }
 
 export type GithubContent = {
-    files: GitHubTreeItem[];
-    dirs: GitHubTreeItem[];
+    files: GitHubTreeContentItem[];
+    dirs: GitHubTreeContentItem[];
 };

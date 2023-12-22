@@ -1,9 +1,9 @@
 import { useStore } from '@/lib/store';
 import { useRepositoryContext } from '@/lib/repository/useRepository';
-import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 
 export const useGitHubItemsStateHandlers = (
-    item: GitHubTreeItem,
+    item: GitHubTreeContentItem,
     parentTree: GitHubParentTree
 ) => {
     const store = useStore();

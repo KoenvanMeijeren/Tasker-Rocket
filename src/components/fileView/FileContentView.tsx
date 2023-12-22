@@ -19,7 +19,7 @@ import {
 import { useEffect } from 'react';
 import { colorConfig } from '../../../theme.config';
 import './fileContentView.css';
-import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import VerticalDivider from '@/components/general/VerticalDivider';
@@ -31,7 +31,7 @@ import { useFileContent } from '@/lib/project/useFileContent';
 import { useGitHubItemsStateHandlers } from '@/lib/project/useGitHubItemsStateHandlers';
 
 type Props = {
-    item: GitHubTreeItem;
+    item: GitHubTreeContentItem;
     parentTree: GitHubParentTree;
     defaultIsOpen: boolean;
     isLastItem: boolean;

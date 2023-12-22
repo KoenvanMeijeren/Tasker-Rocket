@@ -2,7 +2,7 @@
 
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { useGitHubTreeWithContent } from '@/lib/repository/gitHubRepository';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { useOpenedFileName } from '@/hooks/useOpenedFileName';
@@ -26,7 +26,7 @@ const ProjectContent = observer(() => {
 
     return (
         <ProjectView
-            data={data as GitHubTreeItem[]}
+            data={data as GitHubTreeContentItem[]}
             openedFileName={openedFileName}
             parentTree={parentTree}
         />

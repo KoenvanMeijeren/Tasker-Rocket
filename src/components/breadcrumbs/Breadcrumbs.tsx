@@ -10,7 +10,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { BiSolidChevronRight } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
-import { decodeUrl } from '@/lib/utility/uri';
+import { useCurrentPath } from '@/lib/utility/uri';
 
 const excludedBreadcrumbs: string[] = ['#'];
 const removedBreadcrumbCharacters: string[] = ['.md'];
@@ -19,7 +19,7 @@ function pathToBreadcrumbs(path: string): {
     name: string;
     path: string;
 }[] {
-    const url = removeQueryParamsFromURl(decodeUrl(path));
+    const url = removeQueryParamsFromURl(path);
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
     const isEmptyPath = path === '/[...path]';
@@ -58,7 +58,8 @@ function pathToBreadcrumbs(path: string): {
 export function Breadcrumbs() {
     const { fontColor } = useModeColors();
     const router = useRouter();
-    const breadcrumbs = pathToBreadcrumbs(router.asPath);
+    const { path } = useCurrentPath();
+    const breadcrumbs = pathToBreadcrumbs(path);
     if (breadcrumbs.length < 1) {
         return null;
     }

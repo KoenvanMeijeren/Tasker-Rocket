@@ -80,7 +80,7 @@ export class GitHubTreeItemsStateStore {
         itemKey: string
     ): boolean => {
         const { tree } = this.state.repositories[repository];
-        return tree && tree[parentKey]?.childrenStatus[itemKey];
+        return tree[parentKey]?.childrenStatus[itemKey];
     };
 
     public isFolderCompleted = (

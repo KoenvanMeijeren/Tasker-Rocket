@@ -14,7 +14,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
-    const menuItems = store.indexedTree.menuItems;
+    const menuItems = store.menuTree.items;
     const [navSize, toggleNavSize] = useState(NavSize.Large);
     const { menuBackground, tint } = useModeColors();
 

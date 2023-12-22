@@ -31,7 +31,7 @@ export const gitHubConfig = {
  * - Folder 2
  */
 
-export function useGitHubContentTree(path: string) {
+export function useGitHubTreeWithContent(path: string) {
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
     if (path === '/[...path]') {

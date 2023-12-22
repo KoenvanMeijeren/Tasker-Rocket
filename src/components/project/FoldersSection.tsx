@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
-import { gitHubConfig } from '@/lib/repository/gitHubRepository';
+import { useRepository } from '@/lib/repository/hooks';
 
 type GitHubTreeFolder = {
     name: string;
@@ -29,6 +29,7 @@ type Props = {
 
 const FoldersSection = observer(({ data, label }: Props) => {
     const store = useStore();
+    const repository = useRepository();
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
@@ -37,14 +38,13 @@ const FoldersSection = observer(({ data, label }: Props) => {
     const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);
 
     useEffect(() => {
-        const repository = gitHubConfig.content_repository;
         const newFolders = data.map((item: GitHubTreeItem) => {
             return {
                 name: item.name,
                 url: item.url,
                 unique_key: item.unique_key,
                 path: item.path,
-                completed: store.gitHubItems.isFolderCompleted(
+                completed: store.gitHubItemsState.isFolderCompleted(
                     repository,
                     item.unique_key ?? ''
                 ),
@@ -52,7 +52,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
         });
 
         setFolders(newFolders);
-    }, [data, store.gitHubItems]);
+    }, [data, repository, store.gitHubItemsState]);
 
     return (
         <Box

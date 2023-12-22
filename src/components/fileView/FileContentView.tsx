@@ -45,35 +45,24 @@ import { colorConfig } from '../../../theme.config';
 import ExcelView from './ExcelView';
 import ImageView from './ImageView';
 import './fileContentView.css';
-import { GitHubTreeParentItem } from '@/types/gitHubData';
+import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
-import { parentRootKey } from '@/lib/utility/dataStructure';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
+import { useRepository } from '@/lib/repository/hooks';
 
 type Props = {
-    name: string;
-    contentUrl: string;
+    item: GitHubTreeItem;
+    parentTree: GitHubParentTree;
     defaultIsOpen: boolean;
-    currentParent: GitHubTreeParentItem | undefined | null;
-    uniqueKey: string;
-    lastItem: boolean;
-    parentTree: GitHubTreeParentItem[];
-    repository: string;
+    isLastItem: boolean;
 };
 
 const FileContentView = observer((props: Props) => {
-    const {
-        currentParent,
-        uniqueKey,
-        name,
-        contentUrl,
-        defaultIsOpen,
-        lastItem,
-        parentTree,
-        repository,
-    } = props;
+    const { item, parentTree, defaultIsOpen, isLastItem } = props;
+    const { name, download_url: contentUrl, unique_key: uniqueKey } = item;
+    const repository = useRepository();
 
     const store = useStore();
     const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
@@ -90,21 +79,21 @@ const FileContentView = observer((props: Props) => {
     const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, border } = useModeColors();
 
-    const { data, error, isLoading } = useGitHubFileContent(contentUrl);
+    const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
 
-    const isItemCompleted = store.gitHubItems.isCompleted(
+    const isItemCompleted = store.gitHubItemsState.isCompleted(
         repository,
-        currentParent?.unique_key ?? parentRootKey,
+        parentTree.parent.unique_key,
         uniqueKey
     );
 
     const toggleTaskCompleted = () => {
-        store.gitHubItems.toggleCompletedInTree({
+        store.gitHubItemsState.toggleCompletedInTree(
             repository,
-            parentTree: parentTree,
-            parentKey: currentParent?.unique_key ?? parentRootKey,
-            itemKey: uniqueKey,
-        });
+            parentTree.tree,
+            parentTree.parent.unique_key,
+            uniqueKey
+        );
     };
 
     useEffect(() => {
@@ -123,7 +112,7 @@ const FileContentView = observer((props: Props) => {
             content: data,
             fileType: fileInfo.type,
             mimeType: fileInfo.mimeType,
-            downloadUrl: contentUrl,
+            downloadUrl: contentUrl ?? '',
         });
     }, [data, name, contentUrl]);
 
@@ -311,7 +300,7 @@ const FileContentView = observer((props: Props) => {
                 </Collapse>
             </Box>
 
-            {!lastItem ? <VerticalDivider /> : null}
+            {!isLastItem ? <VerticalDivider /> : null}
         </>
     );
 });

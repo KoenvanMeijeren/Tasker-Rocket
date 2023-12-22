@@ -2,48 +2,45 @@
 
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
-import { GitHubTreeItem, GitHubTreeParentItem } from '@/types/gitHubData';
-import {
-    gitHubConfig,
-    useGitHubContentTree,
-} from '@/lib/repository/gitHubRepository';
+import { GitHubParentTree, GitHubTreeItem } from '@/types/gitHubData';
+import { useGitHubTreeWithContent } from '@/lib/repository/gitHubRepository';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
 import { decodeUrl } from '@/lib/utility/uri';
 import { useOpenedFileName } from '@/hooks/useOpenedFileName';
-import { buildParentTreeForSearchPath } from '@/lib/utility/dataStructure';
-import { useStore } from '@/lib/store';
 import { observer } from 'mobx-react-lite';
+import { useStore } from '@/lib/store';
+import { useEffect, useState } from 'react';
+import { buildParentTreeForSearchPath } from '@/lib/utility/dataStructure';
 
 const ProjectContent = observer(() => {
     const router = useRouter();
     const store = useStore();
+    const openedFileName = useOpenedFileName();
     const path = decodeUrl(router.asPath).replaceAll('#', '');
-    const repository = gitHubConfig.content_repository;
 
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
     const isEmptyPath = path === '/[...path]';
 
-    const openedFileName = useOpenedFileName();
-    const { data, error, isLoading } = useGitHubContentTree(path);
-
-    const [parent, setParent] = useState<GitHubTreeParentItem | null>(null);
-    const parentTree: GitHubTreeParentItem[] = useMemo(() => {
-        return buildParentTreeForSearchPath(path, store.indexedTree.items);
-    }, [path, store.indexedTree]);
+    const { data, error, isLoading } = useGitHubTreeWithContent(path);
+    const [parentTree, setParentTree] = useState<GitHubParentTree>();
 
     useEffect(() => {
-        if (parentTree.length < 1) return;
+        if (isEmptyPath) return;
 
-        setParent(parentTree[0]);
-    }, [parentTree]);
+        const menuTree = store.menuTree.items;
+        const result = buildParentTreeForSearchPath(path, menuTree);
+        setParentTree({
+            parent: result[0],
+            tree: result,
+        });
+    }, [isEmptyPath, path, store.menuTree.items]);
 
     if (error) {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || isEmptyPath) {
+    if (isLoading || isEmptyPath || !parentTree) {
         return <LoadingIndicator />;
     }
 
@@ -51,9 +48,7 @@ const ProjectContent = observer(() => {
         <ProjectView
             data={data as GitHubTreeItem[]}
             openedFileName={openedFileName}
-            parent={parent}
             parentTree={parentTree}
-            repository={repository}
         />
     );
 });

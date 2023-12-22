@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { gitHubConfig, useGitHubTree } from '@/lib/repository/gitHubRepository';
-import { buildIndexedGitHubTree } from '@/lib/utility/dataStructure';
+import { buildMenuTree } from '@/lib/utility/dataStructure';
 import { useStore } from '@/lib/store';
 
 type Props = {
@@ -15,14 +15,11 @@ export default function AppInitializerProvider({ children }: Props) {
     useEffect(() => {
         if (!data || isLoading) return;
 
-        const result = buildIndexedGitHubTree(data.tree);
-        store.indexedTree.initialize(result.items, result.menuTree);
+        const result = buildMenuTree(data.tree);
 
-        store.gitHubItems.initTree({
-            repository,
-            items: result.items,
-        });
-    }, [data, isLoading, repository, store.gitHubItems, store.indexedTree]);
+        store.menuTree.initialize(result);
+        store.gitHubItemsState.initTree(repository, result);
+    }, [data, isLoading, repository, store.gitHubItemsState, store.menuTree]);
 
     return children;
 }

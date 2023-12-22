@@ -1,13 +1,13 @@
 import { GitHubTreeItemsStateStore } from '@/lib/store/slices/GitHubTreeItemsStateStore';
-import { GitHubIndexedTreeStore } from '@/lib/store/slices/GitHubIndexedTreeStore';
+import { GitHubMenuTreeStore } from '@/lib/store/slices/GitHubMenuTreeStore';
 
 export class MobxStore {
-    public readonly gitHubItems: GitHubTreeItemsStateStore;
+    public readonly gitHubItemsState: GitHubTreeItemsStateStore;
 
-    public readonly indexedTree: GitHubIndexedTreeStore;
+    public readonly menuTree: GitHubMenuTreeStore;
 
     constructor() {
-        this.gitHubItems = new GitHubTreeItemsStateStore();
-        this.indexedTree = new GitHubIndexedTreeStore();
+        this.gitHubItemsState = new GitHubTreeItemsStateStore();
+        this.menuTree = new GitHubMenuTreeStore();
     }
 }

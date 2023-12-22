@@ -61,8 +61,7 @@ export const blobFileToUrl = (blob: Blob, mimeType: string): string => {
     return URL.createObjectURL(newBlob);
 };
 
-export const parentRootKey = 'root';
-export function buildIndexedGitHubTree(tree: GitHubGitTreeItem[]) {
+export function buildMenuTree(tree: GitHubGitTreeItem[]) {
     const result = new Map<string, GithubTreeMenuItem>();
     const menuTree: GithubTreeMenuItem[] = [];
     tree.forEach((item) => {
@@ -94,62 +93,66 @@ export function buildIndexedGitHubTree(tree: GitHubGitTreeItem[]) {
         }
     });
 
-    // Add the root item to the result.
-    result.set(parentRootKey, {
-        unique_key: parentRootKey,
-        path: '',
-        name: 'Root',
-        type: GitHubTreeItemType.Dir,
-        sha: parentRootKey,
-        size: 0,
-        mode: '',
-        url: '',
-        children: menuTree.length,
-        isTopLevel: true,
-        isRoot: true,
-        tree: [],
-    });
-
-    return {
-        items: result,
-        menuTree,
-    };
+    return menuTree;
 }
 
+export const parentRootKey = 'root';
 export const buildParentTreeForSearchPath = (
-    searchPath: string,
-    indexedItems: Map<string, GithubTreeMenuItem>
+    inputSearchPath: string,
+    menuTree: GithubTreeMenuItem[]
 ): GitHubTreeParentItem[] => {
     const result: GitHubTreeParentItem[] = [];
 
-    // Build the result array by traversing the search path parts
-    const searchPathParts = removeQueryParamsFromURl(searchPath)
+    // When we don't have a tree, we assume that the root is the parent.
+    if (menuTree.length < 1) {
+        result.push({
+            unique_key: parentRootKey,
+            name: 'root',
+            children: menuTree.length,
+        });
+        return result;
+    }
+
+    const searchPathParts = removeQueryParamsFromURl(inputSearchPath)
         .split('/')
         .filter(Boolean);
-    while (searchPathParts.length > 0) {
-        const currentPath = searchPathParts.join('/');
-        const item = indexedItems.get(currentPath);
-        searchPathParts.pop();
-        if (!item) {
-            return [];
+
+    let currentTree = menuTree;
+
+    let searchPath = '';
+    const firstItem = searchPathParts[0];
+    for (const searchPathPart of searchPathParts) {
+        if (searchPathPart !== firstItem) {
+            searchPath += '/';
+        }
+        searchPath += searchPathPart;
+
+        // Avoid unsafe references to the search path variable in the find current item closure.
+        const currentSearchPath = searchPath;
+        const currentItem = currentTree.find(
+            (item) => item.path === currentSearchPath
+        );
+        if (!currentItem) {
+            throw new Error(
+                `Could not find item for given search path in tree: ${searchPath}`
+            );
         }
 
-        result.push({
-            unique_key: item.unique_key,
-            name: item.path,
-            children: item.children,
+        result.unshift({
+            unique_key: currentItem.unique_key,
+            name: currentItem.name,
+            children: currentItem.children,
         });
+
+        currentTree = currentItem.tree || [];
     }
 
     // Add the root item to the result.
-    const rootItem = indexedItems.get(parentRootKey);
-    if (rootItem) {
-        result.push({
-            unique_key: parentRootKey,
-            name: rootItem.path,
-            children: rootItem.children,
-        });
-    }
+    result.push({
+        unique_key: parentRootKey,
+        name: 'root',
+        children: menuTree.length,
+    });
 
     return result;
 };

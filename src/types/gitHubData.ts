@@ -17,11 +17,8 @@ export type GithubTreeMenuItem = {
     unique_key: string;
     path: string;
     name: string;
-    mode: string;
     type: string;
     sha: string;
-    size: number;
-    url: string;
     children: number;
     isTopLevel: boolean;
     isRoot: boolean;
@@ -32,6 +29,11 @@ export type GitHubTreeParentItem = {
     unique_key: string;
     name: string;
     children: number;
+};
+
+export type GitHubParentTree = {
+    parent: GitHubTreeParentItem;
+    tree: GitHubTreeParentItem[];
 };
 
 export interface GitHubTree {

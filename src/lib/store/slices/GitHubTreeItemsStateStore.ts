@@ -28,53 +28,37 @@ export class GitHubTreeItemsStateStore {
         void makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
-    public initTree(payload: {
-        repository: string;
-        items: Map<string, GithubTreeMenuItem>;
-    }) {
-        const { repository, items } = payload;
+    public initTree(repository: string, items: GithubTreeMenuItem[]) {
+        if (!this.state.repositories[repository]) {
+            this.state.repositories[repository] = { tree: {} };
+        }
 
+        const { tree } = this.state.repositories[repository];
         items.forEach((item) => {
             if (!isDir(item)) return;
 
-            const { unique_key: parentKey, children } = item;
-            if (!parentKey) {
-                throw new Error('initTree called without a valid parentKey.');
+            const { unique_key: uniqueKey, children } = item;
+
+            if (!uniqueKey) {
+                throw new Error('initTree called without a valid unique key.');
             }
 
-            const repositoryState = this.state.repositories[repository];
-            if (!repositoryState) {
-                this.state.repositories[repository] = {
-                    tree: {
-                        [parentKey]: {
-                            children: children,
-                            childrenStatus: {},
-                        },
-                    },
-                };
-                return;
-            }
+            tree[uniqueKey] = {
+                children,
+                childrenStatus: tree[uniqueKey]?.childrenStatus || {},
+            };
 
-            if (!repositoryState.tree[parentKey]) {
-                this.state.repositories[repository].tree[parentKey] = {
-                    children: children,
-                    childrenStatus: {},
-                };
-                return;
-            }
-
-            this.state.repositories[repository].tree[parentKey].children =
-                children;
+            // Recursively initialize the tree, because we are dealing with a menu tree.
+            this.initTree(repository, item.tree);
         });
     }
 
-    public toggleCompletedInTree(payload: {
-        repository: string;
-        parentTree: GitHubTreeParentItem[];
-        parentKey: string;
-        itemKey: string;
-    }) {
-        const { repository, parentTree, parentKey, itemKey } = payload;
+    public toggleCompletedInTree(
+        repository: string,
+        parentTree: GitHubTreeParentItem[],
+        parentKey: string,
+        itemKey: string
+    ) {
         this.toggleCompleted(repository, parentKey, itemKey);
 
         let nextParentTreeItem: GitHubTreeParentItem | null = null;
@@ -82,7 +66,7 @@ export class GitHubTreeItemsStateStore {
             nextParentTreeItem = parentTree[index + 1] || null;
             if (!nextParentTreeItem) return;
 
-            this.setFolderCompleted(
+            this.updateFolderCompletedState(
                 repository,
                 nextParentTreeItem.unique_key,
                 parentTreeItem.unique_key
@@ -95,21 +79,18 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ): boolean => {
-        const repositoryState = this.state.repositories[repository];
-        return (
-            repositoryState !== undefined &&
-            repositoryState.tree[parentKey]?.childrenStatus[itemKey]
-        );
+        const { tree } = this.state.repositories[repository];
+        return tree && tree[parentKey]?.childrenStatus[itemKey];
     };
 
     public isFolderCompleted = (
         repository: string,
         parentKey: string
     ): boolean => {
-        const repositoryState = this.state.repositories[repository] ?? null;
-        if (!repositoryState) return false;
+        const { tree } = this.state.repositories[repository] ?? null;
+        if (!tree) return false;
 
-        const parent = repositoryState.tree[parentKey] ?? null;
+        const parent = tree[parentKey] ?? null;
         if (!parent) return false;
 
         const completedChildren = Object.values(parent.childrenStatus).filter(
@@ -124,40 +105,45 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ) => {
-        const repositoryState = this.state.repositories[repository];
-        if (!repositoryState) {
+        const { tree } = this.state.repositories[repository];
+        if (!tree) {
             throw new Error(`Repository '${repository}' state not found.`);
         }
 
-        if (!repositoryState.tree[parentKey]) {
-            repositoryState.tree[parentKey] = {
+        if (!tree[parentKey]) {
+            tree[parentKey] = {
                 children: 0,
                 childrenStatus: {},
             };
         }
 
-        repositoryState.tree[parentKey].childrenStatus[itemKey] =
-            !this.isCompleted(repository, parentKey, itemKey);
+        tree[parentKey].childrenStatus[itemKey] = !this.isCompleted(
+            repository,
+            parentKey,
+            itemKey
+        );
     };
 
-    private setFolderCompleted = (
+    private updateFolderCompletedState = (
         repository: string,
         parentKey: string,
         itemKey: string
     ) => {
-        const repositoryState = this.state.repositories[repository];
-        if (!repositoryState) {
+        const { tree } = this.state.repositories[repository];
+        if (!tree) {
             throw new Error(`Repository '${repository}' state not found.`);
         }
 
-        if (!repositoryState.tree[parentKey]) {
-            repositoryState.tree[parentKey] = {
+        if (!tree[parentKey]) {
+            tree[parentKey] = {
                 children: 0,
                 childrenStatus: {},
             };
         }
 
-        repositoryState.tree[parentKey].childrenStatus[itemKey] =
-            this.isFolderCompleted(repository, itemKey);
+        tree[parentKey].childrenStatus[itemKey] = this.isFolderCompleted(
+            repository,
+            itemKey
+        );
     };
 }

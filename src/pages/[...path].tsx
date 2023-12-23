@@ -8,13 +8,15 @@ import { useCurrentPath } from '@/lib/utility/uri';
 import { useOpenedFileName } from '@/hooks/useOpenedFileName';
 import { observer } from 'mobx-react-lite';
 import { useParentTree } from '@/lib/project/useParentTree';
+import { useStore } from '@/lib/store';
 
 const ProjectContent = observer(() => {
+    const store = useStore();
     const openedFileName = useOpenedFileName();
     const { path, isEmptyServerPath } = useCurrentPath();
 
     const { data, error, isLoading } = useGitHubTreeWithContent(path);
-    const parentTree = useParentTree();
+    const parentTree = useParentTree(store);
 
     if (error) {
         return <div>laden mislukt...</div>;

@@ -1,12 +1,12 @@
-import { useStore } from '@/lib/store';
 import { useRepositoryContext } from '@/lib/repository/useRepository';
 import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
+import { MobxStore } from '@/lib/store/MobxStore';
 
 export const useGitHubItemsStateHandlers = (
+    store: MobxStore,
     item: GitHubTreeContentItem,
     parentTree: GitHubParentTree
 ) => {
-    const store = useStore();
     const { repository } = useRepositoryContext();
     const { unique_key: uniqueKey } = item;
     const { tree, parent } = parentTree;

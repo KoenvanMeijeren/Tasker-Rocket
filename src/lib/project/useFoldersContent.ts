@@ -1,7 +1,7 @@
 import { GitHubTreeContentItem } from '@/types/gitHubData';
-import { useStore } from '@/lib/store';
 import { useRepositoryContext } from '@/lib/repository/useRepository';
 import { useEffect, useState } from 'react';
+import { MobxStore } from '@/lib/store/MobxStore';
 
 type GitHubTreeFolder = {
     name: string;
@@ -11,8 +11,10 @@ type GitHubTreeFolder = {
     completed: boolean;
 };
 
-export const useFoldersContent = (data: GitHubTreeContentItem[]) => {
-    const store = useStore();
+export const useFoldersContent = (
+    store: MobxStore,
+    data: GitHubTreeContentItem[]
+) => {
     const { repository } = useRepositoryContext();
 
     const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);

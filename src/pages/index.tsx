@@ -4,12 +4,14 @@ import { useOpenedFileName } from '@/hooks/useOpenedFileName';
 import { useGitHubTreeWithContent } from '@/lib/repository/gitHubRepository';
 import { useParentTree } from '@/lib/project/useParentTree';
 import { useCurrentPath } from '@/lib/utility/uri';
+import { useStore } from '@/lib/store';
 
 export default function Home() {
+    const store = useStore();
     const openedFileName = useOpenedFileName();
     const { data, error, isLoading } = useGitHubTreeWithContent('');
     const { isEmptyServerPath } = useCurrentPath();
-    const parentTree = useParentTree();
+    const parentTree = useParentTree(store);
 
     if (error) {
         return <div>laden mislukt...</div>;

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { GitHubParentTree } from '@/types/gitHubData';
 import { buildParentTreeForSearchPath } from '@/lib/utility/dataStructure';
-import { useStore } from '@/lib/store';
 import { useCurrentPath } from '@/lib/utility/uri';
+import { MobxStore } from '@/lib/store/MobxStore';
 
-export const useParentTree = () => {
-    const store = useStore();
+export const useParentTree = (store: MobxStore) => {
     const { path, isEmptyServerPath } = useCurrentPath();
     const [parentTree, setParentTree] = useState<GitHubParentTree>();
 

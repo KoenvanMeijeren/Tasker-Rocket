@@ -11,6 +11,7 @@ import Text from '../textStyles/Text';
 import { observer } from 'mobx-react-lite';
 import { RiTodoFill } from 'react-icons/ri';
 import { useFoldersContent } from '@/lib/project/useFoldersContent';
+import { useStore } from '@/lib/store';
 
 type Props = {
     data: GitHubTreeContentItem[];
@@ -18,7 +19,8 @@ type Props = {
 };
 
 const FoldersSection = observer(({ data, label }: Props) => {
-    const { folders } = useFoldersContent(data);
+    const store = useStore();
+    const { folders } = useFoldersContent(store, data);
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
         useModeColors();

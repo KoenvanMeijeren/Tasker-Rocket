@@ -40,6 +40,7 @@ export const codeExtensions: CodeExtensions = {
     java: [java()],
     sass: [sass()],
     cpp: [cpp()],
+    h: [cpp()],
     php: [php()],
     py: [python()],
     txt: [],
@@ -50,6 +51,8 @@ export const codeExtensions: CodeExtensions = {
     gitattributes: [],
     gitignore: [],
     npmrc: [],
+    sln: [],
+    vcxproj: [],
     yml: [],
     xml: [],
 };

@@ -23,10 +23,20 @@ export const isFile = (
 export const hashGitHubItem = (
     item: GitHubTreeContentItem | GitHubTreeGitItem | GithubTreeMenuItem
 ) => {
+    // Do not use the sha key of a directory item, because it changes when the content of the
+    // repository changes. We only want to use the sha if we are dealing with a file.
+    if (isFile(item)) {
+        item.unique_key = objectHash({
+            path: item.path,
+            type: GitHubTreeItemType.File,
+            sha: item.sha,
+        });
+        return;
+    }
+
     item.unique_key = objectHash({
         path: item.path,
-        sha: item.sha,
-        type: isDir(item) ? GitHubTreeItemType.Dir : GitHubTreeItemType.File,
+        type: GitHubTreeItemType.Dir,
     });
 };
 

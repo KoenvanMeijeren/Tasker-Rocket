@@ -9,18 +9,8 @@ import { FaFolderOpen } from 'react-icons/fa6';
 import Heading from '../textStyles/Heading';
 import Text from '../textStyles/Text';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@/lib/store';
-import { useEffect, useState } from 'react';
 import { RiTodoFill } from 'react-icons/ri';
-import { useRepositoryContext } from '@/lib/repository/useRepository';
-
-type GitHubTreeFolder = {
-    name: string;
-    url: string;
-    unique_key: string;
-    path: string;
-    completed: boolean;
-};
+import { useFoldersContent } from '@/lib/project/useFoldersContent';
 
 type Props = {
     data: GitHubTreeContentItem[];
@@ -28,31 +18,10 @@ type Props = {
 };
 
 const FoldersSection = observer(({ data, label }: Props) => {
-    const store = useStore();
-    const { repository } = useRepositoryContext();
+    const { folders } = useFoldersContent(data);
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
-    const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
         useModeColors();
-
-    const [folders, setFolders] = useState<GitHubTreeFolder[]>([]);
-
-    useEffect(() => {
-        const newFolders = data.map((item: GitHubTreeContentItem) => {
-            return {
-                name: item.name,
-                url: item.url,
-                unique_key: item.unique_key,
-                path: item.path,
-                completed: store.gitHubItemsState.isFolderCompleted(
-                    repository,
-                    item.unique_key ?? ''
-                ),
-            } as GitHubTreeFolder;
-        });
-
-        setFolders(newFolders);
-    }, [data, repository, store.gitHubItemsState]);
 
     return (
         <Box
@@ -77,7 +46,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
                 <ChevronDownIcon
                     boxSize={10}
                     color={colorConfig.iconGrey}
-                    transform={rotate}
+                    transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                     transition="all 0.2s linear"
                 />
             </Box>
@@ -101,7 +70,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
                     overflowX="auto"
                     py={3}
                 >
-                    {folders.map((item: GitHubTreeFolder) => {
+                    {folders.map((item) => {
                         return (
                             <Link
                                 href={`/${encodeURIComponent(item.path)}`}

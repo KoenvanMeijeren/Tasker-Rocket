@@ -1,16 +1,9 @@
 'use client';
-import { splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { Box, Stack } from '@chakra-ui/layout';
-import { useEffect, useState } from 'react';
 import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
-import { useRepositoryContext } from '@/lib/repository/useRepository';
-
-type Data = {
-    dirs: GitHubTreeContentItem[];
-    files: GitHubTreeContentItem[];
-};
+import { useProjectContent } from '@/lib/project/useProjectContent';
 
 type Props = {
     data: GitHubTreeContentItem[] | GitHubTreeContentItem;
@@ -19,15 +12,7 @@ type Props = {
 };
 
 export function ProjectView({ data, parentTree, openedFileName }: Props) {
-    const { repository } = useRepositoryContext();
-    const [content, setContent] = useState<Data | null>(null);
-
-    useEffect(() => {
-        if (!data) return;
-
-        setContent(splitFilesAndDirs(Array.isArray(data) ? data : [data]));
-    }, [data]);
-
+    const { content, repository } = useProjectContent(data);
     if (!content) {
         return null;
     }

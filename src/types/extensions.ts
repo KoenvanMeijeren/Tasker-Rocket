@@ -51,6 +51,7 @@ export const codeExtensions: CodeExtensions = {
     gitignore: [],
     npmrc: [],
     yml: [],
+    xml: [],
 };
 
 export interface FileExtensionInfo {

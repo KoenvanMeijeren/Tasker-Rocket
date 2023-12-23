@@ -12,6 +12,11 @@ export default function AppInitializerProvider({ children }: Props) {
     const repository = gitHubConfig.content_repository;
     const { data, isLoading } = useGitHubTree();
 
+    // Make sure that the repository is initialized, even if the data is not loaded yet.
+    useEffect(() => {
+        store.gitHubItemsState.initRepository(repository);
+    });
+
     useEffect(() => {
         if (!data || isLoading) return;
 

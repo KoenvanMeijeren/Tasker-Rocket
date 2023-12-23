@@ -28,10 +28,14 @@ export class GitHubTreeItemsStateStore {
         void makeSlicePersistable(this, 'gitHubTreeItemsState', ['state']);
     }
 
-    public initTree(repository: string, items: GithubTreeMenuItem[]) {
+    public initRepository(repository: string) {
         if (!this.state.repositories[repository]) {
             this.state.repositories[repository] = { tree: {} };
         }
+    }
+
+    public initTree(repository: string, items: GithubTreeMenuItem[]) {
+        this.initRepository(repository);
 
         const { tree } = this.state.repositories[repository];
         items.forEach((item) => {

@@ -6,6 +6,7 @@ import { java } from '@codemirror/lang-java';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
 import { php } from '@codemirror/lang-php';
+import { python } from '@codemirror/lang-python';
 import { sass } from '@codemirror/lang-sass';
 import { sql } from '@codemirror/lang-sql';
 import { LanguageSupport } from '@codemirror/language';
@@ -40,6 +41,7 @@ export const codeExtensions: CodeExtensions = {
     sass: [sass()],
     cpp: [cpp()],
     php: [php()],
+    py: [python()],
     txt: [],
     lock: [],
     editorconfig: [],

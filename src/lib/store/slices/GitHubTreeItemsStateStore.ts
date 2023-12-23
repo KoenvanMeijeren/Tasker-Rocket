@@ -38,8 +38,7 @@ export class GitHubTreeItemsStateStore {
             if (!isDir(item)) return;
 
             const { unique_key: uniqueKey, tree: treeItems } = item;
-
-            if (!uniqueKey) {
+            if (!uniqueKey || uniqueKey.length < 1) {
                 throw new Error('initTree called without a valid unique key.');
             }
 
@@ -59,6 +58,7 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ) {
+        this.assertRepositoryExists(repository);
         this.toggleCompleted(repository, parentKey, itemKey);
 
         let nextParentTreeItem: GitHubTreeParentItem | null = null;
@@ -79,6 +79,7 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ): boolean => {
+        this.assertRepositoryExists(repository);
         const { tree } = this.state.repositories[repository];
         return tree[parentKey]?.childrenStatus[itemKey];
     };
@@ -87,9 +88,8 @@ export class GitHubTreeItemsStateStore {
         repository: string,
         parentKey: string
     ): boolean => {
-        const { tree } = this.state.repositories[repository] ?? null;
-        if (!tree) return false;
-
+        this.assertRepositoryExists(repository);
+        const { tree } = this.state.repositories[repository];
         const parent = tree[parentKey] ?? null;
         if (!parent) return false;
 
@@ -105,11 +105,8 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ) => {
+        this.assertRepositoryExists(repository);
         const { tree } = this.state.repositories[repository];
-        if (!tree) {
-            throw new Error(`Repository '${repository}' state not found.`);
-        }
-
         if (!tree[parentKey]) {
             tree[parentKey] = {
                 children: 0,
@@ -129,11 +126,8 @@ export class GitHubTreeItemsStateStore {
         parentKey: string,
         itemKey: string
     ) => {
+        this.assertRepositoryExists(repository);
         const { tree } = this.state.repositories[repository];
-        if (!tree) {
-            throw new Error(`Repository '${repository}' state not found.`);
-        }
-
         if (!tree[parentKey]) {
             tree[parentKey] = {
                 children: 0,
@@ -146,4 +140,12 @@ export class GitHubTreeItemsStateStore {
             itemKey
         );
     };
+
+    private assertRepositoryExists(repository: string) {
+        if (!this.state.repositories[repository]) {
+            throw new Error(
+                `Repository ${repository} does not exist in the tree.`
+            );
+        }
+    }
 }

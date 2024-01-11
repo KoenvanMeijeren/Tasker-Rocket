@@ -1,8 +1,6 @@
 describe('Check /login page', () => {
-    const baseUrl = Cypress.config('baseUrl');
-
     beforeEach(() => {
-        cy.visit(`${baseUrl}/login`);
+        cy.visit(`/login`);
     });
 
     // Check if the page contains a title

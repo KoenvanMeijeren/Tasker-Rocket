@@ -21,21 +21,15 @@ import {
     Text,
     useDisclosure,
     Input,
-    FormControl,
     useClipboard,
     ModalFooter,
-    Popover,
-    Portal,
-    PopoverContent,
-    PopoverArrow,
-    PopoverHeader,
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import { FaClipboard } from 'react-icons/fa';
 import { MdAddLink, MdGroupAdd, MdLink, MdLinkOff } from 'react-icons/md';
 
 export default function GroupInfo() {
-    const [date, setExpirationDate] = useState<string>('');
+    const [date, setExpirationDate] = useState<string>();
     const { backgroundColorSecondary } = useModeColors();
     const {
         isOpen: isAddLinkOpen,
@@ -48,11 +42,19 @@ export default function GroupInfo() {
         onClose: onCloseNewLink,
     } = useDisclosure();
     const { onCopy, value: copyValue, setValue, hasCopied } = useClipboard('');
-    const createInputFormInvalid = date === '';
     const customToast = useCustomToast();
 
     const { groupData, deleteInvitation, addInvitation } =
         useContext(GroupContext);
+
+    const createInvitationHandler = async (groupData, date) => {
+        const data = await addInvitation(groupData.group_id, date);
+        setValue(
+            `localhost:3000/groups/add/${data.group_id}&${data.signature}`
+        );
+        onCloseAddLink();
+        onOpenNewLink();
+    };
 
     if (!groupData) {
         return <LoadingIndicator />;
@@ -130,7 +132,10 @@ export default function GroupInfo() {
                                         }
                                     </Text>
                                     <Text ml={2}>
-                                        Expires at: {invitation.expires_at}
+                                        Expires at:{' '}
+                                        {invitation.expires_at != null
+                                            ? invitation.expires_at
+                                            : 'Never'}
                                     </Text>
                                     <Spacer />
                                     <Button
@@ -153,32 +158,25 @@ export default function GroupInfo() {
                         <Divider mb={2} />
                         <Heading fontSize="xl">Create new invitation</Heading>
                         <Text>Expires at:</Text>
-                        <FormControl isInvalid={createInputFormInvalid}>
-                            <Flex>
-                                <Input
-                                    type="date"
-                                    value={date}
-                                    onChange={(d) =>
-                                        setExpirationDate(d.target.value)
-                                    }
-                                />
-                                <Button
-                                    _hover={{ backgroundColor: 'lightgreen' }}
-                                    onClick={() => {
-                                        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                                        addInvitation(
-                                            groupData.group_id,
-                                            date,
-                                            setValue
-                                        );
-                                        onCloseAddLink();
-                                        onOpenNewLink();
-                                    }}
-                                >
-                                    <MdAddLink size={30} />
-                                </Button>
-                            </Flex>
-                        </FormControl>
+
+                        <Flex>
+                            <Input
+                                type="date"
+                                value={date}
+                                onChange={(d) =>
+                                    setExpirationDate(d.target.value)
+                                }
+                            />
+                            <Button
+                                _hover={{ backgroundColor: 'lightgreen' }}
+                                onClick={() => {
+                                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                                    createInvitationHandler(groupData, date);
+                                }}
+                            >
+                                <MdAddLink size={30} />
+                            </Button>
+                        </Flex>
                     </Box>
                 </ModalContent>
             </Modal>
@@ -192,8 +190,12 @@ export default function GroupInfo() {
                     <ModalCloseButton />
                     <ModalBody>
                         <Text>
-                            It will expire on {date?.split('-')[2]}-
-                            {date?.split('-')[1]}-{date?.split('-')[0]}
+                            Expires at:{' '}
+                            {date
+                                ? `${date?.split('-')[2]}-${date?.split(
+                                      '-'
+                                  )[1]}-${date?.split('-')[0]}`
+                                : 'Never'}
                         </Text>
                     </ModalBody>
                     <ModalFooter>
@@ -214,68 +216,3 @@ export default function GroupInfo() {
         </>
     );
 }
-
-/*import { LoadingIndicator } from '@/components/general/LoadingIndicator';
-import InvitePopup from '@/components/groups/InvitePopup';
-import AddInvitePopup from '@/components/groups/AddInvitePopup';
-// eslint-disable-next-line @typescript-eslint/naming-convention
-import Heading from '@/components/textStyles/Heading';
-import { useModeColors } from '@/hooks/useModeColors';
-import { GroupContext } from '@/providers/GroupProvider';
-import {
-    Box,
-    Button,
-    Card,
-    CardBody,
-    Divider,
-    Flex,
-    Spacer,
-    Text,
-} from '@chakra-ui/react';
-import { useContext } from 'react';
-import { MdGroupAdd } from 'react-icons/md';
-
-export default function GroupInfo() {
-    const { backgroundColorSecondary } = useModeColors();
-
-    const { groupData, onOpenAddLink } = useContext(GroupContext);
-
-    if (!groupData) {
-        return <LoadingIndicator />;
-    }
-
-    return (
-        <>
-            <Box bg={backgroundColorSecondary} p={5} borderRadius="5">
-                <Flex>
-                    <Heading fontSize="2xl">{groupData?.name} </Heading>
-                    <Spacer />
-                    <Button
-                        p={0}
-                        onClick={() => {
-                            onOpenAddLink();
-                        }}
-                    >
-                        <MdGroupAdd size={30} />
-                    </Button>
-                </Flex>
-
-                <Text>{groupData.description}</Text>
-            </Box>
-            {groupData.users.map((user) => (
-                <Card key={user.user_id} m={5}>
-                    <CardBody>
-                        <Heading fontSize="lg">
-                            {user.first_name} {user.last_name}
-                        </Heading>
-                        <Divider my={1} />
-                        <Text>Progress: {user.progress}</Text>
-                    </CardBody>
-                </Card>
-            ))}
-            <InvitePopup />
-            <AddInvitePopup />
-        </>
-    );
-}
-*/

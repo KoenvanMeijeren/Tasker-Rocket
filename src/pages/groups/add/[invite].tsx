@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import supabase from '@/lib/supabase/db';
-import { Box, Divider, Flex, Heading } from '@chakra-ui/layout';
+import { Box, Divider, Flex, Heading, Text } from '@chakra-ui/layout';
 import { Card, CardBody } from '@chakra-ui/card';
 import { BiSolidErrorAlt } from 'react-icons/bi';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -46,7 +46,6 @@ export default function InvitePage() {
     const [userData, setUserData] = useState<UserData>();
 
     const router = useRouter();
-    const { invite: routerInvite } = router.query;
 
     useEffect(() => {
         const fetchInviteData = async () => {
@@ -100,15 +99,17 @@ export default function InvitePage() {
 
         void fetchInviteData();
         void fetchUserData();
-    }, [routerInvite]);
+    }, [router.query.invite]);
 
     if (!inviteData) {
         return (
             <Card m={5}>
                 <CardBody fontSize="3xl">
                     <Flex>
-                        <BiSolidErrorAlt size={60} />
-                        <Heading m={2} fontSize="2xl">
+                        <Box m={1}>
+                            <BiSolidErrorAlt size={45} />
+                        </Box>
+                        <Heading m={3} fontSize="2xl">
                             There was no link found with this id and signature
                         </Heading>
                     </Flex>
@@ -116,11 +117,10 @@ export default function InvitePage() {
                     <Link href="/groups">
                         <Button
                             my={3}
-                            py={8}
                             rightIcon={<IoArrowUndo />}
                             variant="outline"
                         >
-                            <Heading m={2}>Go back to groups overview</Heading>
+                            <Text>Go back to groups overview</Text>
                         </Button>
                     </Link>
                 </CardBody>
@@ -144,11 +144,11 @@ export default function InvitePage() {
                     <Link href="/profile">
                         <Button
                             my={3}
-                            py={8}
+                            py={3}
                             rightIcon={<IoArrowUndo />}
                             variant="outline"
                         >
-                            <Heading m={2}>Profile page</Heading>
+                            <Heading m={1}>Profile page</Heading>
                         </Button>
                     </Link>
                 </CardBody>

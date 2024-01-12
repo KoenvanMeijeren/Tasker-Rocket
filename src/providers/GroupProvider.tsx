@@ -1,5 +1,4 @@
 import supabase from '@/lib/supabase/db';
-import { useClipboard, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import React, { createContext, useEffect, useState } from 'react';
@@ -42,22 +41,10 @@ export default function GroupProvider({
 }) {
     // Define the state and any necessary functions
     const [groupData, setData] = useState<Data>();
-    const {
-        isOpen: isAddLinkOpen,
-        onOpen: onOpenAddLink,
-        onClose: onCloseAddLink,
-    } = useDisclosure();
-    const {
-        isOpen: isNewLinkOpen,
-        onOpen: onOpenNewLink,
-        onClose: onCloseNewLink,
-    } = useDisclosure();
-    const [date, setExpirationDate] = useState<string>('');
     const router = useRouter();
     const { group_id: groupId } = router.query;
-    const { onCopy, value, setValue, hasCopied } = useClipboard('');
 
-    const fetchData = async () => {
+    const fetchGroupData = async () => {
         if (!groupId) {
             return;
         }
@@ -78,7 +65,7 @@ export default function GroupProvider({
     };
 
     useEffect(() => {
-        void fetchData();
+        void fetchGroupData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groupId]);
 
@@ -92,7 +79,7 @@ export default function GroupProvider({
             // eslint-disable-next-line no-console
             console.error(error);
         }
-        void fetchData();
+        void fetchGroupData();
     };
 
     const addInvitation = async (
@@ -111,44 +98,19 @@ export default function GroupProvider({
             // eslint-disable-next-line no-console
             console.error(error);
         }
-        void fetchData();
+        void fetchGroupData();
         return data as Data;
     };
 
-    const deleteGroup = async (group_Id) => {
-        const { error } = await supabase
-            .from('groups')
-            .delete()
-            .eq('group_id', group_Id);
-        if (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
-        }
-        void fetchData();
-    };
+    
 
     // Provide the state and functions to the children components
     return (
         <GroupContext.Provider
             value={{
                 groupData,
-                fetchData,
-                setData,
                 deleteInvitation,
                 addInvitation,
-                isAddLinkOpen,
-                onOpenAddLink,
-                onCloseAddLink,
-                isNewLinkOpen,
-                onOpenNewLink,
-                onCloseNewLink,
-                date,
-                setExpirationDate,
-                onCopy,
-                value,
-                setValue,
-                hasCopied,
-                deleteGroup,
             }}
         >
             {children}

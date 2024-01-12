@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import supabase from '@/lib/supabase/db';
 import { Card, CardBody } from '@chakra-ui/card';
 import { Divider, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import Link from 'next/link';
 import { useModeColors } from '@/hooks/useModeColors';
 import { FaChevronDown, FaChevronUp, FaPlus, FaTrashAlt } from 'react-icons/fa';
@@ -17,44 +18,75 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Tooltip,
     useDisclosure,
 } from '@chakra-ui/react';
 import { useCustomToast } from '@/lib/utility/toast';
-import { GroupContext } from '@/providers/GroupProvider';
+import { LoadingIndicator } from '@/components/general/LoadingIndicator';
+import { ImExit } from 'react-icons/im';
 
 export default function Index() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [data, setData] = React.useState<any[]>([]); // Provide proper type for data state
     const [filterData, setFilterData] = React.useState<any[]>([]); // Provide proper type for data state
     const { backgroundColorSecondary } = useModeColors();
     const { isOpen, onOpen: onOpen, onClose } = useDisclosure();
     const [groupName, setGroupName] = useState('');
     const [groupDescription, SetGroupDescription] = useState('');
     const customToast = useCustomToast();
-    const { deleteGroup } = useContext(GroupContext);
 
-    const [order, setOrder] = useState('DSC');
+    const [order, setOrder] = useState('ASC');
 
-    const fetchGroupData = async () => {
-        const { data: responseData, error } = await supabase
+    const fetchGroupsData = async () => {
+        const { data: groupData, error: groupError } = await supabase
             .from('groups')
-            .select()
-            .order('name', { ascending: true }); // Rename variable to avoid conflict
-        if (error) console.error(error); // Remove console statement
+            .select('group_id, name, description, users_groups(group_id, role)')
+            .order('name', { ascending: true });
+        // eslint-disable-next-line no-console
+        if (groupError) console.error(groupError); // Remove console statement
         else {
-            setData(responseData);
+            setFilterData(groupData);
+        }
+    }
 
-            setFilterData(responseData);
-        } // Update setData with the renamed variable
+    const deleteGroup = async (groupId: string) => {
+        const { error } = await supabase
+            .from('groups')
+            .delete()
+            .eq('group_id', groupId);
+        if (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+        void fetchGroupsData();
+    };
+
+    const leaveGroup = async (groupId: string) => {
+        const { error } = await supabase.rpc('remove_participant_from_group', {
+            groupid: groupId,
+        });
+        if (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+        }
+        void fetchGroupsData();
+    };
+
+    const handleAddGroup = async () => {
+        await createNewGroup(groupName, groupDescription);
+        setGroupName('');
+        SetGroupDescription('');
+        await fetchGroupsData();
+        onClose();
     };
 
     useEffect(() => {
-        void fetchGroupData();
+        void fetchGroupsData();
         customToast(
             'When using a link or scanning a QR-code to a group, only scan links that take you to a localhost address',
             '',
             'warning'
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const callHandleSort = () => {
@@ -80,17 +112,19 @@ export default function Index() {
         }
     };
 
+    if (!filterData) return <LoadingIndicator />;
+
     return (
         <>
             <Flex bg={backgroundColorSecondary} p={5}>
-                <Heading size="md" mt={2}>
+                <Heading mt={2} size="md">
                     Sort
                 </Heading>
                 <Button onClick={callHandleSort} p={0}>
                     {order === 'ASC' ? <FaChevronDown /> : <FaChevronUp />}
                 </Button>
                 <Spacer />
-                <Heading size="md" mt={2}>
+                <Heading mt={2} size="md">
                     Create new
                 </Heading>
                 <Button onClick={onOpen} p={0}>
@@ -106,45 +140,62 @@ export default function Index() {
                     } // Provide explicit types for group object properties
                 ) => (
                     <Card
-                        m={5}
-                        key={group.group_id}
                         _hover={{
                             shadow: 'xl',
                             transitionDuration: '0.4s',
                             transitionTimingFunction: 'ease-in-out',
                         }}
+                        key={group.group_id}
+                        m={5}
                     >
-                        <Link href={'/groups/info/' + group.group_id}>
-                            <CardBody width="inherit">
-                                <Flex>
-                                    <Heading
-                                        fontSize="2xl"
-                                        size="md"
-                                        wordBreak="break-word"
-                                    >
-                                        {group.name}
-                                    </Heading>
-                                    <Spacer />
-                                </Flex>
-                                <Divider py={2} />
-                                <Text>{group.description}</Text>
+                        <Flex>
+                            <CardBody>
+                                <Link href={'/groups/info/' + group.group_id}>
+                                    <Flex>
+                                        <Heading
+                                            fontSize="2xl"
+                                            size="md"
+                                            wordBreak="break-word"
+                                        >
+                                            {group.name}
+                                        </Heading>
+                                        <Spacer />
+                                        {/* <Text>Role: {group.role}</Text> */}
+                                    </Flex>
+                                    <Divider py={2} />
+                                    <Text>{group.description}</Text>
+                                </Link>
                             </CardBody>
-                        </Link>
-                        {/* <Button
-                            m={3}
-                            onClick={() => {
-                                console.log(
-                                    `group.group_id: ${group.group_id}`
-                                );
-                                deleteGroup(group.group_id);
-                            }}
-                        >
-                            <FaTrashAlt />
-                        </Button> */}
+                            {group.role === 'group_admin' ? (
+                                <Tooltip label="Delete this group">
+                                    <Button
+                                        mt={8}
+                                        mx={3}
+                                        onClick={() => {
+                                            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                                            deleteGroup(group.group_id);
+                                        }}
+                                    >
+                                        <FaTrashAlt />
+                                    </Button>
+                                </Tooltip>
+                            ) : null}
+                            <Tooltip label="Leave this group">
+                                <Button
+                                    mt={8}
+                                    mx={3}
+                                    onClick={() => {
+                                        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                                        leaveGroup(group.group_id);
+                                    }}
+                                >
+                                    <ImExit />
+                                </Button>
+                            </Tooltip>
+                        </Flex>
                     </Card>
                 )
             )}
-
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -185,10 +236,7 @@ export default function Index() {
                             colorScheme="green"
                             onClick={() => {
                                 // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                                createNewGroup(groupName, groupDescription);
-                                setGroupName('');
-                                SetGroupDescription('');
-                                onClose();
+                                handleAddGroup();
                             }}
                             variant="ghost"
                         >

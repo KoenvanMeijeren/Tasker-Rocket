@@ -1,7 +1,7 @@
 // we need to enable static rendering for prevent rerender on server side and leaking memory
 import { enableStaticRendering } from 'mobx-react-lite';
 import { MobxStore } from '@/lib/store/MobxStore';
-import { useState } from 'react';
+import { useMemo } from 'react';
 
 // enable static rendering ONLY on server
 enableStaticRendering(typeof window === 'undefined');
@@ -9,18 +9,23 @@ enableStaticRendering(typeof window === 'undefined');
 // init a client store that we will send to client (one store for client)
 let clientStore: MobxStore | null = null;
 
-const initStore = () => {
-    // check if we already declare store (client Store), otherwise create one
-    const store = clientStore ?? new MobxStore();
+export const initStore = () => {
+    if (typeof window === 'undefined') {
+        // Create a new store on every server request
+        return new MobxStore();
+    }
 
-    // Create a store on every server request
-    if (typeof window === 'undefined') return store;
-    // Otherwise it's client, remember this store and return
-    if (!clientStore) clientStore = store;
-    return store;
+    // On the client side, return the existing store if it exists.
+    // This will create only one store for the client. It also does
+    // not create a new store on each use of the hook. Because of
+    // the caching mechanism by declaring the variable above.
+    if (!clientStore) {
+        clientStore = new MobxStore();
+    }
+
+    return clientStore;
 };
 
 export function useStore() {
-    const [store] = useState(() => initStore());
-    return store;
+    return useMemo(() => initStore(), []);
 }

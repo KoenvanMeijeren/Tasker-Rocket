@@ -10,7 +10,9 @@ The installation is quite simple, just prepare the `.env` file,
 run `npm install` and `npm run dev` and you are good to go.
 
 First, copy the `.env.example` to `.env` and fill in the required values.
-You might need to create a GitHub access token to be able to use this app.
+
+**Please note** that the content repository needs to have an accessible main branch.
+Otherwise, the app will not be able to load the sidebar.
 
 ```bash
 cp .env.example .env

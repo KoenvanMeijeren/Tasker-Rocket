@@ -7,7 +7,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
 import { getEnvValue, EnvOptions } from '@/lib/utility/env';
-import { GitHubTreeItem, GithubTree } from '@/types/gitHubData';
+import { GitHubTreeContentItem, GitHubTree } from '@/types/gitHubData';
 
 export const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -31,29 +31,59 @@ export const gitHubConfig = {
  * - Folder 2
  */
 
-export function useGitHubContentTree(path: string, recursive = false) {
+export function useGitHubTreeWithContent(path: string) {
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
     if (path === '/[...path]') {
         path = '';
     }
 
-    path = recursive ? '/git/trees/main?recursive=1' : `/contents${path}`;
-
     const customToast = useCustomToast();
     const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
-        GitHubTreeItem[] | GitHubTreeItem | GithubTree
+        GitHubTreeContentItem[] | GitHubTreeContentItem
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}${path}`,
+        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
         bearerToken: session?.provider_token ?? undefined,
         isPrivateData: gitHubConfig.is_private,
     });
 
-    if (error) {
-        if (session) {
-            customToast(error.name, error.message, 'error');
+    if (error && session) {
+        customToast(error.name, error.message, 'error');
+    }
+
+    return { data, isLoading, error };
+}
+
+/**
+ * Fetches recursively all items of a repository.
+ *
+ * Example tree:
+ * - Folder 1
+ * - - File 1.md
+ * - - File 2.md
+ * - - Folder 1.1
+ * - - - File 1.1.1.md
+ * - - - File 1.1.2.md
+ * - Folder 2
+ *
+ * Note: These items don't contain the content of the files.
+ */
+export function useGitHubTree() {
+    const { session } = useContext(SessionContext);
+    const customToast = useCustomToast();
+
+    const { data, isLoading, error } = useImmutableDataFetcher<GitHubTree>(
+        fetchJsonData,
+        {
+            url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/git/trees/main?recursive=1`,
+            bearerToken: session?.provider_token ?? undefined,
+            isPrivateData: gitHubConfig.is_private,
         }
+    );
+
+    if (error && session) {
+        customToast(error.name, error.message, 'error');
     }
 
     return { data, isLoading, error };

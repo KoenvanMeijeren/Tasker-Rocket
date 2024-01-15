@@ -1,61 +1,16 @@
 'use client';
 
 import { useModeColors } from '@/hooks/useModeColors';
-import {
-    removeQueryParamsFromURl,
-    replaceAll,
-    urlToReadableString,
-} from '@/lib/utility/formatters';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { BiSolidChevronRight } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
-import { decodeUrl } from '@/lib/utility/uri';
-
-const excludedBreadcrumbs: string[] = ['#'];
-const removedBreadcrumbCharacters: string[] = ['.md'];
-
-function pathToBreadcrumbs(path: string): {
-    name: string;
-    path: string;
-}[] {
-    const url = removeQueryParamsFromURl(decodeUrl(path));
-    if (url.length < 1 || url === '/') {
-        return [];
-    }
-
-    const breadcrumbs = url.split('/');
-    return breadcrumbs
-        .map((breadcrumb: string, index: number) => {
-            if (excludedBreadcrumbs.includes(breadcrumb)) {
-                return {
-                    name: 'empty',
-                    path: '',
-                };
-            }
-
-            const breadcrumbPath = breadcrumbs.slice(0, index + 1).join('/');
-            if (breadcrumbPath.length < 1) {
-                return {
-                    name: '',
-                    path: '/',
-                };
-            }
-
-            return {
-                name: urlToReadableString(
-                    replaceAll(breadcrumb, removedBreadcrumbCharacters, '')
-                ),
-                path: breadcrumbs.slice(0, index + 1).join('/'),
-            };
-        })
-        .filter((item) => item.name !== 'empty');
-}
+import { useBreadcrumbs } from '@/lib/breadcrumbs/breadcrumbs';
 
 export function Breadcrumbs() {
     const { fontColor } = useModeColors();
     const router = useRouter();
-    const breadcrumbs = pathToBreadcrumbs(router.asPath);
+    const breadcrumbs = useBreadcrumbs();
     if (breadcrumbs.length < 1) {
         return null;
     }
@@ -72,7 +27,6 @@ export function Breadcrumbs() {
                     >
                         <BreadcrumbLink
                             color={fontColor}
-                            href="#"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => router.push(item.path)}
                         >

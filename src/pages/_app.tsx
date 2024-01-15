@@ -1,5 +1,5 @@
 import { Content } from '@/components/navigation/Content';
-import { SideBar } from '@/components/navigation/sideBar/SideBar';
+import SideBar from '@/components/navigation/sideBar/SideBar';
 import { Providers } from '@/providers/Providers';
 import '@/styles/globals.css';
 import { Flex } from '@chakra-ui/layout';

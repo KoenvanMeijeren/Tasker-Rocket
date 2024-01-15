@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 export function decodeUrl(url: string): string {
     try {
         return decodeURIComponent(url);
@@ -6,4 +8,18 @@ export function decodeUrl(url: string): string {
         // hexadecimal digits, or if the escape sequence does not encode a valid UTF-8 character.
         return '';
     }
+}
+
+export function useCurrentPath() {
+    const router = useRouter();
+    const path = decodeUrl(router.asPath).replaceAll('#', '');
+
+    // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
+    // because next.js renders the app twice, once on server and once on client.
+    const isEmptyPath = path === '/[...path]';
+
+    return {
+        path,
+        isEmptyServerPath: isEmptyPath,
+    };
 }

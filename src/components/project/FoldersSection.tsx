@@ -1,23 +1,27 @@
 import { useModeColors } from '@/hooks/useModeColors';
-import { GitHubTreeItem } from '@/types/gitHubData';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, ChevronDownIcon, Icon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import { colorConfig } from '../../../theme.config';
 import { FaFolderOpen } from 'react-icons/fa6';
 import Heading from '../textStyles/Heading';
 import Text from '../textStyles/Text';
+import { observer } from 'mobx-react-lite';
+import { RiTodoFill } from 'react-icons/ri';
+import { useFoldersContent } from '@/lib/project/useFoldersContent';
+import { useStore } from '@/lib/store';
 
-export const FoldersSection = ({
-    data,
-    label,
-}: {
-    data: GitHubTreeItem[];
+type Props = {
+    data: GitHubTreeContentItem[];
     label: string;
-}) => {
+};
+
+const FoldersSection = observer(({ data, label }: Props) => {
+    const store = useStore();
+    const { folders } = useFoldersContent(store, data);
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
-    const rotate = isOpen ? 'rotate(-180deg)' : 'rotate(0)';
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
         useModeColors();
 
@@ -44,7 +48,7 @@ export const FoldersSection = ({
                 <ChevronDownIcon
                     boxSize={10}
                     color={colorConfig.iconGrey}
-                    transform={rotate}
+                    transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                     transition="all 0.2s linear"
                 />
             </Box>
@@ -68,7 +72,7 @@ export const FoldersSection = ({
                     overflowX="auto"
                     py={3}
                 >
-                    {data.map((item: GitHubTreeItem) => {
+                    {folders.map((item) => {
                         return (
                             <Link
                                 href={`/${encodeURIComponent(item.path)}`}
@@ -77,12 +81,28 @@ export const FoldersSection = ({
                             >
                                 <Card backgroundColor={backgroundColorPrimary}>
                                     <CardBody py={3}>
-                                        <Text>
-                                            <Flex align="center">
-                                                <FaFolderOpen />
-                                                <Text ml={1}>{item.name}</Text>
-                                            </Flex>
-                                        </Text>
+                                        <Box
+                                            alignItems="center"
+                                            display="flex"
+                                            gap="8px"
+                                        >
+                                            {item.completed ? (
+                                                <CheckCircleIcon color="green" />
+                                            ) : (
+                                                <Icon
+                                                    as={RiTodoFill}
+                                                    color="blue"
+                                                />
+                                            )}
+                                            <Text>
+                                                <Flex align="center">
+                                                    <FaFolderOpen />
+                                                    <Text ml={1}>
+                                                        {item.name}
+                                                    </Text>
+                                                </Flex>
+                                            </Text>
+                                        </Box>
                                     </CardBody>
                                 </Card>
                             </Link>
@@ -92,4 +112,7 @@ export const FoldersSection = ({
             </Collapse>
         </Box>
     );
-};
+});
+
+FoldersSection.displayName = 'FoldersSection';
+export default FoldersSection;

@@ -1,33 +1,39 @@
 'use client';
+
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
 import { ProjectView } from '@/components/project/ProjectView';
+import { GitHubTreeContentItem } from '@/types/gitHubData';
+import { useGitHubTreeWithContent } from '@/lib/repository/gitHubRepository';
+import { useCurrentPath } from '@/lib/utility/uri';
 import { useOpenedFileName } from '@/hooks/useOpenedFileName';
-import { useGitHubContentTree } from '@/lib/repository/gitHubRepository';
-import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
-import { GitHubTreeItem } from '@/types/gitHubData';
-import { useRouter } from 'next/router';
+import { observer } from 'mobx-react-lite';
+import { useParentTree } from '@/lib/project/useParentTree';
+import { useStore } from '@/lib/store';
 
-export default function ProjectContent() {
-    const router = useRouter();
-    const path = removeQueryParamsFromURl(decodeURI(router.asPath));
-    const parent = path.split('/').pop();
-
+const ProjectContent = observer(() => {
+    const store = useStore();
     const openedFileName = useOpenedFileName();
-    const { data, error, isLoading } = useGitHubContentTree(path);
+    const { path, isEmptyServerPath } = useCurrentPath();
+
+    const { data, error, isLoading } = useGitHubTreeWithContent(path);
+    const parentTree = useParentTree(store);
 
     if (error) {
         return <div>laden mislukt...</div>;
     }
 
-    if (isLoading || !data) {
+    if (isLoading || !data || !parentTree || isEmptyServerPath) {
         return <LoadingIndicator />;
     }
 
     return (
         <ProjectView
-            data={data as GitHubTreeItem[]}
+            data={data as GitHubTreeContentItem[]}
             openedFileName={openedFileName}
-            parent={parent || ''}
+            parentTree={parentTree}
         />
     );
-}
+});
+
+ProjectContent.displayName = 'ProjectContent';
+export default ProjectContent;

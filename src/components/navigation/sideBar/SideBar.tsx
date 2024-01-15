@@ -42,7 +42,7 @@ const SideBar = observer(() => {
             <Stack
                 bg={menuBackground}
                 boxShadow={boxShadow}
-                height="100vh"
+                height="98vh"
                 justifyContent="space-between"
                 minWidth={sidebarWidth}
                 position="relative"

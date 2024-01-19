@@ -11,10 +11,12 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
+import { useParentTree } from '@/lib/project/useParentTree';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
+    const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
     const [navSize, toggleNavSize] = useState(NavSize.Large);
     const { menuBackground } = useModeColors();
@@ -69,15 +71,20 @@ const SideBar = observer(() => {
                     {menuItems.map((item) => {
                         if (navSize === NavSize.Small) {
                             return (
-                                <NavItemLogo key={item.path} name={item.name} />
+                                <NavItemLogo
+                                    key={item.path}
+                                    name={item.name}
+                                    textColor="green"
+                                />
                             );
                         }
 
                         return (
                             <ExpandableNavItem
                                 key={item.path}
-                                menuItems={item}
+                                menuItem={item}
                                 navSize={navSize}
+                                parenTree={parentTree}
                                 root={item.isRoot}
                             />
                         );

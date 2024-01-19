@@ -40,6 +40,10 @@ export function useModeColors() {
         colorConfig.light.hoverBackground,
         colorConfig.dark.hoverBackground
     );
+    const menuItemActiveBackground = useColorModeValue(
+        colorConfig.light.menuItemActiveBackground,
+        colorConfig.dark.menuItemActiveBackground
+    );
 
     return {
         backgroundColorSecondary,
@@ -51,5 +55,6 @@ export function useModeColors() {
         title,
         tint,
         hoverBackground,
+        menuItemActiveBackground,
     };
 }

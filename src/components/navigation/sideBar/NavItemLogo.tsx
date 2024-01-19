@@ -7,7 +7,12 @@ const chevronBoxSize = 20;
 
 const horizontalPadding = 6;
 
-export default function NavItemLogo({ name }: { name: string }) {
+type Props = {
+    name: string;
+    textColor: string;
+};
+
+export default function NavItemLogo({ name, textColor }: Props) {
     const { backgroundColorPrimary } = useModeColors();
     return (
         <Flex
@@ -20,7 +25,10 @@ export default function NavItemLogo({ name }: { name: string }) {
             my="2px"
             opacity={0.8}
         >
-            <NavItemTitle name={nameToLogo(name).toUpperCase()} />
+            <NavItemTitle
+                name={nameToLogo(name).toUpperCase()}
+                textColor={textColor}
+            />
         </Flex>
     );
 }

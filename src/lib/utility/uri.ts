@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
 
 export function decodeUrl(url: string): string {
     try {
@@ -20,6 +21,7 @@ export function useCurrentPath() {
 
     return {
         path,
+        pathWithoutQuery: removeQueryParamsFromURl(path),
         isEmptyServerPath: isEmptyPath,
     };
 }

@@ -72,22 +72,9 @@ export default function ExpandableNavItem({
     };
 
     const fileInfo = useMemo(() => {
-        if (!menuItems) return null;
-        const getFileInfo = () => {
-            const extension = urlToFileExtension(menuItems.name);
-            return findFileInfo(extension);
-        };
-        return getFileInfo();
+        const extension = urlToFileExtension(menuItems.name);
+        return findFileInfo(extension);
     }, [menuItems]);
-
-    const renderTitle = useMemo(() => {
-        // eslint-disable-next-line react/display-name
-        return () => {
-            return navSize === NavSize.Large ? (
-                <NavItemTitle name={menuItems.name} />
-            ) : null;
-        };
-    }, [navSize, menuItems]);
 
     if (!fileInfo) return null;
 
@@ -102,7 +89,8 @@ export default function ExpandableNavItem({
                         transition="all 0.2s linear"
                     />
                     <FolderIcon />
-                    {renderTitle()}
+
+                    <NavItemTitle name={menuItems.name} />
                 </Flex>
 
                 <Collapse in={isOpen}>
@@ -132,7 +120,8 @@ export default function ExpandableNavItem({
                     style={containerStyle}
                 >
                     {getFileIcon(fileInfo.type)}
-                    {renderTitle()}
+
+                    <NavItemTitle name={menuItems.name} />
                 </Flex>
             </Link>
         );

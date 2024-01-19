@@ -5,11 +5,7 @@ import ImageIcon from '@/components/icons/ImageIcon';
 import MarkdownIcon from '@/components/icons/MarkdownIcon';
 import VideoIcon from '@/components/icons/VideoIcon';
 import { useModeColors } from '@/hooks/useModeColors';
-import {
-    getParentFromUrl,
-    nameToLogo,
-    urlToFileExtension,
-} from '@/lib/utility/formatters';
+import { getParentFromUrl, urlToFileExtension } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GithubTreeMenuItem } from '@/types/gitHubData';
 import { NavSize } from '@/types/navSize';
@@ -18,7 +14,7 @@ import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
-import Heading from '../../textStyles/Heading';
+import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -26,45 +22,12 @@ const chevronBoxSizePx = `${chevronBoxSize}px`;
 const horizontalPadding = 6;
 const horizontalPaddingPx = `${horizontalPadding}px`;
 const tabSize = `${chevronBoxSize + horizontalPadding}px`;
-const fontSize = 13;
 
-interface NavItemProps {
-    treeItem: GithubTreeMenuItem;
+interface ExpandableNavItemProps {
+    menuItems: GithubTreeMenuItem;
     navSize: NavSize;
     root?: boolean;
 }
-
-const Title = ({ name }: { name: string }) => {
-    const { fontColor } = useModeColors();
-    return (
-        <Heading
-            color={fontColor}
-            display="flex"
-            fontSize={fontSize}
-            noOfLines={1}
-        >
-            {name}
-        </Heading>
-    );
-};
-
-const Logo = ({ name }: { name: string }) => {
-    const { backgroundColorPrimary } = useModeColors();
-    return (
-        <Flex
-            alignItems="center"
-            aspectRatio={1}
-            backgroundColor={backgroundColorPrimary}
-            borderRadius={4}
-            height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
-            justifyContent="center"
-            my="2px"
-            opacity={0.8}
-        >
-            <Title name={nameToLogo(name).toUpperCase()} />
-        </Flex>
-    );
-};
 
 const getFileIcon = (fileType: FileType) => {
     switch (fileType) {
@@ -81,11 +44,11 @@ const getFileIcon = (fileType: FileType) => {
     }
 };
 
-export default function NavItem({
-    treeItem,
+export default function ExpandableNavItem({
+    menuItems,
     navSize,
     root = false,
-}: NavItemProps) {
+}: ExpandableNavItemProps) {
     const { isOpen, onToggle } = useDisclosure();
     const rotate = useMemo(
         () => (isOpen ? 'rotate(-180deg)' : 'rotate(0)'),
@@ -109,36 +72,28 @@ export default function NavItem({
     };
 
     const fileInfo = useMemo(() => {
-        if (!treeItem) return null;
+        if (!menuItems) return null;
         const getFileInfo = () => {
-            const extension = urlToFileExtension(treeItem.name);
+            const extension = urlToFileExtension(menuItems.name);
             return findFileInfo(extension);
         };
         return getFileInfo();
-    }, [treeItem]);
+    }, [menuItems]);
 
     const renderTitle = useMemo(() => {
         // eslint-disable-next-line react/display-name
         return () => {
             return navSize === NavSize.Large ? (
-                <Title name={treeItem.name} />
+                <NavItemTitle name={menuItems.name} />
             ) : null;
         };
-    }, [navSize, treeItem]);
+    }, [navSize, menuItems]);
 
-    if (!treeItem || !fileInfo) return null;
+    if (!fileInfo) return null;
 
-    if (navSize === NavSize.Small) {
-        return <Logo name={treeItem.name} />;
-    }
-
-    if (treeItem.tree.length > 0) {
+    if (menuItems.tree.length > 0) {
         return (
-            <Box
-                alignItems="flex-start"
-                marginLeft={root ? 0 : tabSize}
-                width="100%"
-            >
+            <Box alignItems="flex-start" marginLeft={root ? 0 : tabSize}>
                 <Flex _hover={hover} onClick={onToggle} style={containerStyle}>
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
@@ -151,23 +106,23 @@ export default function NavItem({
                 </Flex>
 
                 <Collapse in={isOpen}>
-                    {treeItem.tree.map((item) => (
-                        <NavItem
+                    {menuItems.tree.map((item) => (
+                        <ExpandableNavItem
                             key={item.path}
+                            menuItems={item}
                             navSize={navSize}
-                            treeItem={item}
                         />
                     ))}
                 </Collapse>
             </Box>
         );
     } else {
-        const parent = getParentFromUrl(treeItem.path);
+        const parent = getParentFromUrl(menuItems.path);
         const url = `/${encodeURIComponent(parent)}`;
 
         return (
             <Link
-                href={`${url}?file=${treeItem.name}`}
+                href={`${url}?file=${menuItems.name}`}
                 style={{ width: '100%' }}
             >
                 <Flex

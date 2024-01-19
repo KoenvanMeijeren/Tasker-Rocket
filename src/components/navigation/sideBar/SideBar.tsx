@@ -5,18 +5,19 @@ import { Box, Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
 import { useContext, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
-import NavItem from './NavItem';
+import ExpandableNavItem from './ExpandableNavItem';
 import { SideBarLogo } from './SideBarLogo';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
+import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
     const menuItems = store.menuTree.items;
     const [navSize, toggleNavSize] = useState(NavSize.Large);
-    const { menuBackground, tint } = useModeColors();
+    const { menuBackground } = useModeColors();
 
     const boxShadow = useColorModeValue(
         '-5px 0px 10px rgba(0,0,0,0.5)',
@@ -38,11 +39,11 @@ const SideBar = observer(() => {
     }
 
     return (
-        <Box overflowX="auto">
+        <Box>
             <Stack
                 bg={menuBackground}
                 boxShadow={boxShadow}
-                height="98vh"
+                height="100vh"
                 justifyContent="space-between"
                 minWidth={sidebarWidth}
                 position="relative"
@@ -59,32 +60,28 @@ const SideBar = observer(() => {
                     alignItems={
                         navSize === NavSize.Small ? 'center' : 'flex-start'
                     }
-                    css={{
-                        '&::-webkit-scrollbar': {
-                            width: '6px',
-                        },
-
-                        '&::-webkit-scrollbar-thumb': {
-                            background: tint,
-                            borderRadius: '24px',
-                        },
-                    }}
                     flex={1}
                     overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
                     p={3}
                     spacing={0}
                     width="100%"
                 >
-                    <>
-                        {menuItems.map((item) => (
-                            <NavItem
+                    {menuItems.map((item) => {
+                        if (navSize === NavSize.Small) {
+                            return (
+                                <NavItemLogo key={item.path} name={item.name} />
+                            );
+                        }
+
+                        return (
+                            <ExpandableNavItem
                                 key={item.path}
+                                menuItems={item}
                                 navSize={navSize}
-                                root={true}
-                                treeItem={item}
+                                root={item.isRoot}
                             />
-                        ))}
-                    </>
+                        );
+                    })}
                 </Stack>
 
                 {/* collapse/expand button */}

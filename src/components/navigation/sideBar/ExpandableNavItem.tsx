@@ -58,7 +58,8 @@ export default function ExpandableNavItem({
         [isOpen]
     );
 
-    const { hoverBackground, menuItemActiveBackground } = useModeColors();
+    const { fontColor, hoverBackground, menuItemActiveBackground } =
+        useModeColors();
 
     const containerStyle: CSSProperties = {
         alignItems: 'center',
@@ -79,8 +80,10 @@ export default function ExpandableNavItem({
         return findFileInfo(extension);
     }, [menuItem]);
 
-    const currentPath = useCurrentPath().pathWithoutQuery.replace('/', '');
-    const isActive = currentPath === menuItem.path;
+    const { searchParams, pathWithoutQuery } = useCurrentPath();
+    const openedFile = searchParams?.get('file');
+    const isActive = pathWithoutQuery === `/${menuItem.path}`;
+    const isActiveFile = openedFile === menuItem.name;
     const isActiveInTree = useMemo(() => {
         return parenTree?.tree.some(
             (item) => item.unique_key === menuItem.unique_key
@@ -108,7 +111,7 @@ export default function ExpandableNavItem({
                     />
                     <FolderIcon />
 
-                    <NavItemTitle name={menuItem.name} textColor="black" />
+                    <NavItemTitle name={menuItem.name} textColor={fontColor} />
                 </Flex>
 
                 <Collapse in={isOpen || isActiveInTree}>
@@ -132,13 +135,16 @@ export default function ExpandableNavItem({
         <Link href={`${url}?file=${menuItem.name}`} style={{ width: '100%' }}>
             <Flex
                 _hover={hover}
+                backgroundColor={
+                    isActiveFile ? menuItemActiveBackground : 'white'
+                }
                 marginLeft={root ? 0 : tabSize}
                 onClick={onToggle}
                 style={containerStyle}
             >
                 {getFileIcon(fileInfo.type)}
 
-                <NavItemTitle name={menuItem.name} textColor="red" />
+                <NavItemTitle name={menuItem.name} textColor={fontColor} />
             </Flex>
         </Link>
     );

@@ -12,14 +12,17 @@ import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useParentTree } from '@/lib/project/useParentTree';
+import { useCurrentPath } from '@/lib/utility/uri';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
+    const { pathWithoutQuery } = useCurrentPath();
     const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
     const [navSize, toggleNavSize] = useState(NavSize.Large);
-    const { menuBackground } = useModeColors();
+    const { fontColor, menuBackground, menuItemActiveBackground } =
+        useModeColors();
 
     const boxShadow = useColorModeValue(
         '-5px 0px 10px rgba(0,0,0,0.5)',
@@ -70,11 +73,19 @@ const SideBar = observer(() => {
                 >
                     {menuItems.map((item) => {
                         if (navSize === NavSize.Small) {
+                            const isActive =
+                                pathWithoutQuery === `/${item.path}`;
+
                             return (
                                 <NavItemLogo
+                                    backgroundColor={
+                                        isActive
+                                            ? menuItemActiveBackground
+                                            : undefined
+                                    }
                                     key={item.path}
                                     name={item.name}
-                                    textColor="green"
+                                    textColor={fontColor}
                                 />
                             );
                         }

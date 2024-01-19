@@ -10,15 +10,20 @@ const horizontalPadding = 6;
 type Props = {
     name: string;
     textColor: string;
+    backgroundColor?: string;
 };
 
-export default function NavItemLogo({ name, textColor }: Props) {
+export default function NavItemLogo({
+    name,
+    textColor,
+    backgroundColor,
+}: Props) {
     const { backgroundColorPrimary } = useModeColors();
     return (
         <Flex
             alignItems="center"
             aspectRatio={1}
-            backgroundColor={backgroundColorPrimary}
+            backgroundColor={backgroundColor ?? backgroundColorPrimary}
             borderRadius={4}
             height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
             justifyContent="center"

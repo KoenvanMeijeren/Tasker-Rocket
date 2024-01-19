@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
+import { useSearchParams } from 'next/navigation';
 
 export function decodeUrl(url: string): string {
     try {
@@ -13,6 +14,7 @@ export function decodeUrl(url: string): string {
 
 export function useCurrentPath() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const path = decodeUrl(router.asPath).replaceAll('#', '');
 
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
@@ -22,6 +24,7 @@ export function useCurrentPath() {
     return {
         path,
         pathWithoutQuery: removeQueryParamsFromURl(path),
+        searchParams: searchParams,
         isEmptyServerPath: isEmptyPath,
     };
 }

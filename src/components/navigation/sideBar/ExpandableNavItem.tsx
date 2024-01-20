@@ -16,6 +16,8 @@ import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
 import { buildUri, useCurrentPath } from '@/lib/utility/uri';
+import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
+import { useSearchParams } from 'next/navigation';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -52,6 +54,11 @@ export default function ExpandableNavItem({
     navSize,
     root = false,
 }: ExpandableNavItemProps) {
+    const searchParams = useSearchParams();
+    const { isActive, isActiveFile, isActiveInTree } = useNavItemActiveHandler(
+        menuItem,
+        parenTree
+    );
     const { isOpen, onToggle } = useDisclosure();
     const rotate = useMemo(
         () => (isOpen ? 'rotate(-180deg)' : 'rotate(0)'),
@@ -79,16 +86,6 @@ export default function ExpandableNavItem({
         const extension = urlToFileExtension(menuItem.name);
         return findFileInfo(extension);
     }, [menuItem]);
-
-    const { searchParams, pathWithoutQuery } = useCurrentPath();
-    const openedFile = searchParams?.get('file');
-    const isActive = pathWithoutQuery === `/${menuItem.path}`;
-    const isActiveFile = openedFile === menuItem.name;
-    const isActiveInTree = useMemo(() => {
-        return parenTree?.tree.some(
-            (item) => item.unique_key === menuItem.unique_key
-        );
-    }, [menuItem, parenTree]);
 
     if (!fileInfo) return null;
 

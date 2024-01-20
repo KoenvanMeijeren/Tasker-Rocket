@@ -3,62 +3,29 @@ import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Box, Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext } from 'react';
 import { colorConfig } from '../../../../theme.config';
-import ExpandableNavItem from './ExpandableNavItem';
 import { SideBarLogo } from './SideBarLogo';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
-import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useParentTree } from '@/lib/project/useParentTree';
-import { useCurrentPath, useUriHandlers } from '@/lib/utility/uri';
+import { useNavSizeHandler } from '@/lib/navigation/useNavSizeHandler';
+import NavItem from '@/components/navigation/sideBar/NavItem';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
-    const { searchParams, pathWithoutQuery } = useCurrentPath();
-    const { updateQueryParams } = useUriHandlers();
     const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
-    const [shouldOverwriteDefault, setShouldOverwriteDefault] = useState(false);
-    const [navSize, toggleNavSize] = useState(NavSize.Large);
-    const { fontColor, menuBackground, menuItemActiveBackground } =
-        useModeColors();
+    const { navSize, navCollapseClickHandler } = useNavSizeHandler();
+    const { menuBackground } = useModeColors();
 
     const boxShadow = useColorModeValue(
         '-5px 0px 10px rgba(0,0,0,0.5)',
         '0px 0px 10px rgba(0,0,0,0.5)'
     );
-
-    const sidebarWidth = useMemo(
-        () => (navSize === NavSize.Small ? '4vw' : '20vw'),
-        [navSize]
-    );
-
-    const rotate = useMemo(
-        () => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
-        [navSize]
-    );
-
-    useEffect(() => {
-        if (shouldOverwriteDefault) return;
-
-        const defaultNavSize = searchParams?.get('navSize');
-        toggleNavSize(defaultNavSize === '0' ? NavSize.Small : NavSize.Large);
-    }, [shouldOverwriteDefault, searchParams]);
-
-    const navCollapseClickHandler = () => {
-        setShouldOverwriteDefault(true);
-
-        updateQueryParams({
-            navSize: navSize === NavSize.Small ? '1' : '0',
-        });
-
-        toggleNavSize(
-            navSize === NavSize.Small ? NavSize.Large : NavSize.Small
-        );
-    };
+    const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
 
     if (!session) {
         return null;
@@ -92,35 +59,14 @@ const SideBar = observer(() => {
                     spacing={0}
                     width="100%"
                 >
-                    {menuItems.map((item) => {
-                        if (navSize === NavSize.Small) {
-                            const isActive =
-                                pathWithoutQuery === `/${item.path}`;
-
-                            return (
-                                <NavItemLogo
-                                    backgroundColor={
-                                        isActive
-                                            ? menuItemActiveBackground
-                                            : undefined
-                                    }
-                                    key={item.path}
-                                    name={item.name}
-                                    textColor={fontColor}
-                                />
-                            );
-                        }
-
-                        return (
-                            <ExpandableNavItem
-                                key={item.path}
-                                menuItem={item}
-                                navSize={navSize}
-                                parenTree={parentTree}
-                                root={item.isRoot}
-                            />
-                        );
-                    })}
+                    {menuItems.map((item) => (
+                        <NavItem
+                            item={item}
+                            key={item.path}
+                            navSize={navSize}
+                            parentTree={parentTree}
+                        />
+                    ))}
                 </Stack>
 
                 {/* collapse/expand button */}
@@ -136,7 +82,11 @@ const SideBar = observer(() => {
                         <ChevronLeftIcon
                             boxSize={8}
                             color={colorConfig.iconGrey}
-                            transform={rotate}
+                            transform={
+                                navSize === NavSize.Small
+                                    ? 'rotate(-180deg)'
+                                    : 'rotate(0)'
+                            }
                             transition="all 0.2s linear"
                         />
                     </Button>

@@ -21,10 +21,25 @@ export function useCurrentPath() {
     // because next.js renders the app twice, once on server and once on client.
     const isEmptyPath = path === '/[...path]';
 
+    const updateQueryParamsHandler = (addedParams: object) => {
+        const query = router.query;
+        const updatedParams = {
+            ...query,
+            ...addedParams,
+        };
+
+        void router.push({
+            pathname: router.pathname,
+            query: updatedParams,
+        });
+    };
+
     return {
         path,
+        router,
         pathWithoutQuery: removeQueryParamsFromURl(path),
         searchParams: searchParams,
         isEmptyServerPath: isEmptyPath,
+        updateQueryParamsHandler,
     };
 }

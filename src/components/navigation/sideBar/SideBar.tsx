@@ -3,7 +3,7 @@ import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Box, Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import ExpandableNavItem from './ExpandableNavItem';
 import { SideBarLogo } from './SideBarLogo';
@@ -17,9 +17,11 @@ import { useCurrentPath } from '@/lib/utility/uri';
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
-    const { pathWithoutQuery } = useCurrentPath();
+    const { searchParams, updateQueryParamsHandler, pathWithoutQuery } =
+        useCurrentPath();
     const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
+    const [shouldOverwriteDefault, setShouldOverwriteDefault] = useState(false);
     const [navSize, toggleNavSize] = useState(NavSize.Large);
     const { fontColor, menuBackground, menuItemActiveBackground } =
         useModeColors();
@@ -38,6 +40,25 @@ const SideBar = observer(() => {
         () => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
         [navSize]
     );
+
+    useEffect(() => {
+        if (shouldOverwriteDefault) return;
+
+        const defaultNavSize = searchParams?.get('navSize');
+        toggleNavSize(defaultNavSize === '0' ? NavSize.Small : NavSize.Large);
+    }, [shouldOverwriteDefault, searchParams]);
+
+    const navCollapseClickHandler = () => {
+        setShouldOverwriteDefault(true);
+
+        updateQueryParamsHandler({
+            navSize: navSize === NavSize.Small ? '1' : '0',
+        });
+
+        toggleNavSize(
+            navSize === NavSize.Small ? NavSize.Large : NavSize.Small
+        );
+    };
 
     if (!session) {
         return null;
@@ -111,16 +132,7 @@ const SideBar = observer(() => {
                     px={2}
                     width="100%"
                 >
-                    <Button
-                        aspectRatio={1}
-                        onClick={() => {
-                            toggleNavSize(
-                                navSize === NavSize.Small
-                                    ? NavSize.Large
-                                    : NavSize.Small
-                            );
-                        }}
-                    >
+                    <Button aspectRatio={1} onClick={navCollapseClickHandler}>
                         <ChevronLeftIcon
                             boxSize={8}
                             color={colorConfig.iconGrey}

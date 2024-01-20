@@ -130,9 +130,13 @@ export default function ExpandableNavItem({
 
     const parent = getParentFromUrl(menuItem.path);
     const url = `/${encodeURIComponent(parent)}`;
+    const searchParamsString = searchParams?.toString() ?? '';
 
     return (
-        <Link href={`${url}?file=${menuItem.name}`} style={{ width: '100%' }}>
+        <Link
+            href={`${url}?file=${menuItem.name}&${searchParamsString}`}
+            style={{ width: '100%' }}
+        >
             <Flex
                 _hover={hover}
                 backgroundColor={

@@ -1,6 +1,7 @@
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
 import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 
 export function decodeUrl(url: string): string {
     try {
@@ -21,19 +22,6 @@ export function useCurrentPath() {
     // because next.js renders the app twice, once on server and once on client.
     const isEmptyPath = path === '/[...path]';
 
-    const updateQueryParamsHandler = (addedParams: object) => {
-        const query = router.query;
-        const updatedParams = {
-            ...query,
-            ...addedParams,
-        };
-
-        void router.push({
-            pathname: router.pathname,
-            query: updatedParams,
-        });
-    };
-
     return {
         path,
         pathname: router.pathname,
@@ -41,9 +29,51 @@ export function useCurrentPath() {
         pathWithoutQuery: removeQueryParamsFromURl(path),
         searchParams: searchParams,
         isEmptyServerPath: isEmptyPath,
-        updateQueryParamsHandler,
     };
 }
+
+const handleUpdateQueryParams = (router: NextRouter, addedParams: object) => {
+    const query = router.query;
+    const mergedParams = {
+        ...query,
+        ...addedParams,
+    };
+
+    // Replace existing values with the addedParams
+    const updatedParams = Object.fromEntries(
+        Object.entries(mergedParams).map(([key, value]) => [
+            key,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line no-prototype-builtins
+            addedParams.hasOwnProperty(key) ? addedParams[key] : value,
+        ])
+    );
+
+    void router.push(
+        {
+            pathname: router.pathname,
+            query: updatedParams,
+        },
+        undefined,
+        { shallow: true }
+    );
+};
+
+export const useUriHandlers = () => {
+    const router = useRouter();
+
+    const updateQueryParams = useCallback(
+        (addedParams: object) => {
+            handleUpdateQueryParams(router, addedParams);
+        },
+        [router]
+    );
+
+    return {
+        updateQueryParams,
+    };
+};
 
 export const buildUri = (
     path: string,

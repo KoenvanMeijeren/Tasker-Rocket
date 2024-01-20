@@ -12,13 +12,13 @@ import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useParentTree } from '@/lib/project/useParentTree';
-import { useCurrentPath } from '@/lib/utility/uri';
+import { useCurrentPath, useUriHandlers } from '@/lib/utility/uri';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
-    const { searchParams, updateQueryParamsHandler, pathWithoutQuery } =
-        useCurrentPath();
+    const { searchParams, pathWithoutQuery } = useCurrentPath();
+    const { updateQueryParams } = useUriHandlers();
     const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
     const [shouldOverwriteDefault, setShouldOverwriteDefault] = useState(false);
@@ -51,7 +51,7 @@ const SideBar = observer(() => {
     const navCollapseClickHandler = () => {
         setShouldOverwriteDefault(true);
 
-        updateQueryParamsHandler({
+        updateQueryParams({
             navSize: navSize === NavSize.Small ? '1' : '0',
         });
 

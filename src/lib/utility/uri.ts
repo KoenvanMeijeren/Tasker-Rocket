@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
-import { useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
 
 export function decodeUrl(url: string): string {
     try {
@@ -36,6 +36,7 @@ export function useCurrentPath() {
 
     return {
         path,
+        pathname: router.pathname,
         router,
         pathWithoutQuery: removeQueryParamsFromURl(path),
         searchParams: searchParams,
@@ -43,3 +44,25 @@ export function useCurrentPath() {
         updateQueryParamsHandler,
     };
 }
+
+export const buildUri = (
+    path: string,
+    params: ReadonlyURLSearchParams | null,
+    extraParams?: string
+) => {
+    const uri = encodeURIComponent(path);
+    const paramsString = params?.toString() ?? '';
+    if (extraParams !== undefined) {
+        if (paramsString === '') {
+            return `${uri}?${extraParams}`;
+        }
+
+        return `${uri}?${paramsString}&${extraParams}`;
+    }
+
+    if (paramsString === '') {
+        return uri;
+    }
+
+    return `${uri}?${paramsString}`;
+};

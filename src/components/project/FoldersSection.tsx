@@ -12,6 +12,7 @@ import { observer } from 'mobx-react-lite';
 import { RiTodoFill } from 'react-icons/ri';
 import { useFoldersContent } from '@/lib/project/useFoldersContent';
 import { useStore } from '@/lib/store';
+import { buildUri, useCurrentPath } from '@/lib/utility/uri';
 
 type Props = {
     data: GitHubTreeContentItem[];
@@ -21,6 +22,7 @@ type Props = {
 const FoldersSection = observer(({ data, label }: Props) => {
     const store = useStore();
     const { folders } = useFoldersContent(store, data);
+    const { searchParams } = useCurrentPath();
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
     const { backgroundColorSecondary, backgroundColorPrimary, tint } =
         useModeColors();
@@ -75,7 +77,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
                     {folders.map((item) => {
                         return (
                             <Link
-                                href={`/${encodeURIComponent(item.path)}`}
+                                href={buildUri(item.path, searchParams)}
                                 key={item.url}
                                 style={{ flexShrink: 0 }}
                             >

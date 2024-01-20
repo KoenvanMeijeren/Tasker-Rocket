@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
-import { useCurrentPath } from '@/lib/utility/uri';
+import { buildUri, useCurrentPath } from '@/lib/utility/uri';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -129,12 +129,10 @@ export default function ExpandableNavItem({
     }
 
     const parent = getParentFromUrl(menuItem.path);
-    const url = `/${encodeURIComponent(parent)}`;
-    const searchParamsString = searchParams?.toString() ?? '';
 
     return (
         <Link
-            href={`${url}?file=${menuItem.name}&${searchParamsString}`}
+            href={buildUri(parent, searchParams, `file=${menuItem.name}`)}
             style={{ width: '100%' }}
         >
             <Flex

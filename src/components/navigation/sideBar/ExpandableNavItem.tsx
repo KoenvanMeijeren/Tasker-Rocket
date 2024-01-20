@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
-import { buildUri, useCurrentPath } from '@/lib/utility/uri';
+import { buildUri } from '@/lib/utility/uri';
 import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
 import { useSearchParams } from 'next/navigation';
 

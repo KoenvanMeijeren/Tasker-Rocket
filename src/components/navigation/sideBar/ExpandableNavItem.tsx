@@ -132,7 +132,9 @@ export default function ExpandableNavItem({
 
     return (
         <Link
-            href={buildUri(parent, searchParams, `file=${menuItem.name}`)}
+            href={buildUri(parent, searchParams, {
+                file: menuItem.name,
+            })}
             style={{ width: '100%' }}
         >
             <Flex

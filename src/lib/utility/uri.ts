@@ -48,21 +48,16 @@ export function useCurrentPath() {
 export const buildUri = (
     path: string,
     params: ReadonlyURLSearchParams | null,
-    extraParams?: string
+    addedParams: object = {}
 ) => {
     const uri = encodeURIComponent(path);
-    const paramsString = params?.toString() ?? '';
-    if (extraParams !== undefined) {
-        if (paramsString === '') {
-            return `${uri}?${extraParams}`;
-        }
 
-        return `${uri}?${paramsString}&${extraParams}`;
-    }
+    const mergedParams = {
+        ...(params ? Object.fromEntries(params) : {}),
+        ...addedParams,
+    };
 
-    if (paramsString === '') {
-        return uri;
-    }
+    const queryParams = new URLSearchParams(mergedParams);
 
-    return `${uri}?${paramsString}`;
+    return `${uri}?${queryParams.toString()}`;
 };

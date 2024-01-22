@@ -3,8 +3,16 @@ import {
     urlToReadableString,
 } from '@/lib/utility/formatters';
 import { useCurrentPath } from '@/lib/utility/uri';
+import { useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { useStore } from '@/lib/store';
 
-function pathToBreadcrumbs(path: string): { name: string; path: string }[] {
+type Breadcrumb = {
+    name: string;
+    path: string;
+};
+
+function pathToBreadcrumbs(path: string): Breadcrumb[] {
     const url = removeQueryParamsFromURl(path);
     const isEmptyPath = path === '/[...path]';
 
@@ -34,5 +42,18 @@ function pathToBreadcrumbs(path: string): { name: string; path: string }[] {
 
 export function useBreadcrumbs() {
     const { path } = useCurrentPath();
-    return pathToBreadcrumbs(path);
+    const router = useRouter();
+    const store = useStore();
+
+    const onBreadcrumbClick = useCallback(
+        (item: Breadcrumb) => {
+            void router.push(item.path);
+            store.menuTree.setOpenedFilePath('');
+        },
+        [router, store]
+    );
+
+    const breadcrumbs = pathToBreadcrumbs(path);
+
+    return { breadcrumbs, onBreadcrumbClick };
 }

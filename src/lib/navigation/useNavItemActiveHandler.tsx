@@ -1,15 +1,16 @@
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { useMemo } from 'react';
+import { MobxStore } from '@/lib/store/MobxStore';
 
 export const useNavItemActiveHandler = (
+    store: MobxStore,
     item: GithubTreeMenuItem,
     parenTree: GitHubParentTree | undefined
 ) => {
-    const { searchParams, pathWithoutQuery } = useCurrentPath();
-    const openedFile = searchParams?.get('file');
+    const { pathWithoutQuery } = useCurrentPath();
     const isActive = pathWithoutQuery === `/${item.path}`;
-    const isActiveFile = openedFile === item.name;
+    const isActiveFile = store.menuTree.isFileOpened(item.path);
     const isActiveInTree = useMemo(() => {
         if (!parenTree) return false;
         return parenTree.tree.some(

@@ -77,7 +77,9 @@ const FoldersSection = observer(({ data, label }: Props) => {
                     {folders.map((item) => {
                         return (
                             <Link
-                                href={buildUri(item.path, searchParams)}
+                                href={buildUri(item.path, searchParams, {}, [
+                                    'path',
+                                ])}
                                 key={item.url}
                                 style={{ flexShrink: 0 }}
                             >

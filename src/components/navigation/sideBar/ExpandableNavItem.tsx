@@ -55,6 +55,7 @@ export const ExpandableNavItem = observer((props: Props) => {
     const store = useStore();
     const searchParams = useSearchParams();
     const { isActive, isActiveFile, isActiveInTree } = useNavItemActiveHandler(
+        store,
         menuItem,
         parenTree
     );
@@ -123,12 +124,14 @@ export const ExpandableNavItem = observer((props: Props) => {
     }
 
     const parent = getParentFromUrl(menuItem.path);
+    const handleFileClick = () => {
+        store.menuTree.setOpenedFilePath(menuItem.path);
+    };
 
     return (
         <Link
-            href={buildUri(parent, searchParams, {
-                file: menuItem.name,
-            })}
+            href={buildUri(parent, searchParams, {}, ['path'])}
+            onClick={handleFileClick}
             style={{ width: '100%' }}
         >
             <Flex

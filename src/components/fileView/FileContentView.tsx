@@ -27,7 +27,6 @@ import { useStore } from '@/lib/store';
 type Props = {
     item: GitHubTreeContentItem;
     parentTree: GitHubParentTree;
-    defaultIsOpen: boolean;
     isLastItem: boolean;
 };
 
@@ -35,13 +34,15 @@ const FileContentView = observer((props: Props) => {
     const store = useStore();
     const { backgroundColorSecondary, border } = useModeColors();
 
-    const { item, parentTree, defaultIsOpen, isLastItem } = props;
+    const { item, parentTree, isLastItem } = props;
     const { download_url: contentUrl } = item;
     const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
     const file = useFile(item, data);
     const icon = useFileIcon(file);
     const { handleDownload } = useFileHandlers(file);
-    const { isOpen, handleFileOpen } = useFileOpenHandler(file, defaultIsOpen);
+    const { isOpen, handleFileOpen } = useFileOpenHandler(
+        store.menuTree.isFileOpened(file?.path)
+    );
     const { content, isFileViewable } = useFileContent(file);
     const { isItemCompleted, toggleTaskCompleted } =
         useGitHubItemsStateHandlers(store, item, parentTree);

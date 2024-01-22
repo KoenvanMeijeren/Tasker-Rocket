@@ -8,10 +8,9 @@ import { useProjectContent } from '@/lib/project/useProjectContent';
 type Props = {
     data: GitHubTreeContentItem[] | GitHubTreeContentItem;
     parentTree: GitHubParentTree;
-    openedFileName: string;
 };
 
-export function ProjectView({ data, parentTree, openedFileName }: Props) {
+export function ProjectView({ data, parentTree }: Props) {
     const { content, repository } = useProjectContent(data);
     if (!content) {
         return null;
@@ -34,7 +33,6 @@ export function ProjectView({ data, parentTree, openedFileName }: Props) {
                     return (
                         <Box key={item.url}>
                             <FileContentView
-                                defaultIsOpen={item.name === openedFileName}
                                 isLastItem={index == content.files.length - 1}
                                 item={item}
                                 key={item.url}

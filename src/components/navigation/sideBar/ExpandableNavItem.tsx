@@ -130,7 +130,10 @@ export const ExpandableNavItem = observer((props: Props) => {
 
     return (
         <Link
-            href={buildUri(parent, searchParams, {}, ['path'])}
+            href={
+                buildUri(parent, searchParams, {}, ['path']) +
+                `#file-${menuItem.unique_key}`
+            }
             onClick={handleFileClick}
             style={{ width: '100%' }}
         >

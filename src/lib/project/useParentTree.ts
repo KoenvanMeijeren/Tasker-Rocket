@@ -8,7 +8,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 const allowedRoutes = ['/[...path]', '/'];
 
 export const useParentTree = (store: MobxStore) => {
-    const { path, pathname, isEmptyServerPath } = useCurrentPath();
+    const { pathStripped, pathname, isEmptyServerPath } = useCurrentPath();
     const sessionContext = useContext(SessionContext);
     const [parentTree, setParentTree] = useState<GitHubParentTree>();
 
@@ -17,14 +17,14 @@ export const useParentTree = (store: MobxStore) => {
         if (isEmptyServerPath || !sessionContext.session) return;
 
         const menuTree = store.menuTree.items;
-        const result = buildParentTreeForSearchPath(path, menuTree);
+        const result = buildParentTreeForSearchPath(pathStripped, menuTree);
         setParentTree({
             parent: result[0],
             tree: result,
         });
     }, [
         isEmptyServerPath,
-        path,
+        pathStripped,
         pathname,
         sessionContext.session,
         store.menuTree.items,

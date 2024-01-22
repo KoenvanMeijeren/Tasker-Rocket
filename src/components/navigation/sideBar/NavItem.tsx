@@ -12,11 +12,11 @@ type Props = {
 };
 
 export default function NavItem({ item, parentTree, navSize }: Props) {
-    const { pathWithoutQuery } = useCurrentPath();
+    const { pathStripped } = useCurrentPath();
     const { fontColor, menuItemActiveBackground } = useModeColors();
 
     if (navSize === NavSize.Small) {
-        const isActive = pathWithoutQuery === `/${item.path}`;
+        const isActive = pathStripped === `/${item.path}`;
 
         return (
             <NavItemLogo

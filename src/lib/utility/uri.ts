@@ -1,5 +1,5 @@
 import { NextRouter, useRouter } from 'next/router';
-import { removeQueryParamsFromURl } from '@/lib/utility/formatters';
+import { removeIdAnchorFromURl, stripUri } from '@/lib/utility/formatters';
 import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -16,7 +16,7 @@ export function decodeUrl(url: string): string {
 export function useCurrentPath() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const path = decodeUrl(router.asPath).replaceAll('#', '');
+    const path = removeIdAnchorFromURl(decodeUrl(router.asPath));
 
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
@@ -26,7 +26,7 @@ export function useCurrentPath() {
         path,
         pathname: router.pathname,
         router,
-        pathWithoutQuery: removeQueryParamsFromURl(path),
+        pathStripped: stripUri(path),
         searchParams: searchParams,
         isEmptyServerPath: isEmptyPath,
     };

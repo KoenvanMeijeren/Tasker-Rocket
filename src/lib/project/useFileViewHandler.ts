@@ -27,6 +27,7 @@ export const useFile = (
 
         setFile({
             name: itemName,
+            fullName: name,
             extension,
             content: data,
             fileType: fileInfo.type,
@@ -58,25 +59,18 @@ export const useFileOpenHandler = (
 ) => {
     const { searchParams } = useCurrentPath();
     const [isOpen, setIsOpen] = useState(defaultIsOpen);
-    const [shouldOverwriteDefault, setShouldOverwriteDefault] = useState(false);
 
     useEffect(() => {
-        if (!file || !shouldOverwriteDefault) return;
+        if (!file) return;
         const openedFile = searchParams?.get('file');
-        if (openedFile === file.name) {
+        if (openedFile === file.fullName) {
             setIsOpen(true);
         }
-    }, [file, searchParams, shouldOverwriteDefault]);
+    }, [file, searchParams]);
 
     const handleFileOpen = useCallback(() => {
-        setShouldOverwriteDefault(true);
-        if (!file) {
-            setIsOpen(false);
-            return;
-        }
-
         setIsOpen(!isOpen);
-    }, [file, isOpen]);
+    }, [isOpen]);
 
     return { isOpen, handleFileOpen };
 };

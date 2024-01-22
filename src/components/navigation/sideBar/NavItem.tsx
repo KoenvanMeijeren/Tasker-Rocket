@@ -1,9 +1,9 @@
 import { useModeColors } from '@/hooks/useModeColors';
 import { NavSize } from '@/types/navSize';
-import ExpandableNavItem from './ExpandableNavItem';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
+import { ExpandableNavItem } from '@/components/navigation/sideBar/ExpandableNavItem';
 
 type Props = {
     item: GithubTreeMenuItem;

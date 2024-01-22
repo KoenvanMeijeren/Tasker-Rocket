@@ -10,7 +10,7 @@ import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
 import { NavSize } from '@/types/navSize';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
+import { Box, Collapse, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
 import { colorConfig } from '../../../../theme.config';
@@ -18,6 +18,8 @@ import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
 import { buildUri } from '@/lib/utility/uri';
 import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
 import { useSearchParams } from 'next/navigation';
+import { useStore } from '@/lib/store';
+import { observer } from 'mobx-react-lite';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -25,13 +27,6 @@ const chevronBoxSizePx = `${chevronBoxSize}px`;
 const horizontalPadding = 6;
 const horizontalPaddingPx = `${horizontalPadding}px`;
 const tabSize = `${chevronBoxSize + horizontalPadding}px`;
-
-interface ExpandableNavItemProps {
-    menuItem: GithubTreeMenuItem;
-    parenTree: GitHubParentTree | undefined;
-    navSize: NavSize;
-    root?: boolean;
-}
 
 const getFileIcon = (fileType: FileType) => {
     switch (fileType) {
@@ -48,22 +43,22 @@ const getFileIcon = (fileType: FileType) => {
     }
 };
 
-export default function ExpandableNavItem({
-    menuItem,
-    parenTree,
-    navSize,
-    root = false,
-}: ExpandableNavItemProps) {
+interface Props {
+    menuItem: GithubTreeMenuItem;
+    parenTree: GitHubParentTree | undefined;
+    navSize: NavSize;
+    root?: boolean;
+}
+
+export const ExpandableNavItem = observer((props: Props) => {
+    const { menuItem, parenTree, navSize, root } = props;
+    const store = useStore();
     const searchParams = useSearchParams();
     const { isActive, isActiveFile, isActiveInTree } = useNavItemActiveHandler(
         menuItem,
         parenTree
     );
-    const { isOpen, onToggle } = useDisclosure();
-    const rotate = useMemo(
-        () => (isOpen ? 'rotate(-180deg)' : 'rotate(0)'),
-        [isOpen]
-    );
+    const isOpen = store.menuTree.isItemActive(menuItem);
 
     const { fontColor, hoverBackground, menuItemActiveBackground } =
         useModeColors();
@@ -97,13 +92,15 @@ export default function ExpandableNavItem({
                     backgroundColor={
                         isActive ? menuItemActiveBackground : 'white'
                     }
-                    onClick={onToggle}
+                    onClick={() => {
+                        store.menuTree.toggleItemState(menuItem);
+                    }}
                     style={containerStyle}
                 >
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
                         color={colorConfig.iconGrey}
-                        transform={rotate}
+                        transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                         transition="all 0.2s linear"
                     />
                     <FolderIcon />
@@ -140,7 +137,6 @@ export default function ExpandableNavItem({
                     isActiveFile ? menuItemActiveBackground : 'white'
                 }
                 marginLeft={root ? 0 : tabSize}
-                onClick={onToggle}
                 style={containerStyle}
             >
                 {getFileIcon(fileInfo.type)}
@@ -149,4 +145,4 @@ export default function ExpandableNavItem({
             </Flex>
         </Link>
     );
-}
+});

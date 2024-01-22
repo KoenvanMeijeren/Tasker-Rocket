@@ -91,7 +91,7 @@ export const ExpandableNavItem = observer((props: Props) => {
                 <Flex
                     _hover={hover}
                     backgroundColor={
-                        isActive ? menuItemActiveBackground : 'white'
+                        isActive ? menuItemActiveBackground : 'default'
                     }
                     onClick={() => {
                         store.menuTree.toggleItemState(menuItem);
@@ -137,7 +137,7 @@ export const ExpandableNavItem = observer((props: Props) => {
             <Flex
                 _hover={hover}
                 backgroundColor={
-                    isActiveFile ? menuItemActiveBackground : 'white'
+                    isActiveFile ? menuItemActiveBackground : 'default'
                 }
                 marginLeft={root ? 0 : tabSize}
                 style={containerStyle}

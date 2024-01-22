@@ -78,7 +78,8 @@ export const useUriHandlers = () => {
 export const buildUri = (
     path: string,
     params: ReadonlyURLSearchParams | null,
-    addedParams: object = {}
+    addedParams: object = {},
+    excludedParams: string[] = []
 ) => {
     const uri = encodeURIComponent(path);
 
@@ -87,7 +88,18 @@ export const buildUri = (
         ...addedParams,
     };
 
-    const queryParams = new URLSearchParams(mergedParams);
+    // Filter out excluded parameters
+    const filteredParams = Object.fromEntries(
+        Object.entries(mergedParams).filter(
+            ([key]) => !excludedParams.includes(key)
+        )
+    );
 
-    return `${uri}?${queryParams.toString()}`;
+    const queryParams = new URLSearchParams(filteredParams);
+    const query = queryParams.toString();
+    if (query.length === 0) {
+        return `/${uri}`;
+    }
+
+    return `/${uri}?${query}`;
 };

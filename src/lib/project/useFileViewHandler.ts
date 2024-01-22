@@ -6,7 +6,6 @@ import {
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { File } from '@/types/file';
-import { useCurrentPath } from '@/lib/utility/uri';
 
 export const useFile = (
     item: GitHubTreeContentItem,
@@ -28,6 +27,7 @@ export const useFile = (
         setFile({
             name: itemName,
             fullName: name,
+            path: item.path,
             extension,
             content: data,
             fileType: fileInfo.type,
@@ -53,20 +53,12 @@ export const useFileHandlers = (file: File | undefined) => {
     return { handleDownload };
 };
 
-export const useFileOpenHandler = (
-    file: File | undefined,
-    defaultIsOpen: boolean
-) => {
-    const { searchParams } = useCurrentPath();
-    const [isOpen, setIsOpen] = useState(defaultIsOpen);
+export const useFileOpenHandler = (isFileOpened: boolean) => {
+    const [isOpen, setIsOpen] = useState(isFileOpened);
 
     useEffect(() => {
-        if (!file) return;
-        const openedFile = searchParams?.get('file');
-        if (openedFile === file.fullName) {
-            setIsOpen(true);
-        }
-    }, [file, searchParams]);
+        setIsOpen(isFileOpened);
+    }, [isFileOpened]);
 
     const handleFileOpen = useCallback(() => {
         setIsOpen(!isOpen);

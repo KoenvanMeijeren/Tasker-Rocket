@@ -1,13 +1,20 @@
 import { makeAutoObservable } from 'mobx';
 import { GithubTreeMenuItem } from '@/types/gitHubData';
+import { makeSlicePersistable } from '@/lib/store/hooks';
 
 export class GitHubMenuTreeStore {
     public items: GithubTreeMenuItem[] = [];
 
     public itemsActive: Record<string, boolean> = {};
 
+    public openedFilePath: string = '';
+
     public constructor() {
         makeAutoObservable(this);
+        void makeSlicePersistable(this, 'gitHubMenuTreeState', [
+            'itemsActive',
+            'openedFilePath',
+        ]);
     }
 
     public initialize(items: GithubTreeMenuItem[]) {
@@ -28,5 +35,13 @@ export class GitHubMenuTreeStore {
 
     public isItemActive(item: GithubTreeMenuItem) {
         return this.itemsActive[item.unique_key] ?? false;
+    }
+
+    public setOpenedFilePath(filePath: string) {
+        this.openedFilePath = filePath;
+    }
+
+    public isFileOpened(filePath: string | undefined) {
+        return this.openedFilePath === filePath;
     }
 }

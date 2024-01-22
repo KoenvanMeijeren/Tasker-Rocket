@@ -49,6 +49,11 @@ export function useBreadcrumbs() {
         (item: Breadcrumb) => {
             void router.push(item.path);
             store.menuTree.setOpenedFilePath('');
+
+            // If we are on the root path, we need to reset the active items.
+            if (item.path === '/') {
+                store.menuTree.resetActiveItems();
+            }
         },
         [router, store]
     );

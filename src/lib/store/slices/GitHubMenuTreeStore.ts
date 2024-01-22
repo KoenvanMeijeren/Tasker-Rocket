@@ -21,15 +21,23 @@ export class GitHubMenuTreeStore {
         this.items = items;
     }
 
-    public toggleItemState(item: GithubTreeMenuItem) {
-        const newState = !this.itemsActive[item.unique_key];
-        this.itemsActive[item.unique_key] = newState;
+    public resetActiveItems() {
+        this.itemsActive = {};
+    }
 
-        // If we are closing the item, we need to close all its subitems.
-        if (!newState) return;
+    public toggleItemState(item: GithubTreeMenuItem) {
+        this.itemsActive[item.unique_key] = !this.itemsActive[item.unique_key];
+
+        if (!this.itemsActive[item.unique_key]) {
+            this.deactivateItemRecursively(item);
+        }
+    }
+
+    public deactivateItemRecursively(item: GithubTreeMenuItem) {
+        this.itemsActive[item.unique_key] = false;
 
         item.tree.forEach((subItem) => {
-            this.itemsActive[subItem.unique_key] = false;
+            this.deactivateItemRecursively(subItem);
         });
     }
 

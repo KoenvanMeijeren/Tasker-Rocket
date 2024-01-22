@@ -3,46 +3,40 @@ import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Box, Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useContext, useMemo, useState } from 'react';
+import { useContext } from 'react';
 import { colorConfig } from '../../../../theme.config';
-import NavItem from './NavItem';
 import { SideBarLogo } from './SideBarLogo';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
 import { SessionContext } from '@/providers/SessionProvider';
+import { useParentTree } from '@/lib/project/useParentTree';
+import { useNavSizeHandler } from '@/lib/navigation/useNavSizeHandler';
+import NavItem from '@/components/navigation/sideBar/NavItem';
 
 const SideBar = observer(() => {
     const { session } = useContext(SessionContext);
     const store = useStore();
+    const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
-    const [navSize, toggleNavSize] = useState(NavSize.Large);
-    const { menuBackground, tint } = useModeColors();
+    const { navSize, navCollapseClickHandler } = useNavSizeHandler();
+    const { menuBackground } = useModeColors();
 
     const boxShadow = useColorModeValue(
         '-5px 0px 10px rgba(0,0,0,0.5)',
         '0px 0px 10px rgba(0,0,0,0.5)'
     );
-
-    const sidebarWidth = useMemo(
-        () => (navSize === NavSize.Small ? '4vw' : '20vw'),
-        [navSize]
-    );
-
-    const rotate = useMemo(
-        () => (navSize === NavSize.Small ? 'rotate(-180deg)' : 'rotate(0)'),
-        [navSize]
-    );
+    const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
 
     if (!session) {
         return null;
     }
 
     return (
-        <Box overflowX="auto">
+        <Box>
             <Stack
                 bg={menuBackground}
                 boxShadow={boxShadow}
-                height="98vh"
+                height="100vh"
                 justifyContent="space-between"
                 minWidth={sidebarWidth}
                 position="relative"
@@ -59,32 +53,20 @@ const SideBar = observer(() => {
                     alignItems={
                         navSize === NavSize.Small ? 'center' : 'flex-start'
                     }
-                    css={{
-                        '&::-webkit-scrollbar': {
-                            width: '6px',
-                        },
-
-                        '&::-webkit-scrollbar-thumb': {
-                            background: tint,
-                            borderRadius: '24px',
-                        },
-                    }}
                     flex={1}
                     overflow={navSize === NavSize.Small ? 'hidden' : 'auto'}
                     p={3}
                     spacing={0}
                     width="100%"
                 >
-                    <>
-                        {menuItems.map((item) => (
-                            <NavItem
-                                key={item.path}
-                                navSize={navSize}
-                                root={true}
-                                treeItem={item}
-                            />
-                        ))}
-                    </>
+                    {menuItems.map((item) => (
+                        <NavItem
+                            item={item}
+                            key={item.path}
+                            navSize={navSize}
+                            parentTree={parentTree}
+                        />
+                    ))}
                 </Stack>
 
                 {/* collapse/expand button */}
@@ -96,20 +78,15 @@ const SideBar = observer(() => {
                     px={2}
                     width="100%"
                 >
-                    <Button
-                        aspectRatio={1}
-                        onClick={() => {
-                            toggleNavSize(
-                                navSize === NavSize.Small
-                                    ? NavSize.Large
-                                    : NavSize.Small
-                            );
-                        }}
-                    >
+                    <Button aspectRatio={1} onClick={navCollapseClickHandler}>
                         <ChevronLeftIcon
                             boxSize={8}
                             color={colorConfig.iconGrey}
-                            transform={rotate}
+                            transform={
+                                navSize === NavSize.Small
+                                    ? 'rotate(-180deg)'
+                                    : 'rotate(0)'
+                            }
                             transition="all 0.2s linear"
                         />
                     </Button>

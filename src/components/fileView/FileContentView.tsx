@@ -7,23 +7,18 @@ import {
     DownloadIcon,
     Icon,
 } from '@chakra-ui/icons';
-import {
-    Box,
-    Button,
-    Collapse,
-    Divider,
-    Flex,
-    Text,
-    useDisclosure,
-} from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { Box, Button, Collapse, Divider, Flex, Text } from '@chakra-ui/react';
 import { colorConfig } from '../../../theme.config';
 import './fileContentView.css';
 import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { observer } from 'mobx-react-lite';
 import VerticalDivider from '@/components/general/VerticalDivider';
 import { RiTodoFill } from 'react-icons/ri';
-import { useFile, useFileHandlers } from '@/lib/project/useFileViewHandler';
+import {
+    useFile,
+    useFileHandlers,
+    useFileOpenHandler,
+} from '@/lib/project/useFileViewHandler';
 import { useFileIcon } from '@/lib/project/useFileIcon';
 import { useFileContent } from '@/lib/project/useFileContent';
 import { useGitHubItemsStateHandlers } from '@/lib/project/useGitHubItemsStateHandlers';
@@ -46,18 +41,10 @@ const FileContentView = observer((props: Props) => {
     const file = useFile(item, data);
     const icon = useFileIcon(file);
     const { handleDownload } = useFileHandlers(file);
+    const { isOpen, handleFileOpen } = useFileOpenHandler(file, defaultIsOpen);
     const { content, isFileViewable } = useFileContent(file);
     const { isItemCompleted, toggleTaskCompleted } =
         useGitHubItemsStateHandlers(store, item, parentTree);
-
-    const { isOpen, onToggle, onClose, onOpen } = useDisclosure({
-        defaultIsOpen,
-    });
-
-    // Update the 'isOpen' state when 'defaultIsOpen' changes
-    useEffect(() => {
-        return defaultIsOpen ? onOpen() : onClose();
-    }, [defaultIsOpen, onClose, onOpen]);
 
     if (error) {
         return <div>laden mislukt...</div>;
@@ -86,7 +73,7 @@ const FileContentView = observer((props: Props) => {
                     display="flex"
                     flex={1}
                     justifyContent="space-between"
-                    onClick={onToggle}
+                    onClick={handleFileOpen}
                     px={4}
                 >
                     <Box alignItems="center" display="flex" gap="10px">

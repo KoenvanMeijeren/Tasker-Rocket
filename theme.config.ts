@@ -24,6 +24,7 @@ export const colorConfig = {
         title: 'white',
         tint: '#616d79',
         hoverBackground: '#1a2636',
+        menuItemActiveBackground: '#232d3b',
     },
     light: {
         backgroundSecondary: '#ffffff',
@@ -34,6 +35,7 @@ export const colorConfig = {
         title: 'black',
         tint: '#dbdee6',
         hoverBackground: '#e8eaf3',
+        menuItemActiveBackground: '#dbdee6',
     },
     green: '#239964',
     blue: '#3b82f6',

@@ -6,6 +6,7 @@ import {
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { File } from '@/types/file';
+import { useCurrentPath } from '@/lib/utility/uri';
 
 export const useFile = (
     item: GitHubTreeContentItem,
@@ -49,4 +50,33 @@ export const useFileHandlers = (file: File | undefined) => {
     }, [file]);
 
     return { handleDownload };
+};
+
+export const useFileOpenHandler = (
+    file: File | undefined,
+    defaultIsOpen: boolean
+) => {
+    const { searchParams } = useCurrentPath();
+    const [isOpen, setIsOpen] = useState(defaultIsOpen);
+    const [shouldOverwriteDefault, setShouldOverwriteDefault] = useState(false);
+
+    useEffect(() => {
+        if (!file || !shouldOverwriteDefault) return;
+        const openedFile = searchParams?.get('file');
+        if (openedFile === file.name) {
+            setIsOpen(true);
+        }
+    }, [file, searchParams, shouldOverwriteDefault]);
+
+    const handleFileOpen = useCallback(() => {
+        setShouldOverwriteDefault(true);
+        if (!file) {
+            setIsOpen(false);
+            return;
+        }
+
+        setIsOpen(!isOpen);
+    }, [file, isOpen]);
+
+    return { isOpen, handleFileOpen };
 };

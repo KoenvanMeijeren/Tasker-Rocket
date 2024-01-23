@@ -1,4 +1,3 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { blobToString } from '@/lib/utility/dataStructure';
 import { codeExtensions } from '@/types/extensions';
 import { File } from '@/types/file';
@@ -7,9 +6,10 @@ import { Box, Button, Flex } from '@chakra-ui/react';
 import CodeMirror from '@uiw/react-codemirror';
 import { useMemo, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 export default function CodeView({ file }: { file: File }) {
-    const { codeMirror } = useModeColors();
+    const colorConfig = useColorConfig();
     const [copied, setCopied] = useState(false);
 
     const content = useMemo(() => {
@@ -43,7 +43,7 @@ export default function CodeView({ file }: { file: File }) {
             <CodeMirror
                 editable={false}
                 extensions={codeExtensions[file.extension]}
-                theme={codeMirror}
+                theme={colorConfig.gitHubConfig}
                 value={content}
             />
         </Box>

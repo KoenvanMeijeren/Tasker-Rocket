@@ -1,9 +1,9 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { NavSize } from '@/types/navSize';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
 import { ExpandableNavItem } from '@/components/navigation/sideBar/ExpandableNavItem';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 type Props = {
     item: GithubTreeMenuItem;
@@ -13,7 +13,7 @@ type Props = {
 
 export default function NavItem({ item, parentTree, navSize }: Props) {
     const { pathStripped } = useCurrentPath();
-    const { fontColor, menuItemActiveBackground } = useModeColors();
+    const colorConfig = useColorConfig();
 
     if (navSize === NavSize.Small) {
         const isActive = pathStripped === `/${item.path}`;
@@ -21,10 +21,10 @@ export default function NavItem({ item, parentTree, navSize }: Props) {
         return (
             <NavItemLogo
                 backgroundColor={
-                    isActive ? menuItemActiveBackground : undefined
+                    isActive ? colorConfig.menuItemActiveBackground : undefined
                 }
                 name={item.name}
-                textColor={fontColor}
+                textColor={colorConfig.font}
             />
         );
     }

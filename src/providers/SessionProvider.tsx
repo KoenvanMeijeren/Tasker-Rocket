@@ -2,7 +2,6 @@ import supabase from '@/lib/supabase/db';
 import { Session } from '@supabase/supabase-js';
 import React, { createContext, useEffect, useState } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
-import { useRouter } from 'next/navigation';
 
 interface SessionContextTypes {
     session: Session | null;
@@ -19,7 +18,6 @@ export default function SessionProvider({
 }) {
     const [session, setSession] = useState<Session | null>(null);
     const customToast = useCustomToast();
-    const router = useRouter();
 
     async function getSession(): Promise<void> {
         const { data, error } = await supabase.auth.getSession();

@@ -6,17 +6,17 @@ import { MobxStore } from '@/lib/store/MobxStore';
 export const useNavItemActiveHandler = (
     store: MobxStore,
     item: GithubTreeMenuItem,
-    parenTree: GitHubParentTree | undefined
+    parentTree: GitHubParentTree | undefined
 ) => {
     const { pathStripped } = useCurrentPath();
     const isActive = pathStripped === `/${item.path}`;
     const isActiveFile = store.menuTree.isFileOpened(item.path);
     const isActiveInTree = useMemo(() => {
-        if (!parenTree) return false;
-        return parenTree.tree.some(
+        if (!parentTree) return false;
+        return parentTree.tree.some(
             (parentItem) => parentItem.unique_key === item.unique_key
         );
-    }, [item.unique_key, parenTree]);
+    }, [item.unique_key, parentTree]);
 
     return {
         isActive,

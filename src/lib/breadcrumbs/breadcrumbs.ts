@@ -10,34 +10,67 @@ import { useStore } from '@/lib/store';
 type Breadcrumb = {
     name: string;
     path: string;
+    isSkipped?: boolean;
 };
+
+function getBreadcrumb(
+    breadcrumb: string,
+    index: number,
+    breadcrumbs: string[]
+): Breadcrumb {
+    const breadcrumbPath = breadcrumbs.slice(0, index + 1).join('/');
+    return {
+        name: urlToReadableString(breadcrumb),
+        path: breadcrumbPath.length < 1 ? '/' : breadcrumbPath,
+    };
+}
+
+function getAllBreadcrumbs(url: string): Breadcrumb[] {
+    const breadcrumbs = url.split('/');
+    return breadcrumbs.map((breadcrumb: string, index: number) =>
+        getBreadcrumb(breadcrumb, index, breadcrumbs)
+    );
+}
+
+function getCollapsedBreadcrumbs(
+    url: string,
+    maxVisibleBreadcrumbs: number
+): Breadcrumb[] {
+    const breadcrumbs = url.split('/');
+    const firstBreadcrumbs = breadcrumbs
+        .slice(0, maxVisibleBreadcrumbs)
+        .map((breadcrumb, index) =>
+            getBreadcrumb(breadcrumb, index, breadcrumbs)
+        );
+    const lastBreadcrumbs = breadcrumbs
+        .slice(-maxVisibleBreadcrumbs)
+        .map((breadcrumb, index) =>
+            getBreadcrumb(
+                breadcrumb,
+                breadcrumbs.length - maxVisibleBreadcrumbs + index,
+                breadcrumbs
+            )
+        );
+
+    return [
+        ...firstBreadcrumbs,
+        { name: '...', path: '...', isSkipped: true },
+        ...lastBreadcrumbs,
+    ];
+}
 
 function pathToBreadcrumbs(path: string): Breadcrumb[] {
     const url = removeQueryParamsFromURl(path);
     const isEmptyPath = path === '/[...path]';
-
-    if (url.length < 1 || url === '/' || isEmptyPath) {
+    if (isEmptyPath || url === '/') {
         return [];
     }
 
-    const breadcrumbs = url.split('/');
+    if (url.split('/').length > 5) {
+        return getCollapsedBreadcrumbs(url, 3);
+    }
 
-    return breadcrumbs.map((breadcrumb: string, index: number) => {
-        const breadcrumbPath = breadcrumbs.slice(0, index + 1).join('/');
-
-        // If the path empty, we need to explicitly set it to the root path.
-        if (breadcrumbPath.length < 1) {
-            return {
-                name: '',
-                path: '/',
-            };
-        }
-
-        return {
-            name: urlToReadableString(breadcrumb),
-            path: breadcrumbPath,
-        };
-    });
+    return getAllBreadcrumbs(url);
 }
 
 export function useBreadcrumbs() {
@@ -48,6 +81,9 @@ export function useBreadcrumbs() {
 
     const onBreadcrumbClick = useCallback(
         (item: Breadcrumb) => {
+            // If the item is skipped, we don't want to do anything.
+            if (item.isSkipped === true) return;
+
             void router.push(item.path);
             store.menuTree.setOpenedFilePath('');
 

@@ -6,6 +6,7 @@ import {
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { File } from '@/types/file';
+import { useDisclosure } from '@chakra-ui/react';
 
 export const useFile = (
     item: GitHubTreeContentItem,
@@ -53,16 +54,42 @@ export const useFileHandlers = (file: File | undefined) => {
     return { handleDownload };
 };
 
-export const useFileOpenHandler = (isFileOpened: boolean) => {
-    const [isOpen, setIsOpen] = useState(isFileOpened);
+export const useFileOpenHandler = (
+    item: GitHubTreeContentItem,
+    isFileOpened: boolean,
+    onLoad: (fileName: string) => void,
+    isAllOpen: boolean
+) => {
+    const { isOpen, onOpen, onClose, onToggle } = useDisclosure({
+        defaultIsOpen: isFileOpened,
+    });
 
     useEffect(() => {
-        setIsOpen(isFileOpened);
-    }, [isFileOpened]);
+        if (isFileOpened) {
+            onOpen();
+            return;
+        }
+
+        onClose();
+    }, [isFileOpened, onClose, onOpen]);
 
     const handleFileOpen = useCallback(() => {
-        setIsOpen(!isOpen);
-    }, [isOpen]);
+        onToggle();
+    }, [onToggle]);
 
-    return { isOpen, handleFileOpen };
+    useEffect(() => {
+        if (!item) return;
+        onLoad(item.name);
+    }, [item, onLoad]);
+
+    useEffect(() => {
+        if (isAllOpen) {
+            onOpen();
+            return;
+        }
+
+        onClose();
+    }, [isAllOpen, onClose, onOpen]);
+
+    return { isOpen, handleFileOpen, handleFileClose: onClose };
 };

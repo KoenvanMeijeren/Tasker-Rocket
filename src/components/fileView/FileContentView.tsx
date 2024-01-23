@@ -28,20 +28,25 @@ type Props = {
     item: GitHubTreeContentItem;
     parentTree: GitHubParentTree;
     isLastItem: boolean;
+    onLoad: (fileName: string) => void;
+    isAllOpen: boolean;
 };
 
 const FileContentView = observer((props: Props) => {
     const store = useStore();
     const { backgroundColorSecondary, border } = useModeColors();
 
-    const { item, parentTree, isLastItem } = props;
+    const { item, parentTree, isLastItem, onLoad, isAllOpen } = props;
     const { download_url: contentUrl } = item;
     const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
     const file = useFile(item, data);
     const icon = useFileIcon(file);
     const { handleDownload } = useFileHandlers(file);
-    const { isOpen, handleFileOpen } = useFileOpenHandler(
-        store.menuTree.isFileOpened(file?.path)
+    const { isOpen, handleFileOpen, handleFileClose } = useFileOpenHandler(
+        item,
+        store.menuTree.isFileOpened(file?.path),
+        onLoad,
+        isAllOpen
     );
     const { content, isFileViewable } = useFileContent(file);
     const { isItemCompleted, toggleTaskCompleted } =
@@ -70,12 +75,16 @@ const FileContentView = observer((props: Props) => {
                 {/* Task header (collapsible) */}
                 <Box
                     alignItems="center"
+                    backgroundColor={backgroundColorSecondary}
                     cursor="pointer"
                     display="flex"
                     flex={1}
                     justifyContent="space-between"
                     onClick={handleFileOpen}
+                    position="sticky"
                     px={4}
+                    top={0}
+                    zIndex={1}
                 >
                     <Box alignItems="center" display="flex" gap="10px">
                         {isItemCompleted ? (
@@ -145,7 +154,16 @@ const FileContentView = observer((props: Props) => {
                                 </Box>
                             </button>
                         </Box>
+
                         {content}
+
+                        <Button
+                            className="close-btn"
+                            colorScheme="green"
+                            onClick={() => handleFileClose()}
+                        >
+                            Close
+                        </Button>
                     </Box>
                 </Collapse>
             </Box>

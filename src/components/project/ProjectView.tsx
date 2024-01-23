@@ -24,9 +24,11 @@ export function ProjectView({ data, parentTree }: Props) {
                 <FoldersSection data={content.dirs} label={repository} />
             ) : null}
 
-            <Button onClick={onToggle}>
-                {isOpen ? 'Sluit Alles' : 'Open Alles'}
-            </Button>
+            {content.files.length > 0 ? (
+                <Button onClick={onToggle}>
+                    {isOpen ? 'Sluit Alles' : 'Open Alles'}
+                </Button>
+            ) : null}
 
             <Stack
                 alignItems="flex-start"

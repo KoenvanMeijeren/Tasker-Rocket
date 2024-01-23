@@ -2,6 +2,7 @@ import supabase from '@/lib/supabase/db';
 import { Session } from '@supabase/supabase-js';
 import React, { createContext, useEffect, useState } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
+import { useRouter } from 'next/navigation';
 
 interface SessionContextTypes {
     session: Session | null;
@@ -18,6 +19,7 @@ export default function SessionProvider({
 }) {
     const [session, setSession] = useState<Session | null>(null);
     const customToast = useCustomToast();
+    const router = useRouter();
 
     async function getSession(): Promise<void> {
         const { data, error } = await supabase.auth.getSession();
@@ -33,6 +35,13 @@ export default function SessionProvider({
         void getSession();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Fallback to redirect to login page if session is null and middleware is not working.
+    useEffect(() => {
+        if (session) return;
+
+        router.push('/login');
+    }, [session, router]);
 
     return (
         <SessionContext.Provider value={{ session }}>

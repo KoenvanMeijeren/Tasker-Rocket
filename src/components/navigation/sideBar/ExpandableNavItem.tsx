@@ -94,6 +94,9 @@ export const ExpandableNavItem = observer((props: Props) => {
                         isActive ? menuItemActiveBackground : 'default'
                     }
                     onClick={() => {
+                        // Toggling has no effect, because the item is marked as active in tree.
+                        if (isActiveInTree) return;
+
                         store.menuTree.toggleItemState(menuItem);
                     }}
                     style={containerStyle}

@@ -3,7 +3,7 @@ import {
     urlToReadableString,
 } from '@/lib/utility/formatters';
 import { useCurrentPath } from '@/lib/utility/uri';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from '@/lib/store';
 
@@ -44,6 +44,7 @@ export function useBreadcrumbs() {
     const { path } = useCurrentPath();
     const router = useRouter();
     const store = useStore();
+    const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
 
     const onBreadcrumbClick = useCallback(
         (item: Breadcrumb) => {
@@ -58,7 +59,9 @@ export function useBreadcrumbs() {
         [router, store]
     );
 
-    const breadcrumbs = pathToBreadcrumbs(path);
+    useEffect(() => {
+        setBreadcrumbs(pathToBreadcrumbs(path));
+    }, [path]);
 
     return { breadcrumbs, onBreadcrumbClick };
 }

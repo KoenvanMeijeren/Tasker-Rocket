@@ -36,13 +36,6 @@ export default function SessionProvider({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Fallback to redirect to login page if session is null and middleware is not working.
-    useEffect(() => {
-        if (session) return;
-
-        router.push('/login');
-    }, [session, router]);
-
     return (
         <SessionContext.Provider value={{ session }}>
             {children}

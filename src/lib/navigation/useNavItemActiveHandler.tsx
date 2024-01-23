@@ -8,8 +8,8 @@ export const useNavItemActiveHandler = (
     item: GithubTreeMenuItem,
     parenTree: GitHubParentTree | undefined
 ) => {
-    const { pathWithoutQuery } = useCurrentPath();
-    const isActive = pathWithoutQuery === `/${item.path}`;
+    const { pathStripped } = useCurrentPath();
+    const isActive = pathStripped === `/${item.path}`;
     const isActiveFile = store.menuTree.isFileOpened(item.path);
     const isActiveInTree = useMemo(() => {
         if (!parenTree) return false;

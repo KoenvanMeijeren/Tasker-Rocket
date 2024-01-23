@@ -91,7 +91,7 @@ export const ExpandableNavItem = observer((props: Props) => {
                 <Flex
                     _hover={hover}
                     backgroundColor={
-                        isActive ? menuItemActiveBackground : 'white'
+                        isActive ? menuItemActiveBackground : 'default'
                     }
                     onClick={() => {
                         store.menuTree.toggleItemState(menuItem);
@@ -130,14 +130,17 @@ export const ExpandableNavItem = observer((props: Props) => {
 
     return (
         <Link
-            href={buildUri(parent, searchParams, {}, ['path'])}
+            href={
+                buildUri(parent, searchParams, {}, ['path']) +
+                `#file-${menuItem.unique_key}`
+            }
             onClick={handleFileClick}
             style={{ width: '100%' }}
         >
             <Flex
                 _hover={hover}
                 backgroundColor={
-                    isActiveFile ? menuItemActiveBackground : 'white'
+                    isActiveFile ? menuItemActiveBackground : 'default'
                 }
                 marginLeft={root ? 0 : tabSize}
                 style={containerStyle}

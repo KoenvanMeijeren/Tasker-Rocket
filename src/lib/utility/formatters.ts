@@ -36,6 +36,9 @@ export const getParentFromUrl = (url: string) => {
 };
 
 export const removeQueryParamsFromURl = (url: string) => url.split('?')[0];
+export const removeIdAnchorFromURl = (url: string) => url.split('#')[0];
+export const stripUri = (url: string) =>
+    removeQueryParamsFromURl(removeIdAnchorFromURl(url));
 
 // Temporary function to extract 2 sensible characters from the name until we have configurable
 // icons for folders and files. They will be shown instead.

@@ -31,7 +31,7 @@ export function ProjectView({ data, parentTree }: Props) {
             >
                 {content.files.map((item: GitHubTreeContentItem, index) => {
                     return (
-                        <Box key={item.url}>
+                        <Box id={`file-${item.unique_key}`} key={item.url}>
                             <FileContentView
                                 isLastItem={index == content.files.length - 1}
                                 item={item}

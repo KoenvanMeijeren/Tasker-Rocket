@@ -2,7 +2,7 @@ import { NavSize } from '@/types/navSize';
 import NavItemLogo from '@/components/navigation/sideBar/NavItemLogo';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
-import { ExpandableNavItem } from '@/components/navigation/sideBar/ExpandableNavItem';
+import ExpandableNavItem from '@/components/navigation/sideBar/ExpandableNavItem';
 import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 type Props = {
@@ -32,8 +32,9 @@ export default function NavItem({ item, parentTree, navSize }: Props) {
     return (
         <ExpandableNavItem
             menuItem={item}
+            menuParentItem={undefined}
             navSize={navSize}
-            parenTree={parentTree}
+            parentTree={parentTree}
             root={item.isRoot}
         />
     );

@@ -4,6 +4,7 @@ import { Box, Stack } from '@chakra-ui/layout';
 import FoldersSection from './FoldersSection';
 import FileContentView from '../fileView/FileContentView';
 import { useProjectContent } from '@/lib/project/useProjectContent';
+import { Button } from '@chakra-ui/react';
 
 type Props = {
     data: GitHubTreeContentItem[] | GitHubTreeContentItem;
@@ -11,16 +12,22 @@ type Props = {
 };
 
 export function ProjectView({ data, parentTree }: Props) {
-    const { content, repository } = useProjectContent(data);
+    const { content, repository, isOpen, onToggle, isLoading, handleFileLoad } =
+        useProjectContent(data);
     if (!content) {
         return null;
     }
 
     return (
-        <Box>
+        <Box display={isLoading ? 'none' : 'block'}>
             {content.dirs && content.dirs.length > 0 ? (
                 <FoldersSection data={content.dirs} label={repository} />
             ) : null}
+
+            <Button onClick={onToggle}>
+                {isOpen ? 'Sluit Alles' : 'Open Alles'}
+            </Button>
+
             <Stack
                 alignItems="flex-start"
                 display="block"
@@ -33,9 +40,11 @@ export function ProjectView({ data, parentTree }: Props) {
                     return (
                         <Box id={`file-${item.unique_key}`} key={item.url}>
                             <FileContentView
+                                isAllOpen={isOpen}
                                 isLastItem={index == content.files.length - 1}
                                 item={item}
                                 key={item.url}
+                                onLoad={handleFileLoad}
                                 parentTree={parentTree}
                             />
                         </Box>

@@ -46,3 +46,8 @@
     @apply font-bold;
     margin: 0 10px;
 }
+
+.close-btn {
+    @apply text-white;
+    background-color: #239964;
+}

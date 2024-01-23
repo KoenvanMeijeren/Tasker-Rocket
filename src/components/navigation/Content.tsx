@@ -1,14 +1,15 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { Box } from '@chakra-ui/layout';
 import type { AppProps } from 'next/app';
 import { Header } from './Header';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Content = ({ Component, ...pageProps }: AppProps) => {
-    const { backgroundColorPrimary } = useModeColors();
+    const colorConfig = useColorConfig();
+
     return (
         <Box
-            backgroundColor={backgroundColorPrimary}
+            backgroundColor={colorConfig.backgroundPrimary}
             height="100%"
             overflow="auto"
             width="100%"

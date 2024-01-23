@@ -1,7 +1,7 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { nameToLogo } from '@/lib/utility/formatters';
 import { Flex } from '@chakra-ui/react';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 const chevronBoxSize = 20;
 
@@ -18,12 +18,13 @@ export default function NavItemLogo({
     textColor,
     backgroundColor,
 }: Props) {
-    const { backgroundColorPrimary } = useModeColors();
+    const colorConfig = useColorConfig();
+
     return (
         <Flex
             alignItems="center"
             aspectRatio={1}
-            backgroundColor={backgroundColor ?? backgroundColorPrimary}
+            backgroundColor={backgroundColor ?? colorConfig.backgroundPrimary}
             borderRadius={4}
             height={`${chevronBoxSize + horizontalPadding * 2 - 4}px`}
             justifyContent="center"

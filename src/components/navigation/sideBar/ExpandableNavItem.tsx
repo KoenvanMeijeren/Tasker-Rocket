@@ -4,7 +4,6 @@ import FolderIcon from '@/components/icons/FolderIcon';
 import ImageIcon from '@/components/icons/ImageIcon';
 import MarkdownIcon from '@/components/icons/MarkdownIcon';
 import VideoIcon from '@/components/icons/VideoIcon';
-import { useModeColors } from '@/hooks/useModeColors';
 import { getParentFromUrl, urlToFileExtension } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
@@ -13,13 +12,14 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
-import { colorConfig } from '../../../../theme.config';
+import { themeConfig } from '../../../../theme.config';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
 import { buildUri } from '@/lib/utility/uri';
 import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
 import { useSearchParams } from 'next/navigation';
 import { useStore } from '@/lib/store';
 import { observer } from 'mobx-react-lite';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -52,6 +52,7 @@ interface Props {
 
 export const ExpandableNavItem = observer((props: Props) => {
     const { menuItem, parenTree, navSize, root } = props;
+    const colorConfig = useColorConfig();
     const store = useStore();
     const searchParams = useSearchParams();
     const { isActive, isActiveFile, isActiveInTree } = useNavItemActiveHandler(
@@ -60,9 +61,6 @@ export const ExpandableNavItem = observer((props: Props) => {
         parenTree
     );
     const isOpen = store.menuTree.isItemActive(menuItem);
-
-    const { fontColor, hoverBackground, menuItemActiveBackground } =
-        useModeColors();
 
     const containerStyle: CSSProperties = {
         alignItems: 'center',
@@ -74,7 +72,7 @@ export const ExpandableNavItem = observer((props: Props) => {
     };
 
     const hover = {
-        backgroundColor: hoverBackground,
+        backgroundColor: colorConfig.hoverBackground,
         opacity: 1,
     };
 
@@ -91,7 +89,9 @@ export const ExpandableNavItem = observer((props: Props) => {
                 <Flex
                     _hover={hover}
                     backgroundColor={
-                        isActive ? menuItemActiveBackground : 'default'
+                        isActive
+                            ? colorConfig.menuItemActiveBackground
+                            : 'default'
                     }
                     onClick={() => {
                         // Toggling has no effect, because the item is marked as active in tree.
@@ -103,13 +103,16 @@ export const ExpandableNavItem = observer((props: Props) => {
                 >
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
-                        color={colorConfig.iconGrey}
+                        color={themeConfig.iconGrey}
                         transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                         transition="all 0.2s linear"
                     />
                     <FolderIcon />
 
-                    <NavItemTitle name={menuItem.name} textColor={fontColor} />
+                    <NavItemTitle
+                        name={menuItem.name}
+                        textColor={colorConfig.font}
+                    />
                 </Flex>
 
                 <Collapse in={isOpen || isActiveInTree}>
@@ -143,14 +146,19 @@ export const ExpandableNavItem = observer((props: Props) => {
             <Flex
                 _hover={hover}
                 backgroundColor={
-                    isActiveFile ? menuItemActiveBackground : 'default'
+                    isActiveFile
+                        ? colorConfig.menuItemActiveBackground
+                        : 'default'
                 }
                 marginLeft={root ? 0 : tabSize}
                 style={containerStyle}
             >
                 {getFileIcon(fileInfo.type)}
 
-                <NavItemTitle name={menuItem.name} textColor={fontColor} />
+                <NavItemTitle
+                    name={menuItem.name}
+                    textColor={colorConfig.font}
+                />
             </Flex>
         </Link>
     );

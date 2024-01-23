@@ -1,13 +1,13 @@
 'use client';
 
-import { useModeColors } from '@/hooks/useModeColors';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { BiSolidChevronRight } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
 import { useBreadcrumbs } from '@/lib/breadcrumbs/breadcrumbs';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 export function Breadcrumbs() {
-    const { fontColor } = useModeColors();
+    const colorConfig = useColorConfig();
     const { breadcrumbs, onBreadcrumbClick } = useBreadcrumbs();
     if (breadcrumbs.length < 1) {
         return null;
@@ -24,7 +24,7 @@ export function Breadcrumbs() {
                         key={`breadcrumb-item-${index}-${item.path}`}
                     >
                         <BreadcrumbLink
-                            color={fontColor}
+                            color={colorConfig.font}
                             onClick={() => {
                                 onBreadcrumbClick(item);
                             }}

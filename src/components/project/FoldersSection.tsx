@@ -1,10 +1,9 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { Card, CardBody } from '@chakra-ui/card';
 import { CheckCircleIcon, ChevronDownIcon, Icon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex, useDisclosure } from '@chakra-ui/react';
 import Link from 'next/link';
-import { colorConfig } from '../../../theme.config';
+import { themeConfig } from '../../../theme.config';
 import { FaFolderOpen } from 'react-icons/fa6';
 import Heading from '../textStyles/Heading';
 import Text from '../textStyles/Text';
@@ -13,6 +12,7 @@ import { RiTodoFill } from 'react-icons/ri';
 import { useFoldersContent } from '@/lib/project/useFoldersContent';
 import { useStore } from '@/lib/store';
 import { buildUri, useCurrentPath } from '@/lib/utility/uri';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 type Props = {
     data: GitHubTreeContentItem[];
@@ -24,12 +24,11 @@ const FoldersSection = observer(({ data, label }: Props) => {
     const { folders } = useFoldersContent(store, data);
     const { searchParams } = useCurrentPath();
     const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
-    const { backgroundColorSecondary, backgroundColorPrimary, tint } =
-        useModeColors();
+    const colorConfig = useColorConfig();
 
     return (
         <Box
-            backgroundColor={backgroundColorSecondary}
+            backgroundColor={colorConfig.backgroundSecondary}
             boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
             pos="sticky"
             px={6}
@@ -49,7 +48,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
                 <Heading className="noselect">{label}</Heading>
                 <ChevronDownIcon
                     boxSize={10}
-                    color={colorConfig.iconGrey}
+                    color={themeConfig.iconGrey}
                     transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                     transition="all 0.2s linear"
                 />
@@ -65,7 +64,7 @@ const FoldersSection = observer(({ data, label }: Props) => {
                         },
 
                         '&::-webkit-scrollbar-thumb': {
-                            background: tint,
+                            background: colorConfig.tint,
                             borderRadius: '24px',
                         },
                     }}
@@ -83,7 +82,11 @@ const FoldersSection = observer(({ data, label }: Props) => {
                                 key={item.url}
                                 style={{ flexShrink: 0 }}
                             >
-                                <Card backgroundColor={backgroundColorPrimary}>
+                                <Card
+                                    backgroundColor={
+                                        colorConfig.backgroundPrimary
+                                    }
+                                >
                                     <CardBody py={3}>
                                         <Box
                                             alignItems="center"

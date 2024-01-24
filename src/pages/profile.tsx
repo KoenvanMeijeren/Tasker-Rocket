@@ -1,20 +1,21 @@
+import SettingsTab from '@/components/profile/tabs/SettingsTab';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 import { SessionContext } from '@/providers/SessionProvider';
 import {
-    Container,
-    Box,
-    Flex,
     Avatar,
-    Text,
+    Box,
+    Container,
     Divider,
-    Tabs,
-    TabList,
+    Flex,
     Tab,
+    TabList,
     TabPanels,
+    Tabs,
+    Text,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
-import DeleteAccountTab from '../components/profile/tabs/DeleteAccountTab';
 import ChangeProfileInfoTab from '../components/profile/tabs/ChangeProfileInfoTab';
-import { useColorConfig } from '@/lib/colors/useColorConfig';
+import DeleteAccountTab from '../components/profile/tabs/DeleteAccountTab';
 
 export default function Profile() {
     const { session } = useContext(SessionContext);
@@ -49,11 +50,13 @@ export default function Profile() {
                         <Tabs>
                             <TabList>
                                 <Tab>Update Profile Information</Tab>
+                                <Tab>Update repository config</Tab>
                                 <Tab>Delete Profile</Tab>
                             </TabList>
 
                             <TabPanels>
                                 <ChangeProfileInfoTab />
+                                <SettingsTab />
                                 <DeleteAccountTab />
                             </TabPanels>
                         </Tabs>

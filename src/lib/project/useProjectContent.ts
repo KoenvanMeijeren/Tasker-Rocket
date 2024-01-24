@@ -1,8 +1,8 @@
-import { useRepositoryContext } from '@/lib/repository/useRepository';
 import { useCallback, useEffect, useState } from 'react';
 import { isDir, splitFilesAndDirs } from '@/lib/utility/dataStructure';
 import { GitHubTreeContentItem } from '@/types/gitHubData';
 import { useDisclosure } from '@chakra-ui/react';
+import { MobxStore } from '@/lib/store/MobxStore';
 
 type Data = {
     dirs: GitHubTreeContentItem[];
@@ -10,9 +10,10 @@ type Data = {
 };
 
 export const useProjectContent = (
+    store: MobxStore,
     data: GitHubTreeContentItem[] | GitHubTreeContentItem
 ) => {
-    const { repository } = useRepositoryContext();
+    const { repository } = store.repositoryConfig.selectedItem;
     const [content, setContent] = useState<Data | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [loadedFiles, setLoadedFiles] = useState({});

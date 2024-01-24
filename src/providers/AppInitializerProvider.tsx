@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
 import { useGitHubTree } from '@/lib/repository/gitHubRepository';
-import { buildMenuTree } from '@/lib/utility/dataStructure';
 import { useStore } from '@/lib/store';
+import { buildMenuTree } from '@/lib/utility/dataStructure';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
 
 type Props = {
     children: React.ReactNode;
 };
 
-export default function AppInitializerProvider({ children }: Props) {
+const AppInitializerProvider = observer(({ children }: Props) => {
     const store = useStore();
     const selectedRepository = store.repositoryConfig.selectedItem;
     const { data, isLoading } = useGitHubTree(selectedRepository);
@@ -33,4 +34,7 @@ export default function AppInitializerProvider({ children }: Props) {
     ]);
 
     return children;
-}
+});
+
+AppInitializerProvider.displayName = 'AppInitializerProvider';
+export default AppInitializerProvider;

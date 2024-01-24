@@ -19,18 +19,20 @@ const Header = observer(() => {
     const store = useStore();
     const { colorMode, toggleColorMode } = useColorMode();
     const colorConfig = useColorConfig();
-    const [repositories, setRepositories] = useState<RepositoryConfigItem[]>(
-        []
-    );
 
     const boxShadow = useColorModeValue(
         '0px -5px 10px rgba(0,0,0,0.5)',
         '0px -1px 15px rgba(0,0,0,0.75)'
     );
 
-    useEffect(() => {
-        setRepositories(store.repositoryConfig.items);
-    }, [store, repositories]);
+    const changeSelectedItem = (item: string) => {
+        const repoItem = store.repositoryConfig.items.find(
+            (repo) => repo.repository === item
+        );
+        if (!repoItem) return;
+        store.gitHubItemsState.initRepository(repoItem.repository);
+        store.repositoryConfig.setSelectedItem(repoItem);
+    };
 
     return (
         <Flex
@@ -49,8 +51,12 @@ const Header = observer(() => {
                     <Breadcrumbs />
                 </Box>
                 <Spacer />
-                <Select width={200}>
-                    {repositories.map((repo) => (
+                <Select
+                    onChange={(e) => changeSelectedItem(e.target.value)}
+                    value={store.repositoryConfig.selectedItem?.repository}
+                    width={200}
+                >
+                    {store.repositoryConfig.items.map((repo) => (
                         <option key={repo.repository} value={repo.repository}>
                             {repo.repository}
                         </option>

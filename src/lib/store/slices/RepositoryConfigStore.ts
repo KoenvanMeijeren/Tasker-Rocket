@@ -1,6 +1,6 @@
+import { EnvOptions, getEnvValue, isEnvValueEnabled } from '@/lib/utility/env';
 import { makeAutoObservable } from 'mobx';
 import { makeSlicePersistable } from '../hooks';
-import { EnvOptions, getEnvValue, isEnvValueEnabled } from '@/lib/utility/env';
 
 export type RepositoryConfigItem = {
     repository: string;
@@ -17,7 +17,14 @@ export class RepositoryConfigStore {
 
     constructor() {
         makeAutoObservable(this);
-        void makeSlicePersistable(this, 'repositoryConfig', ['items']);
+        void makeSlicePersistable(this, 'repositoryConfig', [
+            'items',
+            'selectedItem',
+        ]);
+        //add default item to the store so there is always at least one item
+        if (this.items.length === 0) {
+            this.items.push(this.selectedItem);
+        }
     }
 
     public addRepository(item: RepositoryConfigItem) {
@@ -36,5 +43,9 @@ export class RepositoryConfigStore {
 
         //remove item
         this.items.splice(index, 1);
+    }
+
+    public setSelectedItem(item: RepositoryConfigItem) {
+        this.selectedItem = item;
     }
 }

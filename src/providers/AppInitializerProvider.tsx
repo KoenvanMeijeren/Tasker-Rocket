@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { gitHubConfig, useGitHubTree } from '@/lib/repository/gitHubRepository';
+import { useGitHubTree } from '@/lib/repository/gitHubRepository';
 import { buildMenuTree } from '@/lib/utility/dataStructure';
 import { useStore } from '@/lib/store';
+import { useRepositoryContext } from '@/lib/repository/useRepository';
 
 type Props = {
     children: React.ReactNode;
@@ -9,8 +10,8 @@ type Props = {
 
 export default function AppInitializerProvider({ children }: Props) {
     const store = useStore();
-    const repository = gitHubConfig.content_repository;
-    const { data, isLoading } = useGitHubTree();
+    const { repository, context: repositoryContext } = useRepositoryContext();
+    const { data, isLoading } = useGitHubTree(repositoryContext);
 
     // Make sure that the repository is initialized, even if the data is not loaded yet.
     useEffect(() => {

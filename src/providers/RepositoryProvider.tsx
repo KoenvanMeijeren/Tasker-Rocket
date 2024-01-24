@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { gitHubConfig } from '@/lib/repository/gitHubRepository';
+import { EnvOptions, getEnvValue, isEnvValueEnabled } from '@/lib/utility/env';
 
 export type RepositoryContextType = {
     repository: string;
-    setRepository: React.Dispatch<React.SetStateAction<string>>;
+    isPrivate: boolean;
 };
 
 export const RepositoryContext = React.createContext<
@@ -15,18 +15,19 @@ export default function RepositoryProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [repository, setRepository] = useState<string>(
-        gitHubConfig.content_repository
+    const [repository] = useState<string>(
+        getEnvValue(EnvOptions.GithubContentRepository)
+    );
+    const [isPrivate] = useState<boolean>(
+        isEnvValueEnabled(EnvOptions.GithubContentRepository)
     );
 
     return (
         <RepositoryContext.Provider
-            value={
-                {
-                    repository,
-                    setRepository,
-                } as RepositoryContextType
-            }
+            value={{
+                repository,
+                isPrivate,
+            }}
         >
             {children}
         </RepositoryContext.Provider>

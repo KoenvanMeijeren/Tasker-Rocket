@@ -1,5 +1,4 @@
 export enum EnvOptions {
-    GitHubToken,
     GithubContentRepository,
     GitHubRepositoryIsPrivate,
     SupabaseUrl,
@@ -32,4 +31,8 @@ export function getEnvValue(key: EnvOptions): string {
     }
 
     return envValue;
+}
+
+export function isEnvValueEnabled(key: EnvOptions): boolean {
+    return getEnvValue(key) === 'true';
 }

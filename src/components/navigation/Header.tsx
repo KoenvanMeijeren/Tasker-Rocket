@@ -1,23 +1,36 @@
+import { useColorConfig } from '@/lib/colors/useColorConfig';
+import { useStore } from '@/lib/store';
+import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 import { Box, Flex, Spacer } from '@chakra-ui/layout';
 import {
     Button,
+    Select,
     Show,
     useColorMode,
     useColorModeValue,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
 import UserProfileCard from '../userProfile/UserProfileCard';
-import { useColorConfig } from '@/lib/colors/useColorConfig';
 
-export const Header = () => {
+const Header = observer(() => {
+    const store = useStore();
     const { colorMode, toggleColorMode } = useColorMode();
     const colorConfig = useColorConfig();
+    const [repositories, setRepositories] = useState<RepositoryConfigItem[]>(
+        []
+    );
 
     const boxShadow = useColorModeValue(
         '0px -5px 10px rgba(0,0,0,0.5)',
         '0px -1px 15px rgba(0,0,0,0.75)'
     );
+
+    useEffect(() => {
+        setRepositories(store.repositoryConfig.items);
+    }, [store, repositories]);
 
     return (
         <Flex
@@ -36,6 +49,13 @@ export const Header = () => {
                     <Breadcrumbs />
                 </Box>
                 <Spacer />
+                <Select width={200}>
+                    {repositories.map((repo) => (
+                        <option key={repo.repository} value={repo.repository}>
+                            {repo.repository}
+                        </option>
+                    ))}
+                </Select>
                 <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? (
                         <MdDarkMode color="black" />
@@ -47,4 +67,7 @@ export const Header = () => {
             </Show>
         </Flex>
     );
-};
+});
+
+Header.displayName = 'Header';
+export default Header;

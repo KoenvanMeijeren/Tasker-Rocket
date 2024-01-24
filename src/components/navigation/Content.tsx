@@ -1,7 +1,7 @@
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 import { Box } from '@chakra-ui/layout';
 import type { AppProps } from 'next/app';
-import { Header } from './Header';
-import { useColorConfig } from '@/lib/colors/useColorConfig';
+import Header from './Header';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Content = ({ Component, ...pageProps }: AppProps) => {

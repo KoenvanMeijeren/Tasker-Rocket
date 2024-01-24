@@ -12,5 +12,6 @@ export const useRepositoryContext = () => {
     return {
         context,
         repository: context.repository,
+        isPrivate: context.isPrivate,
     };
 };

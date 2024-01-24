@@ -4,10 +4,16 @@ import { useGitHubTreeWithContent } from '@/lib/repository/gitHubRepository';
 import { useParentTree } from '@/lib/project/useParentTree';
 import { useCurrentPath } from '@/lib/utility/uri';
 import { useStore } from '@/lib/store';
+import { useRepositoryContext } from '@/lib/repository/useRepository';
+import { observer } from 'mobx-react-lite';
 
-export default function Home() {
+const Home = observer(() => {
     const store = useStore();
-    const { data, error, isLoading } = useGitHubTreeWithContent('');
+    const { context: repositoryContext } = useRepositoryContext();
+    const { data, error, isLoading } = useGitHubTreeWithContent(
+        '',
+        repositoryContext
+    );
     const { isEmptyServerPath } = useCurrentPath();
     const parentTree = useParentTree(store);
 
@@ -20,4 +26,7 @@ export default function Home() {
     }
 
     return <ProjectView data={data} parentTree={parentTree} />;
-}
+});
+
+Home.displayName = 'Home';
+export default Home;

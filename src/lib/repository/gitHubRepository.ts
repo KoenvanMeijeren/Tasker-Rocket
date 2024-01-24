@@ -6,13 +6,11 @@ import {
 import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
-import { getEnvValue, EnvOptions } from '@/lib/utility/env';
 import { GitHubTreeContentItem, GitHubTree } from '@/types/gitHubData';
+import { RepositoryContextType } from '@/providers/RepositoryProvider';
 
-export const gitHubConfig = {
+const gitHubConfig = {
     base_url: 'https://api.github.com',
-    content_repository: getEnvValue(EnvOptions.GithubContentRepository),
-    is_private: getEnvValue(EnvOptions.GitHubRepositoryIsPrivate) === 'true',
 };
 
 /**
@@ -31,7 +29,10 @@ export const gitHubConfig = {
  * - Folder 2
  */
 
-export function useGitHubTreeWithContent(path: string) {
+export function useGitHubTreeWithContent(
+    path: string,
+    config: RepositoryContextType
+) {
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
     if (path === '/[...path]') {
@@ -43,9 +44,9 @@ export function useGitHubTreeWithContent(path: string) {
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeContentItem[] | GitHubTreeContentItem
     >(fetchJsonData, {
-        url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/contents${path}`,
+        url: `${gitHubConfig.base_url}/repos/${config.repository}/contents${path}`,
         bearerToken: session?.provider_token ?? undefined,
-        isPrivateData: gitHubConfig.is_private,
+        isPrivateData: config.isPrivate,
     });
 
     if (error && session) {
@@ -69,16 +70,16 @@ export function useGitHubTreeWithContent(path: string) {
  *
  * Note: These items don't contain the content of the files.
  */
-export function useGitHubTree() {
+export function useGitHubTree(config: RepositoryContextType) {
     const { session } = useContext(SessionContext);
     const customToast = useCustomToast();
 
     const { data, isLoading, error } = useImmutableDataFetcher<GitHubTree>(
         fetchJsonData,
         {
-            url: `${gitHubConfig.base_url}/repos/${gitHubConfig.content_repository}/git/trees/main?recursive=1`,
+            url: `${gitHubConfig.base_url}/repos/${config.repository}/git/trees/main?recursive=1`,
             bearerToken: session?.provider_token ?? undefined,
-            isPrivateData: gitHubConfig.is_private,
+            isPrivateData: config.isPrivate,
         }
     );
 
@@ -92,9 +93,12 @@ export function useGitHubTree() {
 /**
  * Fetches the data of a file of a GitHub repository.
  */
-export function useGitHubFileContent(url: string) {
+export function useGitHubFileContent(
+    url: string,
+    config: RepositoryContextType
+) {
     return useImmutableDataFetcher(fetchBlobData, {
         url,
-        isPrivateData: gitHubConfig.is_private,
+        isPrivateData: config.isPrivate,
     });
 }

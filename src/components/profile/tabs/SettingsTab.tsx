@@ -50,7 +50,7 @@ const SettingsTab = observer(() => {
         onOpen();
     };
 
-    const addCard = () => {
+    const addRepository = () => {
         const newRepoPath = (
             document.querySelector('#new-repo-path') as HTMLInputElement
         ).value;
@@ -184,7 +184,7 @@ const SettingsTab = observer(() => {
                         <Button
                             colorScheme="blue"
                             disabled={isValidating}
-                            onClick={addCard}
+                            onClick={addRepository}
                             variant="ghost"
                         >
                             {isValidating ? 'Validating...' : 'Add'}

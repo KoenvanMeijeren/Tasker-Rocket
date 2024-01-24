@@ -13,29 +13,21 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
 import UserProfileCard from '../userProfile/UserProfileCard';
 
+import { useRepoSwitchHandler } from '@/lib/navigation/useRepoSwitchHandler';
 import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 
 const Header = observer(() => {
     const store = useStore();
+    const { session } = useContext(SessionContext);
     const { colorMode, toggleColorMode } = useColorMode();
     const colorConfig = useColorConfig();
-
-    const { session } = useContext(SessionContext);
+    const { changeSelectedItem } = useRepoSwitchHandler(store);
 
     const boxShadow = useColorModeValue(
         '0px -5px 10px rgba(0,0,0,0.5)',
         '0px -1px 15px rgba(0,0,0,0.75)'
     );
-
-    const changeSelectedItem = (item: string) => {
-        const repoItem = store.repositoryConfig.items.find(
-            (repo) => repo.repository === item
-        );
-        if (!repoItem) return;
-        store.gitHubItemsState.initRepository(repoItem.repository);
-        store.repositoryConfig.setSelectedItem(repoItem);
-    };
 
     return (
         <Flex

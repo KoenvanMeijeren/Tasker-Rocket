@@ -50,7 +50,7 @@ export default function Profile() {
                         <Tabs>
                             <TabList>
                                 <Tab>Update Profile Information</Tab>
-                                <Tab>Settings</Tab>
+                                <Tab>Update repository config</Tab>
                                 <Tab>Delete Profile</Tab>
                             </TabList>
 

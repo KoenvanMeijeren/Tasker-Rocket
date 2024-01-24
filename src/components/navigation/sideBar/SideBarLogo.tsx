@@ -1,11 +1,12 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { NavSize } from '@/types/navSize';
 import { Flex, Text } from '@chakra-ui/react';
 import { TaskerLogo } from '../../icons/TaskerLogo';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 export const SideBarLogo = ({ navSize }: { navSize: NavSize }) => {
-    const { title } = useModeColors();
+    const colorConfig = useColorConfig();
     const boxShadow = '-3px -5px 10px rgba(0,0,0,0.5)';
+
     return (
         <Flex
             alignItems="center"
@@ -18,7 +19,7 @@ export const SideBarLogo = ({ navSize }: { navSize: NavSize }) => {
             {navSize === NavSize.Large ? (
                 <Text
                     className="mr-1"
-                    color={title}
+                    color={colorConfig.title}
                     fontSize="2xl"
                     fontWeight="bold"
                 >

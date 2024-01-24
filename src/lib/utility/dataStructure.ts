@@ -104,14 +104,15 @@ export function buildMenuTree(tree: GitHubTreeGitItem[]) {
     return menuTree;
 }
 
+export const parentRootKey = 'root';
 export const buildParentTreeForSearchPath = (
     inputSearchPath: string,
     menuTree: GithubTreeMenuItem[]
 ): GitHubTreeParentItem[] => {
     const result: GitHubTreeParentItem[] = [];
     const rootItem: GitHubTreeParentItem = {
-        unique_key: 'root',
-        name: 'root',
+        unique_key: parentRootKey,
+        name: parentRootKey,
         children: 0,
     };
 

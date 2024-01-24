@@ -1,5 +1,5 @@
 import SettingsTab from '@/components/profile/tabs/SettingsTab';
-import { useModeColors } from '@/hooks/useModeColors';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 import { SessionContext } from '@/providers/SessionProvider';
 import {
     Avatar,
@@ -19,13 +19,13 @@ import DeleteAccountTab from '../components/profile/tabs/DeleteAccountTab';
 
 export default function Profile() {
     const { session } = useContext(SessionContext);
-    const { backgroundColorSecondary } = useModeColors();
+    const colorConfig = useColorConfig();
 
     return (
         <Container maxW="container.lg" pt="6">
             <Flex direction="row" justifyContent="space-between">
                 <Box
-                    bg={backgroundColorSecondary}
+                    bg={colorConfig.backgroundSecondary}
                     borderRadius="sm"
                     width="30%"
                 >
@@ -42,7 +42,7 @@ export default function Profile() {
                     </Box>
                 </Box>
                 <Box
-                    bg={backgroundColorSecondary}
+                    bg={colorConfig.backgroundSecondary}
                     borderRadius="sm"
                     width="68%"
                 >

@@ -4,22 +4,23 @@ import FolderIcon from '@/components/icons/FolderIcon';
 import ImageIcon from '@/components/icons/ImageIcon';
 import MarkdownIcon from '@/components/icons/MarkdownIcon';
 import VideoIcon from '@/components/icons/VideoIcon';
-import { useModeColors } from '@/hooks/useModeColors';
 import { getParentFromUrl, urlToFileExtension } from '@/lib/utility/formatters';
 import { FileType, findFileInfo } from '@/types/extensions';
 import { GitHubParentTree, GithubTreeMenuItem } from '@/types/gitHubData';
 import { NavSize } from '@/types/navSize';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, ChevronDownIcon, Icon } from '@chakra-ui/icons';
 import { Box, Collapse, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
 import { CSSProperties, useMemo } from 'react';
-import { colorConfig } from '../../../../theme.config';
+import { themeConfig } from '../../../../theme.config';
 import NavItemTitle from '@/components/navigation/sideBar/NavItemTitle';
 import { buildUri } from '@/lib/utility/uri';
-import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
 import { useSearchParams } from 'next/navigation';
 import { useStore } from '@/lib/store';
 import { observer } from 'mobx-react-lite';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
+import { RiTodoFill } from 'react-icons/ri';
+import { useNavItemActiveHandler } from '@/lib/navigation/useNavItemActiveHandler';
 
 const chevronBoxSize = 20;
 const chevronBoxSizePx = `${chevronBoxSize}px`;
@@ -45,24 +46,25 @@ const getFileIcon = (fileType: FileType) => {
 
 interface Props {
     menuItem: GithubTreeMenuItem;
-    parenTree: GitHubParentTree | undefined;
+    menuParentItem: GithubTreeMenuItem | undefined;
+    parentTree: GitHubParentTree | undefined;
     navSize: NavSize;
     root?: boolean;
 }
 
-export const ExpandableNavItem = observer((props: Props) => {
-    const { menuItem, parenTree, navSize, root } = props;
+const ExpandableNavItem = observer((props: Props) => {
+    const { menuItem, menuParentItem, parentTree, navSize, root } = props;
+    const colorConfig = useColorConfig();
     const store = useStore();
     const searchParams = useSearchParams();
-    const { isActive, isActiveFile, isActiveInTree } = useNavItemActiveHandler(
-        store,
-        menuItem,
-        parenTree
-    );
-    const isOpen = store.menuTree.isItemActive(menuItem);
-
-    const { fontColor, hoverBackground, menuItemActiveBackground } =
-        useModeColors();
+    const {
+        isActive,
+        isActiveFile,
+        isActiveInTree,
+        isOpen,
+        isItemCompleted,
+        isFolderCompleted,
+    } = useNavItemActiveHandler(store, menuItem, parentTree, menuParentItem);
 
     const containerStyle: CSSProperties = {
         alignItems: 'center',
@@ -74,7 +76,7 @@ export const ExpandableNavItem = observer((props: Props) => {
     };
 
     const hover = {
-        backgroundColor: hoverBackground,
+        backgroundColor: colorConfig.hoverBackground,
         opacity: 1,
     };
 
@@ -91,22 +93,37 @@ export const ExpandableNavItem = observer((props: Props) => {
                 <Flex
                     _hover={hover}
                     backgroundColor={
-                        isActive ? menuItemActiveBackground : 'default'
+                        isActive
+                            ? colorConfig.menuItemActiveBackground
+                            : 'default'
                     }
                     onClick={() => {
+                        // Toggling has no effect, because the item is marked as active in tree.
+                        if (isActiveInTree) return;
+
                         store.menuTree.toggleItemState(menuItem);
                     }}
                     style={containerStyle}
                 >
                     <ChevronDownIcon
                         boxSize={chevronBoxSizePx}
-                        color={colorConfig.iconGrey}
+                        color={themeConfig.iconGrey}
                         transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                         transition="all 0.2s linear"
                     />
+
+                    {isFolderCompleted ? (
+                        <CheckCircleIcon color="green" />
+                    ) : (
+                        <Icon as={RiTodoFill} color="blue" />
+                    )}
+
                     <FolderIcon />
 
-                    <NavItemTitle name={menuItem.name} textColor={fontColor} />
+                    <NavItemTitle
+                        name={menuItem.name}
+                        textColor={colorConfig.font}
+                    />
                 </Flex>
 
                 <Collapse in={isOpen || isActiveInTree}>
@@ -114,8 +131,9 @@ export const ExpandableNavItem = observer((props: Props) => {
                         <ExpandableNavItem
                             key={item.path}
                             menuItem={item}
+                            menuParentItem={menuItem}
                             navSize={navSize}
-                            parenTree={parenTree}
+                            parentTree={parentTree}
                         />
                     ))}
                 </Collapse>
@@ -123,7 +141,7 @@ export const ExpandableNavItem = observer((props: Props) => {
         );
     }
 
-    const parent = getParentFromUrl(menuItem.path);
+    const parentUrl = getParentFromUrl(menuItem.path);
     const handleFileClick = () => {
         store.menuTree.setOpenedFilePath(menuItem.path);
     };
@@ -131,7 +149,7 @@ export const ExpandableNavItem = observer((props: Props) => {
     return (
         <Link
             href={
-                buildUri(parent, searchParams, {}, ['path']) +
+                buildUri(parentUrl, searchParams, {}, ['path']) +
                 `#file-${menuItem.unique_key}`
             }
             onClick={handleFileClick}
@@ -140,15 +158,30 @@ export const ExpandableNavItem = observer((props: Props) => {
             <Flex
                 _hover={hover}
                 backgroundColor={
-                    isActiveFile ? menuItemActiveBackground : 'default'
+                    isActiveFile
+                        ? colorConfig.menuItemActiveBackground
+                        : 'default'
                 }
                 marginLeft={root ? 0 : tabSize}
                 style={containerStyle}
             >
+                {isItemCompleted ? (
+                    <CheckCircleIcon color={colorConfig.success} />
+                ) : null}
+                {!isItemCompleted ? (
+                    <Icon as={RiTodoFill} color={colorConfig.primary} />
+                ) : null}
+
                 {getFileIcon(fileInfo.type)}
 
-                <NavItemTitle name={menuItem.name} textColor={fontColor} />
+                <NavItemTitle
+                    name={menuItem.name}
+                    textColor={colorConfig.font}
+                />
             </Flex>
         </Link>
     );
 });
+
+ExpandableNavItem.displayName = 'ExpandableNavItem';
+export default ExpandableNavItem;

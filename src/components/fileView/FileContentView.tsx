@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-max-depth */
-import { useModeColors } from '@/hooks/useModeColors';
 import { useGitHubFileContent } from '@/lib/repository/gitHubRepository';
 import {
     CheckCircleIcon,
@@ -8,7 +7,6 @@ import {
     Icon,
 } from '@chakra-ui/icons';
 import { Box, Button, Collapse, Divider, Flex, Text } from '@chakra-ui/react';
-import { colorConfig } from '../../../theme.config';
 import './fileContentView.css';
 import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { observer } from 'mobx-react-lite';
@@ -23,25 +21,32 @@ import { useFileIcon } from '@/lib/project/useFileIcon';
 import { useFileContent } from '@/lib/project/useFileContent';
 import { useGitHubItemsStateHandlers } from '@/lib/project/useGitHubItemsStateHandlers';
 import { useStore } from '@/lib/store';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
+import { themeConfig } from '../../../theme.config';
 
 type Props = {
     item: GitHubTreeContentItem;
     parentTree: GitHubParentTree;
     isLastItem: boolean;
+    onLoad: (fileName: string) => void;
+    isAllOpen: boolean;
 };
 
 const FileContentView = observer((props: Props) => {
     const store = useStore();
-    const { backgroundColorSecondary, border } = useModeColors();
+    const colorConfig = useColorConfig();
 
-    const { item, parentTree, isLastItem } = props;
+    const { item, parentTree, isLastItem, onLoad, isAllOpen } = props;
     const { download_url: contentUrl } = item;
     const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
     const file = useFile(item, data);
     const icon = useFileIcon(file);
     const { handleDownload } = useFileHandlers(file);
-    const { isOpen, handleFileOpen } = useFileOpenHandler(
-        store.menuTree.isFileOpened(file?.path)
+    const { isOpen, handleFileOpen, handleFileClose } = useFileOpenHandler(
+        item,
+        store.menuTree.isFileOpened(file?.path),
+        onLoad,
+        isAllOpen
     );
     const { content, isFileViewable } = useFileContent(file);
     const { isItemCompleted, toggleTaskCompleted } =
@@ -59,30 +64,38 @@ const FileContentView = observer((props: Props) => {
         <>
             <Box
                 alignItems="center"
-                backgroundColor={backgroundColorSecondary}
+                backgroundColor={colorConfig.backgroundSecondary}
                 borderRadius={8}
                 boxShadow="0px 4px 10px -3px rgba(0, 0, 0, 0.07)"
                 justifyContent="center"
-                outline={isOpen ? `5px solid ${border}` : `0px solid ${border}`}
+                outline={
+                    isOpen
+                        ? `5px solid ${colorConfig.border}`
+                        : `0px solid ${colorConfig.border}`
+                }
                 p={2}
                 transition="outline-width 200ms ease"
             >
                 {/* Task header (collapsible) */}
                 <Box
                     alignItems="center"
+                    backgroundColor={colorConfig.backgroundSecondary}
                     cursor="pointer"
                     display="flex"
                     flex={1}
                     justifyContent="space-between"
                     onClick={handleFileOpen}
+                    position="sticky"
                     px={4}
+                    top={0}
+                    zIndex={1}
                 >
                     <Box alignItems="center" display="flex" gap="10px">
                         {isItemCompleted ? (
-                            <CheckCircleIcon color={colorConfig.green} />
+                            <CheckCircleIcon color={colorConfig.success} />
                         ) : null}
                         {!isItemCompleted ? (
-                            <Icon as={RiTodoFill} color={colorConfig.blue} />
+                            <Icon as={RiTodoFill} color={colorConfig.primary} />
                         ) : null}
                         <Text className="noselect" fontSize="18px">
                             <Flex align="center">
@@ -93,7 +106,7 @@ const FileContentView = observer((props: Props) => {
                     </Box>
                     <ChevronDownIcon
                         boxSize={10}
-                        color={colorConfig.iconGrey}
+                        color={themeConfig.iconGrey}
                         transform={isOpen ? 'rotate(-180deg)' : 'rotate(0)'}
                         transition="all 0.2s linear"
                     />
@@ -101,7 +114,11 @@ const FileContentView = observer((props: Props) => {
 
                 {/* Content */}
                 <Collapse in={isOpen}>
-                    <Divider borderColor={border} borderWidth={1.5} my={4} />
+                    <Divider
+                        borderColor={colorConfig.border}
+                        borderWidth={1.5}
+                        my={4}
+                    />
                     <Box px={4} py={4}>
                         <Box
                             className="btn-group"
@@ -145,7 +162,16 @@ const FileContentView = observer((props: Props) => {
                                 </Box>
                             </button>
                         </Box>
+
                         {content}
+
+                        <Button
+                            className="close-btn"
+                            colorScheme="green"
+                            onClick={() => handleFileClose()}
+                        >
+                            Close
+                        </Button>
                     </Box>
                 </Collapse>
             </Box>

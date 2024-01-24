@@ -1,4 +1,3 @@
-import { useModeColors } from '@/hooks/useModeColors';
 import { Box, Flex, Spacer } from '@chakra-ui/layout';
 import {
     Button,
@@ -9,18 +8,21 @@ import {
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
 import UserProfileCard from '../userProfile/UserProfileCard';
+import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 export const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
-    const { menuBackground } = useModeColors();
+    const colorConfig = useColorConfig();
+
     const boxShadow = useColorModeValue(
         '0px -5px 10px rgba(0,0,0,0.5)',
         '0px -1px 15px rgba(0,0,0,0.75)'
     );
+
     return (
         <Flex
             alignItems="center"
-            bg={menuBackground}
+            bg={colorConfig.menuBackground}
             boxShadow={boxShadow}
             height="70px"
             justifyContent="flex-end"

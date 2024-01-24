@@ -23,26 +23,34 @@ import {
 import { FaGithub, FaPlusSquare, FaRegTrashAlt, FaTimes } from 'react-icons/fa';
 import './SettingsTab.css';
 
-import { useState } from 'react';
+import { useStore } from '@/lib/store';
+import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
+import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
 
-export default function SettingsTab() {
-    const [cards, setCards] = useState(['test', 'test1', 'test2'] as string[]);
+const SettingsTab = observer(() => {
+    const store = useStore();
+    const [cards, setCards] = useState<RepositoryConfigItem[]>([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [repoError, setRepoError] = useState(false);
+    const [repoErrorMessage, setRepoErrorMessage] = useState('');
 
-    const deleteCard = (card: string) => {
-        setCards(cards.filter((c) => c !== card));
+    useEffect(() => {
+        setCards(store.repositoryConfig.items);
+    }, [store, cards]);
+
+    const deleteCard = (card: RepositoryConfigItem) => {
+        store.repositoryConfig.removeRepository(card);
     };
 
     const openModal = () => {
-        setRepoError(false);
+        setRepoErrorMessage('');
         onOpen();
     };
 
     const validateRepoPath = (path: string) => {
-        setRepoError(false);
+        setRepoErrorMessage('');
         if (path.trim().length === 0) {
-            setRepoError(true);
+            setRepoErrorMessage('Repository path cannot be empty.');
             return false;
         }
         return true;
@@ -57,8 +65,21 @@ export default function SettingsTab() {
             return;
         }
 
-        onClose();
-        setCards([...cards, newRepoPath]);
+        const newRepoItem = {
+            repository: newRepoPath,
+            isPrivate: false,
+        } as RepositoryConfigItem;
+        try {
+            store.repositoryConfig.addRepository(newRepoItem);
+            onClose();
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                const errorMessage = e.message;
+                setRepoErrorMessage(errorMessage);
+            } else {
+                setRepoErrorMessage('Unknown error.');
+            }
+        }
     };
 
     return (
@@ -68,9 +89,9 @@ export default function SettingsTab() {
                 <Text>Settings for Tasker Rocket.</Text>
                 <Stack spacing={4} width="100%">
                     {cards.map((card) => (
-                        <Card key={card} size="sm">
+                        <Card key={card.repository} size="sm">
                             <CardBody>
-                                <Text>{card}</Text>
+                                <Text>{card.repository}</Text>
                                 {/* delete button */}
                                 <Button
                                     className="settingsDelete"
@@ -107,7 +128,7 @@ export default function SettingsTab() {
                                 placeholder="Repository path"
                                 type="text"
                             />
-                            {repoError ? (
+                            {repoErrorMessage != '' ? (
                                 <InputRightElement
                                     className="shake"
                                     color="red.600"
@@ -116,6 +137,9 @@ export default function SettingsTab() {
                                 </InputRightElement>
                             ) : null}
                         </InputGroup>
+                        <Text color="red.600" fontSize="sm">
+                            {repoErrorMessage}
+                        </Text>
                     </ModalBody>
 
                     <ModalFooter>
@@ -134,4 +158,7 @@ export default function SettingsTab() {
             </Modal>
         </TabPanel>
     );
-}
+});
+
+SettingsTab.displayName = 'SettingsTab';
+export default SettingsTab;

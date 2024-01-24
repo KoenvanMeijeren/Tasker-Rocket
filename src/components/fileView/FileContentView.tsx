@@ -23,6 +23,7 @@ import { useGitHubItemsStateHandlers } from '@/lib/project/useGitHubItemsStateHa
 import { useStore } from '@/lib/store';
 import { useColorConfig } from '@/lib/colors/useColorConfig';
 import { themeConfig } from '../../../theme.config';
+import { useRepositoryContext } from '@/lib/repository/useRepository';
 
 type Props = {
     item: GitHubTreeContentItem;
@@ -38,7 +39,11 @@ const FileContentView = observer((props: Props) => {
 
     const { item, parentTree, isLastItem, onLoad, isAllOpen } = props;
     const { download_url: contentUrl } = item;
-    const { data, error, isLoading } = useGitHubFileContent(contentUrl ?? '');
+    const { context: repositoryContext } = useRepositoryContext();
+    const { data, error, isLoading } = useGitHubFileContent(
+        contentUrl ?? '',
+        repositoryContext
+    );
     const file = useFile(item, data);
     const icon = useFileIcon(file);
     const { handleDownload } = useFileHandlers(file);

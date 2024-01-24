@@ -1,7 +1,10 @@
 import {
+    Badge,
     Button,
     Card,
     CardBody,
+    FormControl,
+    FormLabel,
     Heading,
     Input,
     InputGroup,
@@ -15,6 +18,7 @@ import {
     ModalHeader,
     ModalOverlay,
     Stack,
+    Switch,
     TabPanel,
     Text,
     VStack,
@@ -58,8 +62,12 @@ const SettingsTab = observer(() => {
 
     const addCard = () => {
         const newRepoPath = (
-            document.querySelector('.newRepoPath') as HTMLInputElement
+            document.querySelector('#new-repo-path') as HTMLInputElement
         ).value;
+
+        const isPrivate = (
+            document.querySelector('#repo-private') as HTMLInputElement
+        ).checked;
 
         if (!validateRepoPath(newRepoPath)) {
             return;
@@ -67,7 +75,7 @@ const SettingsTab = observer(() => {
 
         const newRepoItem = {
             repository: newRepoPath,
-            isPrivate: false,
+            isPrivate: isPrivate,
         } as RepositoryConfigItem;
         try {
             store.repositoryConfig.addRepository(newRepoItem);
@@ -90,8 +98,17 @@ const SettingsTab = observer(() => {
                     {cards.map((card) => (
                         <Card key={card.repository} size="sm">
                             <CardBody>
-                                <Text>{card.repository}</Text>
-                                {/* delete button */}
+                                <Text>
+                                    <Badge
+                                        colorScheme={
+                                            card.isPrivate ? 'red' : 'green'
+                                        }
+                                        mr={1}
+                                    >
+                                        {card.isPrivate ? 'Private' : 'Public'}
+                                    </Badge>
+                                    {card.repository}
+                                </Text>
                                 <Button
                                     className="settingsDelete"
                                     colorScheme="red"
@@ -123,7 +140,7 @@ const SettingsTab = observer(() => {
                                 <Text marginLeft={1}>/</Text>
                             </InputLeftElement>
                             <Input
-                                className="newRepoPath"
+                                id="new-repo-path"
                                 placeholder="Repository path"
                                 type="text"
                             />
@@ -139,6 +156,12 @@ const SettingsTab = observer(() => {
                         <Text color="red.600" fontSize="sm">
                             {repoErrorMessage}
                         </Text>
+                        <FormControl alignItems="center" display="flex" mt={1}>
+                            <FormLabel htmlFor="email-alerts" mb="0">
+                                Is repository private?
+                            </FormLabel>
+                            <Switch id="repo-private" />
+                        </FormControl>
                     </ModalBody>
 
                     <ModalFooter>

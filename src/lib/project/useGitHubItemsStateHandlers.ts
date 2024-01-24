@@ -1,4 +1,3 @@
-import { useRepositoryContext } from '@/lib/repository/useRepository';
 import { GitHubParentTree, GitHubTreeContentItem } from '@/types/gitHubData';
 import { MobxStore } from '@/lib/store/MobxStore';
 
@@ -7,7 +6,7 @@ export const useGitHubItemsStateHandlers = (
     item: GitHubTreeContentItem,
     parentTree: GitHubParentTree
 ) => {
-    const { repository } = useRepositoryContext();
+    const { repository } = store.repositoryConfig.selectedItem;
     const { unique_key: uniqueKey } = item;
     const { tree, parent } = parentTree;
 

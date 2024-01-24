@@ -6,15 +6,19 @@ import FileContentView from '../fileView/FileContentView';
 import { useProjectContent } from '@/lib/project/useProjectContent';
 import { Button } from '@chakra-ui/react';
 import { LoadingIndicator } from '@/components/general/LoadingIndicator';
+import { useStore } from '@/lib/store';
+import { observer } from 'mobx-react-lite';
 
 type Props = {
     data: GitHubTreeContentItem[] | GitHubTreeContentItem;
     parentTree: GitHubParentTree;
 };
 
-export function ProjectView({ data, parentTree }: Props) {
+const ProjectView = observer((props: Props) => {
+    const store = useStore();
+    const { data, parentTree } = props;
     const { content, repository, isOpen, onToggle, isLoading, handleFileLoad } =
-        useProjectContent(data);
+        useProjectContent(store, data);
     if (!content) {
         return null;
     }
@@ -62,4 +66,7 @@ export function ProjectView({ data, parentTree }: Props) {
             </Box>
         </>
     );
-}
+});
+
+ProjectView.displayName = 'ProjectView';
+export default ProjectView;

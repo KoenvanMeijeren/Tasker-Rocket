@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { makeSlicePersistable } from '../hooks';
+import { EnvOptions, getEnvValue, isEnvValueEnabled } from '@/lib/utility/env';
 
 export type RepositoryConfigItem = {
     repository: string;
@@ -8,6 +9,11 @@ export type RepositoryConfigItem = {
 
 export class RepositoryConfigStore {
     public items: RepositoryConfigItem[] = [];
+
+    public selectedItem: RepositoryConfigItem = {
+        repository: getEnvValue(EnvOptions.GithubContentRepository),
+        isPrivate: isEnvValueEnabled(EnvOptions.GitHubRepositoryIsPrivate),
+    };
 
     constructor() {
         makeAutoObservable(this);

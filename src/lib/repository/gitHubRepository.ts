@@ -7,7 +7,7 @@ import { SessionContext } from '@/providers/SessionProvider';
 import { useContext } from 'react';
 import { useCustomToast } from '@/lib/utility/toast';
 import { GitHubTreeContentItem, GitHubTree } from '@/types/gitHubData';
-import { RepositoryContextType } from '@/providers/RepositoryProvider';
+import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 
 const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -31,7 +31,7 @@ const gitHubConfig = {
 
 export function useGitHubTreeWithContent(
     path: string,
-    config: RepositoryContextType
+    config: RepositoryConfigItem
 ) {
     // Do not fetch data when we are on this path. This causes 404 requests. This url pops up
     // because next.js renders the app twice, once on server and once on client.
@@ -70,7 +70,7 @@ export function useGitHubTreeWithContent(
  *
  * Note: These items don't contain the content of the files.
  */
-export function useGitHubTree(config: RepositoryContextType) {
+export function useGitHubTree(config: RepositoryConfigItem) {
     const { session } = useContext(SessionContext);
     const customToast = useCustomToast();
 
@@ -95,7 +95,7 @@ export function useGitHubTree(config: RepositoryContextType) {
  */
 export function useGitHubFileContent(
     url: string,
-    config: RepositoryContextType
+    config: RepositoryConfigItem
 ) {
     return useImmutableDataFetcher(fetchBlobData, {
         url,

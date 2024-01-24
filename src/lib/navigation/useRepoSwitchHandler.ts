@@ -15,7 +15,7 @@ export const useRepoSwitchHandler = (store: MobxStore) => {
     const changeSelectedItem = (item: string) => {
         const currentPath = router.asPath;
 
-        if (currentPath.includes('/[...path]')) {
+        if (!currentPath.includes('/profile')) {
             router
                 .push('/')
                 .then(() => {

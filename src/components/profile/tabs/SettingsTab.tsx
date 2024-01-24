@@ -6,6 +6,7 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
+    InputRightElement,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -19,7 +20,7 @@ import {
     VStack,
     useDisclosure,
 } from '@chakra-ui/react';
-import { FaGithub, FaPlusSquare, FaRegTrashAlt } from 'react-icons/fa';
+import { FaGithub, FaPlusSquare, FaRegTrashAlt, FaTimes } from 'react-icons/fa';
 import './SettingsTab.css';
 
 import { useState } from 'react';
@@ -27,16 +28,36 @@ import { useState } from 'react';
 export default function SettingsTab() {
     const [cards, setCards] = useState(['test', 'test1', 'test2'] as string[]);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [repoError, setRepoError] = useState(false);
 
     const deleteCard = (card: string) => {
         setCards(cards.filter((c) => c !== card));
     };
 
+    const openModal = () => {
+        setRepoError(false);
+        onOpen();
+    };
+
+    const validateRepoPath = (path: string) => {
+        setRepoError(false);
+        if (path.trim().length === 0) {
+            setRepoError(true);
+            return false;
+        }
+        return true;
+    };
+
     const addCard = () => {
-        onClose();
         const newRepoPath = (
             document.querySelector('.newRepoPath') as HTMLInputElement
         ).value;
+
+        if (!validateRepoPath(newRepoPath)) {
+            return;
+        }
+
+        onClose();
         setCards([...cards, newRepoPath]);
     };
 
@@ -63,7 +84,7 @@ export default function SettingsTab() {
                         </Card>
                     ))}
                 </Stack>
-                <Button colorScheme="blue" onClick={onOpen} variant="ghost">
+                <Button colorScheme="blue" onClick={openModal} variant="ghost">
                     <Text marginRight={1}>Add Card</Text>
                     <FaPlusSquare />
                 </Button>
@@ -73,7 +94,7 @@ export default function SettingsTab() {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Modal Title</ModalHeader>
+                    <ModalHeader>Add content repo</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <InputGroup>
@@ -86,6 +107,14 @@ export default function SettingsTab() {
                                 placeholder="Repository path"
                                 type="text"
                             />
+                            {repoError ? (
+                                <InputRightElement
+                                    className="shake"
+                                    color="red.600"
+                                >
+                                    <FaTimes />
+                                </InputRightElement>
+                            ) : null}
                         </InputGroup>
                     </ModalBody>
 

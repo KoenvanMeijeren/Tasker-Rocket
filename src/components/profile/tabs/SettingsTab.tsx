@@ -1,28 +1,23 @@
 import {
     Badge,
-    Button,
     Card,
     CardBody,
     Heading,
     Stack,
     TabPanel,
     Text,
-    VStack,
+    VStack
 } from '@chakra-ui/react';
-import { FaRegTrashAlt } from 'react-icons/fa';
 import './SettingsTab.css';
 
 import { useStore } from '@/lib/store';
 import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 import { observer } from 'mobx-react-lite';
 import { AddRepoModal } from './modals/AddRepoModal';
+import { RemoveRepoModal } from './modals/RemoveRepoModal';
 
 const SettingsTab = observer(() => {
     const store = useStore();
-
-    const deleteCard = (card: RepositoryConfigItem) => {
-        store.repositoryConfig.removeRepository(card);
-    };
 
     return (
         <TabPanel>
@@ -47,14 +42,7 @@ const SettingsTab = observer(() => {
                                 {card.repository !==
                                 store.repositoryConfig.selectedItem
                                     ?.repository ? (
-                                    <Button
-                                        className="settingsDelete"
-                                        colorScheme="red"
-                                        onClick={() => deleteCard(card)}
-                                        variant="ghost"
-                                    >
-                                        <FaRegTrashAlt />
-                                    </Button>
+                                    <RemoveRepoModal card={card} />
                                 ) : null}
                             </CardBody>
                         </Card>

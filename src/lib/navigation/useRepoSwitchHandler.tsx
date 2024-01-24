@@ -14,7 +14,8 @@ export const useRepoSwitchHandler = (store: MobxStore) => {
                 store.gitHubItemsState.initRepository(repoItem.repository);
                 store.repositoryConfig.setSelectedItem(repoItem);
             })
-            .catch((e) => console.error(e));
+            // eslint-disable-next-line no-console
+            .catch((e: unknown) => console.error(e));
     };
 
     return {

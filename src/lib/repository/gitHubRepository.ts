@@ -120,7 +120,7 @@ export async function gitHubValidateRepository(
             }
             return true;
         })
-        .catch((error) => {
+        .catch(() => {
             throw new Error(
                 `GitHub repository ${config.repository} not found.`
             );

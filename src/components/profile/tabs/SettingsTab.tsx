@@ -6,12 +6,11 @@ import {
     Stack,
     TabPanel,
     Text,
-    VStack
+    VStack,
 } from '@chakra-ui/react';
 import './SettingsTab.css';
 
 import { useStore } from '@/lib/store';
-import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 import { observer } from 'mobx-react-lite';
 import { AddRepoModal } from './modals/AddRepoModal';
 import { RemoveRepoModal } from './modals/RemoveRepoModal';

@@ -21,7 +21,7 @@ type Props = {
 
 export const RemoveRepoModal = observer(({ card }: Props) => {
     const store = useStore();
-    const { removeRepository, openModal, onClose, isOpen, repoErrorMessage } =
+    const { removeRepository, openModal, onClose, isOpen } =
         useRemoveRepoHandler(store);
 
     return (

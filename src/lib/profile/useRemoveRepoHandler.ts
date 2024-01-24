@@ -8,8 +8,6 @@ export const useRemoveRepoHandler = (store: MobxStore) => {
     const [repoErrorMessage, setRepoErrorMessage] = useState('');
 
     const openModal = () => {
-        console.log('openModal');
-        
         setRepoErrorMessage('');
         onOpen();
     };

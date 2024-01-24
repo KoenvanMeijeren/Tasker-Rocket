@@ -74,8 +74,7 @@ const SettingsTab = observer(() => {
             onClose();
         } catch (e: unknown) {
             if (e instanceof Error) {
-                const errorMessage = e.message;
-                setRepoErrorMessage(errorMessage);
+                setRepoErrorMessage(e.message);
             } else {
                 setRepoErrorMessage('Unknown error.');
             }

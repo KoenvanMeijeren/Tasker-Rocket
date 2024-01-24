@@ -3,11 +3,11 @@ import {
     fetchJsonData,
     useImmutableDataFetcher,
 } from '@/lib/api/dataFetcher';
-import { SessionContext } from '@/providers/SessionProvider';
-import { useContext } from 'react';
-import { useCustomToast } from '@/lib/utility/toast';
-import { GitHubTreeContentItem, GitHubTree } from '@/types/gitHubData';
 import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
+import { useCustomToast } from '@/lib/utility/toast';
+import { GitHubTree, GitHubTreeContentItem } from '@/types/gitHubData';
+import { useContext } from 'react';
+import { SessionContext } from './../../providers/SessionProvider';
 
 const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -101,4 +101,30 @@ export function useGitHubFileContent(
         url,
         isPrivateData: config.isPrivate,
     });
+}
+
+export async function gitHubValidateRepository(
+    config: RepositoryConfigItem,
+    bearerToken: string
+) {
+    const data = fetch(`${gitHubConfig.base_url}/repos/${config.repository}`, {
+        headers: {
+            Authorization: `Bearer ${bearerToken}`,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    `GitHub repository ${config.repository} not found.`
+                );
+            }
+            return true;
+        })
+        .catch((error) => {
+            throw new Error(
+                `GitHub repository ${config.repository} not found.`
+            );
+        });
+
+    return data;
 }

@@ -27,16 +27,20 @@ import {
 import { FaGithub, FaPlusSquare, FaRegTrashAlt, FaTimes } from 'react-icons/fa';
 import './SettingsTab.css';
 
+import { gitHubValidateRepository } from '@/lib/repository/gitHubRepository';
 import { useStore } from '@/lib/store';
 import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
+import { SessionContext } from '@/providers/SessionProvider';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 const SettingsTab = observer(() => {
     const store = useStore();
     const [cards, setCards] = useState<RepositoryConfigItem[]>([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [repoErrorMessage, setRepoErrorMessage] = useState('');
+    const { session } = useContext(SessionContext);
+    const [isValidating, setIsValidating] = useState(false);
 
     useEffect(() => {
         setCards(store.repositoryConfig.items);
@@ -51,15 +55,6 @@ const SettingsTab = observer(() => {
         onOpen();
     };
 
-    const validateRepoPath = (path: string) => {
-        setRepoErrorMessage('');
-        if (path.trim().length === 0) {
-            setRepoErrorMessage('Repository path cannot be empty.');
-            return false;
-        }
-        return true;
-    };
-
     const addCard = () => {
         const newRepoPath = (
             document.querySelector('#new-repo-path') as HTMLInputElement
@@ -69,24 +64,43 @@ const SettingsTab = observer(() => {
             document.querySelector('#repo-private') as HTMLInputElement
         ).checked;
 
-        if (!validateRepoPath(newRepoPath)) {
-            return;
-        }
-
         const newRepoItem = {
             repository: newRepoPath,
             isPrivate: isPrivate,
         } as RepositoryConfigItem;
-        try {
-            store.repositoryConfig.addRepository(newRepoItem);
-            onClose();
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                setRepoErrorMessage(e.message);
-            } else {
-                setRepoErrorMessage('Unknown error.');
-            }
+
+        setIsValidating(true);
+        setRepoErrorMessage('');
+        if (newRepoItem.repository.trim().length === 0) {
+            setRepoErrorMessage('Repository path cannot be empty.');
+            setIsValidating(false);
+            return false;
         }
+
+        gitHubValidateRepository(newRepoItem, session?.provider_token ?? '')
+            .then(() => {
+                setIsValidating(false);
+                try {
+                    store.repositoryConfig.addRepository(newRepoItem);
+                    onClose();
+                } catch (e: unknown) {
+                    if (e instanceof Error) {
+                        setRepoErrorMessage(e.message);
+                    } else {
+                        setRepoErrorMessage('Unknown error.');
+                    }
+                }
+                return true;
+            })
+            .catch((e: unknown) => {
+                if (e instanceof Error) {
+                    setRepoErrorMessage(e.message);
+                } else {
+                    setRepoErrorMessage('Unknown error.');
+                }
+                setIsValidating(false);
+                return false;
+            });
     };
 
     return (
@@ -170,10 +184,11 @@ const SettingsTab = observer(() => {
                         </Button>
                         <Button
                             colorScheme="blue"
+                            disabled={isValidating}
                             onClick={addCard}
                             variant="ghost"
                         >
-                            Add
+                            {isValidating ? 'Validating...' : 'Add'}
                         </Button>
                     </ModalFooter>
                 </ModalContent>

@@ -122,8 +122,8 @@ const SettingsTab = observer(() => {
                     ))}
                 </Stack>
                 <Button colorScheme="blue" onClick={openModal} variant="ghost">
-                    <Text marginRight={1}>Add Card</Text>
                     <FaPlusSquare />
+                    <Text ml={1}>Repository</Text>
                 </Button>
             </VStack>
 
@@ -131,7 +131,7 @@ const SettingsTab = observer(() => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Add content repo</ModalHeader>
+                    <ModalHeader>Add repository</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <InputGroup>

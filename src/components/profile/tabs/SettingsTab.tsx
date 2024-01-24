@@ -32,19 +32,14 @@ import { useStore } from '@/lib/store';
 import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 import { SessionContext } from '@/providers/SessionProvider';
 import { observer } from 'mobx-react-lite';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 const SettingsTab = observer(() => {
     const store = useStore();
-    const [cards, setCards] = useState<RepositoryConfigItem[]>([]);
+    const { session } = useContext(SessionContext);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [repoErrorMessage, setRepoErrorMessage] = useState('');
-    const { session } = useContext(SessionContext);
     const [isValidating, setIsValidating] = useState(false);
-
-    useEffect(() => {
-        setCards(store.repositoryConfig.items);
-    }, [store, cards]);
 
     const deleteCard = (card: RepositoryConfigItem) => {
         store.repositoryConfig.removeRepository(card);
@@ -109,7 +104,7 @@ const SettingsTab = observer(() => {
                 <Heading>Settings</Heading>
                 <Text>Settings for Tasker Rocket.</Text>
                 <Stack spacing={4} width="100%">
-                    {cards.map((card) => (
+                    {store.repositoryConfig.items.map((card) => (
                         <Card key={card.repository} size="sm">
                             <CardBody>
                                 <Text>
@@ -123,14 +118,18 @@ const SettingsTab = observer(() => {
                                     </Badge>
                                     {card.repository}
                                 </Text>
-                                <Button
-                                    className="settingsDelete"
-                                    colorScheme="red"
-                                    onClick={() => deleteCard(card)}
-                                    variant="ghost"
-                                >
-                                    <FaRegTrashAlt />
-                                </Button>
+                                {card.repository !==
+                                store.repositoryConfig.selectedItem
+                                    ?.repository ? (
+                                    <Button
+                                        className="settingsDelete"
+                                        colorScheme="red"
+                                        onClick={() => deleteCard(card)}
+                                        variant="ghost"
+                                    >
+                                        <FaRegTrashAlt />
+                                    </Button>
+                                ) : null}
                             </CardBody>
                         </Card>
                     ))}

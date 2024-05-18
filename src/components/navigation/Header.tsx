@@ -13,6 +13,7 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
 
 import { useRepoSwitchHandler } from '@/lib/navigation/useRepoSwitchHandler';
+import UserProfileCard from '@/components/userProfile/UserProfileCard';
 
 const Header = observer(() => {
     const store = useStore();
@@ -60,6 +61,7 @@ const Header = observer(() => {
                         <MdLightMode />
                     )}
                 </Button>
+                <UserProfileCard />
             </Show>
         </Flex>
     );

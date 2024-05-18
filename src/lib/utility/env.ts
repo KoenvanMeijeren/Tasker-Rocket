@@ -2,8 +2,6 @@ export enum EnvOptions {
     GithubToken,
     GithubContentRepository,
     GitHubRepositoryIsPrivate,
-    SupabaseUrl,
-    SupabaseKey,
 }
 
 export function getEnvValue(key: EnvOptions): string {
@@ -22,13 +20,6 @@ export function getEnvValue(key: EnvOptions): string {
             envValue = process.env.GITHUB_REPOSITORY_IS_PRIVATE;
             envKey = 'GITHUB_REPOSITORY_IS_PRIVATE';
             break;
-        case EnvOptions.SupabaseUrl:
-            envValue = process.env.NEXT_PUBLIC_SUPABASE_URL;
-            envKey = 'NEXT_PUBLIC_SUPABASE_URL';
-            break;
-        case EnvOptions.SupabaseKey:
-            envValue = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-            envKey = 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
     }
 
     if (typeof envValue !== 'string') {

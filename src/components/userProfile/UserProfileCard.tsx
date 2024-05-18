@@ -1,33 +1,20 @@
-import { useContext } from 'react';
 import {
     Button,
     Text,
     Menu,
     MenuButton,
     Flex,
-    Avatar,
     MenuList,
     MenuItem,
-    MenuDivider,
     HStack,
 } from '@chakra-ui/react';
 import { FaAngleDown, FaRegUser } from 'react-icons/fa';
-import { MdLogout } from 'react-icons/md';
-import useAuth from '@/hooks/useAuth';
-import { SessionContext } from '@/providers/SessionProvider';
 import Link from 'next/link';
 
 export default function UserProfileCard() {
-    const { signOut } = useAuth();
-    const { session } = useContext(SessionContext);
-
-    if (!session) return null;
-
     return (
         <Menu>
-            <Text className="text-center m-4">
-                {session.user.user_metadata.user_name}
-            </Text>
+            <Text className="text-center m-4">Profile</Text>
             <MenuButton
                 as={Button}
                 cursor="pointer"
@@ -36,11 +23,6 @@ export default function UserProfileCard() {
                 variant="link"
             >
                 <Flex alignItems="center" direction="row">
-                    <Avatar
-                        name={session.user.user_metadata.user_name as string}
-                        size="md"
-                        src={session.user.user_metadata.avatar_url as string}
-                    />
                     <FaAngleDown />
                 </Flex>
             </MenuButton>
@@ -54,17 +36,6 @@ export default function UserProfileCard() {
                         </HStack>
                     </MenuItem>
                 </Link>
-                <MenuDivider />
-                <MenuItem
-                    onClick={() => {
-                        void signOut();
-                    }}
-                >
-                    <HStack>
-                        <MdLogout />
-                        <Text>Sign out</Text>
-                    </HStack>
-                </MenuItem>
             </MenuList>
         </Menu>
     );

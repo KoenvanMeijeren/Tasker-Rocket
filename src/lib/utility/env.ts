@@ -1,4 +1,5 @@
 export enum EnvOptions {
+    GithubToken,
     GithubContentRepository,
     GitHubRepositoryIsPrivate,
     SupabaseUrl,
@@ -9,6 +10,10 @@ export function getEnvValue(key: EnvOptions): string {
     let envValue: string | null | undefined = null;
     let envKey = '';
     switch (key) {
+        case EnvOptions.GithubToken:
+            envValue = process.env.GITHUB_TOKEN;
+            envKey = 'GITHUB_TOKEN';
+            break;
         case EnvOptions.GithubContentRepository:
             envValue = process.env.GITHUB_CONTENT_REPOSITORY;
             envKey = 'GITHUB_CONTENT_REPOSITORY';

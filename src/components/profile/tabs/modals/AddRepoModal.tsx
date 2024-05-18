@@ -1,6 +1,5 @@
 import { useAddRepoHandler } from '@/lib/profile/useAddRepoHandler';
 import { useStore } from '@/lib/store';
-import { SessionContext } from '@/providers/SessionProvider';
 import {
     Button,
     FormControl,
@@ -20,12 +19,10 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
-import { useContext } from 'react';
 import { FaGithub, FaPlusSquare, FaTimes } from 'react-icons/fa';
 
 export const AddRepoModal = observer(() => {
     const store = useStore();
-    const { session } = useContext(SessionContext);
     const {
         addRepository,
         isOpen,
@@ -33,7 +30,7 @@ export const AddRepoModal = observer(() => {
         onClose,
         repoErrorMessage,
         isValidating,
-    } = useAddRepoHandler(store, session);
+    } = useAddRepoHandler(store);
 
     return (
         <>

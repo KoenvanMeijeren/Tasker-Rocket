@@ -6,8 +6,7 @@ import {
 import { RepositoryConfigItem } from '@/lib/store/slices/RepositoryConfigStore';
 import { useCustomToast } from '@/lib/utility/toast';
 import { GitHubTree, GitHubTreeContentItem } from '@/types/gitHubData';
-import { useContext } from 'react';
-import { SessionContext } from './../../providers/SessionProvider';
+import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 
 const gitHubConfig = {
     base_url: 'https://api.github.com',
@@ -40,16 +39,15 @@ export function useGitHubTreeWithContent(
     }
 
     const customToast = useCustomToast();
-    const { session } = useContext(SessionContext);
     const { data, isLoading, error } = useImmutableDataFetcher<
         GitHubTreeContentItem[] | GitHubTreeContentItem
     >(fetchJsonData, {
         url: `${gitHubConfig.base_url}/repos/${config.repository}/contents${path}`,
-        bearerToken: session?.provider_token ?? undefined,
+        bearerToken: getEnvValue(EnvOptions.GithubToken),
         isPrivateData: config.isPrivate,
     });
 
-    if (error && session) {
+    if (error) {
         customToast(error.name, error.message, 'error');
     }
 
@@ -71,19 +69,18 @@ export function useGitHubTreeWithContent(
  * Note: These items don't contain the content of the files.
  */
 export function useGitHubTree(config: RepositoryConfigItem) {
-    const { session } = useContext(SessionContext);
     const customToast = useCustomToast();
 
     const { data, isLoading, error } = useImmutableDataFetcher<GitHubTree>(
         fetchJsonData,
         {
             url: `${gitHubConfig.base_url}/repos/${config.repository}/git/trees/main?recursive=1`,
-            bearerToken: session?.provider_token ?? undefined,
+            bearerToken: getEnvValue(EnvOptions.GithubToken),
             isPrivateData: config.isPrivate,
         }
     );
 
-    if (error && session) {
+    if (error) {
         customToast(error.name, error.message, 'error');
     }
 
@@ -107,7 +104,7 @@ export async function gitHubValidateRepository(
     config: RepositoryConfigItem,
     bearerToken: string
 ) {
-    const data = fetch(`${gitHubConfig.base_url}/repos/${config.repository}`, {
+    return fetch(`${gitHubConfig.base_url}/repos/${config.repository}`, {
         headers: {
             Authorization: `Bearer ${bearerToken}`,
         },
@@ -125,6 +122,4 @@ export async function gitHubValidateRepository(
                 `GitHub repository ${config.repository} not found.`
             );
         });
-
-    return data;
 }

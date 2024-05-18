@@ -2,19 +2,16 @@ import { NavSize } from '@/types/navSize';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Box, Flex, Stack } from '@chakra-ui/layout';
 import { Button, useColorModeValue } from '@chakra-ui/react';
-import { useContext } from 'react';
 import { themeConfig } from '../../../../theme.config';
 import { SideBarLogo } from './SideBarLogo';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/lib/store';
-import { SessionContext } from '@/providers/SessionProvider';
 import { useParentTree } from '@/lib/project/useParentTree';
 import { useNavSizeHandler } from '@/lib/navigation/useNavSizeHandler';
 import NavItem from '@/components/navigation/sideBar/NavItem';
 import { useColorConfig } from '@/lib/colors/useColorConfig';
 
 const SideBar = observer(() => {
-    const { session } = useContext(SessionContext);
     const store = useStore();
     const parentTree = useParentTree(store);
     const menuItems = store.menuTree.items;
@@ -26,10 +23,6 @@ const SideBar = observer(() => {
         '0px 0px 10px rgba(0,0,0,0.5)'
     );
     const sidebarWidth = navSize === NavSize.Small ? '4vw' : '20vw';
-
-    if (!session) {
-        return null;
-    }
 
     return (
         <Box>

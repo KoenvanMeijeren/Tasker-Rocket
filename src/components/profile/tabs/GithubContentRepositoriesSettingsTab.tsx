@@ -8,21 +8,20 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import './SettingsTab.css';
+import './GithubContentRepositoriesSettingsTab.css';
 
 import { useStore } from '@/lib/store';
 import { observer } from 'mobx-react-lite';
 import { AddRepoModal } from './modals/AddRepoModal';
 import { RemoveRepoModal } from './modals/RemoveRepoModal';
 
-const SettingsTab = observer(() => {
+const GithubContentRepositoriesSettingsTab = observer(() => {
     const store = useStore();
 
     return (
         <TabPanel>
             <VStack spacing={4}>
-                <Heading>Settings</Heading>
-                <Text>Settings for Tasker Rocket.</Text>
+                <Heading>Content repositories settings</Heading>
                 <Stack spacing={4} width="100%">
                     {store.repositoryConfig.items.map((card) => (
                         <Card key={card.repository} size="sm">
@@ -53,5 +52,5 @@ const SettingsTab = observer(() => {
     );
 });
 
-SettingsTab.displayName = 'SettingsTab';
-export default SettingsTab;
+GithubContentRepositoriesSettingsTab.displayName = 'SettingsTab';
+export default GithubContentRepositoriesSettingsTab;

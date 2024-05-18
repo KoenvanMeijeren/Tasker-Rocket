@@ -11,15 +11,11 @@ import {
 import { observer } from 'mobx-react-lite';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { Breadcrumbs } from '../breadcrumbs/Breadcrumbs';
-import UserProfileCard from '../userProfile/UserProfileCard';
 
 import { useRepoSwitchHandler } from '@/lib/navigation/useRepoSwitchHandler';
-import { SessionContext } from '@/providers/SessionProvider';
-import { useContext } from 'react';
 
 const Header = observer(() => {
     const store = useStore();
-    const { session } = useContext(SessionContext);
     const { colorMode, toggleColorMode } = useColorMode();
     const colorConfig = useColorConfig();
     const { changeSelectedItem } = useRepoSwitchHandler(store);
@@ -46,23 +42,17 @@ const Header = observer(() => {
                     <Breadcrumbs />
                 </Box>
                 <Spacer />
-                {/* if session display the select */}
-                {session ? (
-                    <Select
-                        onChange={(e) => changeSelectedItem(e.target.value)}
-                        value={store.repositoryConfig.selectedItem?.repository}
-                        width={200}
-                    >
-                        {store.repositoryConfig.items.map((repo) => (
-                            <option
-                                key={repo.repository}
-                                value={repo.repository}
-                            >
-                                {repo.repository}
-                            </option>
-                        ))}
-                    </Select>
-                ) : null}
+                <Select
+                    onChange={(e) => changeSelectedItem(e.target.value)}
+                    value={store.repositoryConfig.selectedItem?.repository}
+                    width={200}
+                >
+                    {store.repositoryConfig.items.map((repo) => (
+                        <option key={repo.repository} value={repo.repository}>
+                            {repo.repository}
+                        </option>
+                    ))}
+                </Select>
                 <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? (
                         <MdDarkMode color="black" />
@@ -70,7 +60,6 @@ const Header = observer(() => {
                         <MdLightMode />
                     )}
                 </Button>
-                <UserProfileCard />
             </Show>
         </Flex>
     );

@@ -1,14 +1,11 @@
 import { useDisclosure } from '@chakra-ui/react';
-import { Session } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { gitHubValidateRepository } from '../repository/gitHubRepository';
 import { MobxStore } from '../store/MobxStore';
 import { RepositoryConfigItem } from '../store/slices/RepositoryConfigStore';
+import { EnvOptions, getEnvValue } from '@/lib/utility/env';
 
-export const useAddRepoHandler = (
-    store: MobxStore,
-    session: Session | null
-) => {
+export const useAddRepoHandler = (store: MobxStore) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [repoErrorMessage, setRepoErrorMessage] = useState('');
     const [isValidating, setIsValidating] = useState(false);
@@ -40,7 +37,10 @@ export const useAddRepoHandler = (
             return false;
         }
 
-        gitHubValidateRepository(newRepoItem, session?.provider_token ?? '')
+        gitHubValidateRepository(
+            newRepoItem,
+            getEnvValue(EnvOptions.GithubToken)
+        )
             .then(() => {
                 setIsValidating(false);
                 try {

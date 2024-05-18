@@ -6,11 +6,9 @@ import {
     Flex,
     MenuList,
     MenuItem,
-    MenuDivider,
     HStack,
 } from '@chakra-ui/react';
 import { FaAngleDown, FaRegUser } from 'react-icons/fa';
-import { MdLogout } from 'react-icons/md';
 import Link from 'next/link';
 
 export default function UserProfileCard() {
